@@ -1,0 +1,20 @@
+{
+  "stakingContractAddress": "0x24045DEDCa01fE7Fc91923A9aE596765ED639A3e",
+  "multisenderContractAddress": "0x71B622f0019b269CcE27AACD13627767dF4D7C5e",
+  "litTokenContractAddress": "0x53695556f8a1a064EdFf91767f15652BbfaFaD04",
+  "accessControlConditionsContractAddress": "0xc371CC4Dc98687f69b147019740fFC593737Fc84",
+  "pubkeyRouterContractAddress": "0xA99a99271000945b7ed55C47cf3438Bef9abd70e",
+  "pkpNftContractAddress": "0x0794f11AC5247F9FB7Bec58DaFA1B5C756de36F5",
+  "rateLimitNftContractAddress": "0x1b556168D1a9257f7FfCc376273A20B2E75446a5",
+  "pkpHelperContractAddress": "0x6178B9C2B2A9E4564A772C16CfCb5b0b1A0CDA42",
+  "pkpPermissionsContractAddress": "0xCc34e2B1e77dB2ee3B712EA657e4b0B010056404",
+  "pkpNftMetadataContractAddress": "0x97A7cd07f1e9138CAa8103d3C965a98CCcDFc223",
+  "allowlistContractAddress": "0x8EbD675d54A3C05E9aCb2142d7a0dFdF9C5F03f2",
+  "resolverContractAddress": "0xfcc113189AbA931B86ee781F923ac8e6EDaF0096",
+  "chainId": 175177,
+  "rpcUrl": "https://lit-protocol.calderachain.xyz/http",
+  "chainName": "lit",
+  "litNodeDomainName": "127.0.0.1",
+  "litNodePort": 7470,
+  "rocketPort": 7470
+}
