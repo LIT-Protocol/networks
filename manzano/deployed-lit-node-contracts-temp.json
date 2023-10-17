@@ -1,0 +1,23 @@
+{
+  "stakingBalancesContractAddress": "0x82F0a170CEDFAaab623513EE558DB19f5D787C8D",
+  "stakingContractAddress": "0xBC7F8d7864002b6629Ab49781D5199C8dD1DDcE1",
+  "multisenderContractAddress": "0x7dda866ea0bbF06959008D579daDefB6A8a4fAE9",
+  "litTokenContractAddress": "0x53695556f8a1a064EdFf91767f15652BbfaFaD04",
+  "pubkeyRouterContractAddress": "0x3d3f062fD338dAbD469CD8e22435838Fa9a4917F",
+  "pkpNftContractAddress": "0x72Add30F759373320F9b0079835E22eb51421eA5",
+  "rateLimitNftContractAddress": "0xC601D6F44686D978b7fabc6d8F7B4c9c4954985a",
+  "pkpHelperContractAddress": "0x86156a4479A31A661C8d2DD614420E4b2c4dC37d",
+  "pkpPermissionsContractAddress": "0x82CF0F45d4d545a5F146e18Fd52f34240300a8F2",
+  "pkpNftMetadataContractAddress": "0xb9b4178f3Da4fc4B0dE71aeBD8D4094E8985501D",
+  "allowlistContractAddress": "0xE44C86CEA9b84b7Bf02237109862ED8F18bf8585",
+  "resolverContractAddress": "0xF9bd7737E0CC47846F7c7D9A8042F8eC475a1D07",
+  "DomainWaleltRegistryAddress": "0xe22798FaC8142a4B1F231d0aa5997da45BD7bf6b",
+  "DomainWalletOracleAddress": "0x917A50AbBb2579856A8C0Ffdb446872d47aE17F1",
+  "hdKeyDeriverContractAddress": "0xCdFa82bf57EDD4CF6D23A4f5E89c68E4b33b39B0",
+  "chainId": "175177",
+  "rpcUrl": "https://lit-protocol.calderachain.xyz/http",
+  "chainName": "lit",
+  "litNodeDomainName": "127.0.0.1",
+  "litNodePort": 7470,
+  "rocketPort": 7470
+}
