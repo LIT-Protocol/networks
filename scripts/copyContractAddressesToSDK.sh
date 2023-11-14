@@ -3,7 +3,7 @@
 # This script copies the addresses from this folder into the lit js sdk contracts folder
 
 sdk_path="../js-sdk/packages/contracts-sdk/src/abis"
-lit_assets_path="../lit-assets/blockchain/contracts"
+lit_assets_path="../lit-assets-2/blockchain/contracts"
 
 contracts_in_sdk=("Allowlist.sol" "LITToken.sol" "Multisender.sol" "PKPHelper.sol" "PKPNFT.sol" "PKPPermissions.sol" "PubkeyRouter.sol" "RateLimitNFT.sol" "Staking.sol")
 keys_from_json=("allowlistContractAddress" "litTokenContractAddress" "multisenderContractAddress" "pkpHelperContractAddress" "pkpNftContractAddress" "pkpPermissionsContractAddress" "pubkeyRouterContractAddress" "rateLimitNftContractAddress" "stakingContractAddress")
