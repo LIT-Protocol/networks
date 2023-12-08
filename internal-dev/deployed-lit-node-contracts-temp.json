@@ -1,5 +1,5 @@
 {
-  "backupRecoveryContractAddress": "0xeeE0Eaa766eB6C1e0F7AD73204f66ca5859c8651",
+  "backupRecoveryContractAddress": "0x5aF81777Ed36eD405940d5afDBb6803ED5053aeB",
   "stakingBalancesContractAddress": "0x18B86b0f46aBb02217d953Fb2C50e33745cf27F7",
   "stakingContractAddress": "0x84bf35aA70fE01643d6c0f033b185d96dc5D830e",
   "multisenderContractAddress": "0xF66e526662904083b43126dbBa032Fa200f90f36",
@@ -141,19 +141,19 @@
     "BackupRecovery": [
       {
         "facetName": "DiamondCutFacet",
-        "facetAddress": "0x9AE8071B8bBC67b02aF386fB700aAC18D9428F4E"
+        "facetAddress": "0x532Ec12fE75bFd7847E64A05c9cbE2bD83Ba4e86"
       },
       {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x90974BbEbCC406ab2a2326f705f80a9e6b5A0B5b"
+        "facetName": "DiamondLoupeFacet",
+        "facetAddress": "0x1fCF8Da9a28BCb55eAE3C952D19FAdB0e630bCa6"
       },
       {
         "facetName": "OwnershipFacet",
-        "facetAddress": "0x861419e7AA4EbFbAF6E744247B9c5D07442CBCBd"
+        "facetAddress": "0x4526444f8f72C8d61DDe88ee0cB64853F74cBFd8"
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x02Bfdc0E63eBe146c237244A8DFdCe153bC7C8e1"
+        "facetAddress": "0xc9f49C609d8153f6BFD93426D2B337B3F5EeAf2D"
       }
     ]
   }
