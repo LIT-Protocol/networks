@@ -55,7 +55,7 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x2E8E7eb5cF4e4E2128200313445aEb47849113AA"
+        "facetAddress": "0x475b2af17ce5d150915f8f0c4da80035c99d114d"
       },
       {
         "facetName": "StakingViewsFacet",
@@ -121,7 +121,7 @@
       },
       {
         "facetName": "PubkeyRouterFacet",
-        "facetAddress": "0xa709233974f91261Ba3dc574635630a3A1e953c2"
+        "facetAddress": "0xedc650304a1ad39feb405c862ddae050f39dc7eb"
       }
     ],
     "PKPPermissions": [
