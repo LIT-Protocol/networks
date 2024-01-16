@@ -55,11 +55,11 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x475b2af17ce5d150915f8f0c4da80035c99d114d"
+        "facetAddress": "0xf32f97c3c4a71b136bffb23561f2c22f7d096f34"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0xBfBDCF831cDCCfD79efA5a44554D2ce334b23C6F"
+        "facetAddress": "0xb3bdaf9d3043683e28a89e8b4a0faf674c7a8bbb"
       },
       {
         "facetName": "StakingVersionFacet",
