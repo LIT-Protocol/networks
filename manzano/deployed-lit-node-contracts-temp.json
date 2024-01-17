@@ -37,7 +37,7 @@
       },
       {
         "facetName": "StakingBalancesFacet",
-        "facetAddress": "0x479B41bA81D45F845A48E418fc3B30c3e972f01E"
+        "facetAddress": "0xA416ecaa33adB1E308f9516BAee96D714ae7e47e"
       }
     ],
     "Staking": [
@@ -55,11 +55,15 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0xeb4c684b24b2be24fa55eec1c69e24364a7e15f2"
+        "facetAddress": "0x4E1CF0F5157882509f368e87E50eC5A5472Fc3b6"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x0CCdD516be05A9DF2cd3591c4b82Ab2efC442B49"
+        "facetAddress": "0xC8B96cF32A1d79A5267b80A44e599b6020d331C8"
+      },
+      {
+        "facetName": "StakingVersionFacet",
+        "facetAddress": "0xC4109aFA48f44e588De502FaeAfd420D8F179909"
       }
     ],
     "PKPNFT": [
@@ -77,7 +81,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0xcA74094c3d0aDdf796119a56b0ee8E4E1272FbE1"
+        "facetAddress": "0xaAC6b4422F60677de7075F60405C2a0d59bD3C64"
       }
     ],
     "RateLimitNFT": [
@@ -95,11 +99,11 @@
       },
       {
         "facetName": "RateLimitNFTFacet",
-        "facetAddress": "0x661B0A83BE1ca39Cc126a4f6BC10608cbBDC282f"
+        "facetAddress": "0x9B980a8634bcBefBD3C7876d1a186183daB35988"
       },
       {
         "facetName": "RateLimitNFTViewsFacet",
-        "facetAddress": "0x215905CBcBB841484755d6642a551bb9d1795206"
+        "facetAddress": "0x3e057103C3D84cdd6F9394085063244541f6B770"
       }
     ],
     "PubkeyRouter": [
@@ -117,7 +121,7 @@
       },
       {
         "facetName": "PubkeyRouterFacet",
-        "facetAddress": "0xDf23ffDBF0AEE93eDdEd7d490D0aFD252C0a2734"
+        "facetAddress": "0xB2a9Bf439cE514a3Cb6FE4e49A8c7084a779C463"
       }
     ],
     "PKPPermissions": [
@@ -135,7 +139,7 @@
       },
       {
         "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0x5DAe3d70a4453eA73E62FA12C8A89B2a7c5D6716"
+        "facetAddress": "0x4ACf06b4a19F2B8601c1Deaa37e4580Fe55f885F"
       }
     ],
     "BackupRecovery": [
@@ -153,7 +157,7 @@
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0xF4229409702964eBE5A03F009F60100ba70C06eB"
+        "facetAddress": "0x9BeA503dEE346f36da5C39631deA658C8416F583"
       }
     ]
   }
