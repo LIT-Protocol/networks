@@ -59,7 +59,7 @@
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x38ec2cb228a18ff4f22ff603c1ca78bd7b63495c"
+        "facetAddress": "0x0CCdD516be05A9DF2cd3591c4b82Ab2efC442B49"
       }
     ],
     "PKPNFT": [
@@ -77,7 +77,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0x1C6E5AcfB3eCe844Fa14467EeE55A011670A1471"
+        "facetAddress": "0xcA74094c3d0aDdf796119a56b0ee8E4E1272FbE1"
       }
     ],
     "RateLimitNFT": [
@@ -95,11 +95,11 @@
       },
       {
         "facetName": "RateLimitNFTFacet",
-        "facetAddress": "0xBDc9153386a3AF5A6C6A5d00E0D075Ba9f8D2f84"
+        "facetAddress": "0x661B0A83BE1ca39Cc126a4f6BC10608cbBDC282f"
       },
       {
         "facetName": "RateLimitNFTViewsFacet",
-        "facetAddress": "0xAe2314BaA82879d6fE00d7e8eC5b001A4C37b527"
+        "facetAddress": "0x215905CBcBB841484755d6642a551bb9d1795206"
       }
     ],
     "PubkeyRouter": [
@@ -135,7 +135,7 @@
       },
       {
         "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0xA00fF45f3E6240c2C97579EeA0c82ca5Ba1F8D58"
+        "facetAddress": "0x5DAe3d70a4453eA73E62FA12C8A89B2a7c5D6716"
       }
     ],
     "BackupRecovery": [
