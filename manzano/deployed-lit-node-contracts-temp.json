@@ -8,6 +8,7 @@
   "pkpNftContractAddress": "0x3c3ad2d238757Ea4AF87A8624c716B11455c1F9A",
   "rateLimitNftContractAddress": "0x9b1B8aD8A4144Be9F8Fb5C4766eE37CE0754AEAb",
   "pkpHelperContractAddress": "0x24d646b9510e56af8B15de759331d897C4d66044",
+  "pkpHelperV2ContractAddress": "0x161F7c12eE886A11527DB21B7c21B891Ab7a633B",
   "pkpPermissionsContractAddress": "0x974856dB1C4259915b709E6BcA26A002fbdd31ea",
   "pkpNftMetadataContractAddress": "0xa87fe043AD341A1Dc8c5E48d75BA9f712256fe7e",
   "allowlistContractAddress": "0xC52b72E2AD3dC58B7d23197575fb48A4523fa734",
