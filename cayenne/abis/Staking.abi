@@ -401,6 +401,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "CannotKickBelowCurrentValidatorThreshold",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -490,6 +495,17 @@
       }
     ],
     "name": "MustBeInNextValidatorSetLockedOrReadyForNextEpochOrRestoreState",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum LibStakingStorage.States",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "MustBeInNextValidatorSetLockedOrReadyForNextEpochState",
     "type": "error"
   },
   {
@@ -664,19 +680,43 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "reason",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "intervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "kickPenaltyPercent",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct LibStakingStorage.ComplaintConfig",
+        "name": "config",
+        "type": "tuple"
+      }
+    ],
+    "name": "ComplaintConfigSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "newTokenRewardPerTokenPerEpoch",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newComplaintTolerance",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newComplaintIntervalSecs",
         "type": "uint256"
       },
       {
@@ -689,6 +729,36 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "newMinimumValidatorCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaxConcurrentRequests",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaxTripleCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMinTripleCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newPeerCheckingIntervalSecs",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaxTripleConcurrency",
         "type": "uint256"
       }
     ],
@@ -959,6 +1029,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "adminResetEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1073,31 +1150,105 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "requestToLeaveAsNode",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "newTokenRewardPerTokenPerEpoch",
+        "name": "reason",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "newComplaintTolerance",
-        "type": "uint256"
-      },
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "intervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "kickPenaltyPercent",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.ComplaintConfig",
+        "name": "config",
+        "type": "tuple"
+      }
+    ],
+    "name": "setComplaintConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "uint256",
-        "name": "newComplaintIntervalSecs",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "newKeyTypes",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "newMinimumValidatorCount",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tokenRewardPerTokenPerEpoch",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "DEPRECATED_complaintTolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "DEPRECATED_complaintIntervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "keyTypes",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimumValidatorCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxConcurrentRequests",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxTripleCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minTripleCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "peerCheckingIntervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxTripleConcurrency",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.Config",
+        "name": "newConfig",
+        "type": "tuple"
       }
     ],
     "name": "setConfig",
@@ -1296,13 +1447,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "unlockValidatorsForNextEpoch",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -1314,6 +1458,42 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "major",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "patch",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct LibStakingStorage.Version",
+        "name": "version",
+        "type": "tuple"
+      }
+    ],
+    "name": "VersionRequirementsUpdated",
+    "type": "event"
   },
   {
     "inputs": [
@@ -1498,6 +1678,42 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "reason",
+        "type": "uint256"
+      }
+    ],
+    "name": "complaintConfig",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tolerance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "intervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "kickPenaltyPercent",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.ComplaintConfig",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "config",
     "outputs": [
@@ -1510,12 +1726,12 @@
           },
           {
             "internalType": "uint256",
-            "name": "complaintTolerance",
+            "name": "DEPRECATED_complaintTolerance",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "complaintIntervalSecs",
+            "name": "DEPRECATED_complaintIntervalSecs",
             "type": "uint256"
           },
           {
@@ -1526,6 +1742,31 @@
           {
             "internalType": "uint256",
             "name": "minimumValidatorCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxConcurrentRequests",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxTripleCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minTripleCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "peerCheckingIntervalSecs",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxTripleConcurrency",
             "type": "uint256"
           }
         ],

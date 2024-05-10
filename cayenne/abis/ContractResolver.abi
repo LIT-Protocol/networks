@@ -195,19 +195,6 @@
   },
   {
     "inputs": [],
-    "name": "DOMAIN_WALLET_ORACLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "DOMAIN_WALLET_REGISTRY",
     "outputs": [
       {
@@ -248,6 +235,19 @@
   {
     "inputs": [],
     "name": "MULTI_SENDER_CONTRACT",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PAYMENT_DELEGATION_CONTRACT",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -378,6 +378,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "addAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "enum ContractResolver.Env",
         "name": "env",
         "type": "uint8"
@@ -476,6 +489,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "adminBeingRemoved",
+        "type": "address"
+      }
+    ],
+    "name": "removeAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "enum ContractResolver.Env",
         "name": "env",
         "type": "uint8"
@@ -518,19 +544,6 @@
       }
     ],
     "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newAdmin",
-        "type": "address"
-      }
-    ],
-    "name": "setAdmin",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
