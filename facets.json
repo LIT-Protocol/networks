@@ -1,0 +1,52 @@
+[
+  {
+    "facetName": "BackupRecoveryFacet",
+    "address": "0x203aC5C1548157DF14512B8631E58c83a7B05dee" - manzano done
+  },
+  {
+    facetName: 'BackupRecoveryNodeStatusFacet',
+    address: '0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790' - manzano done
+  },
+  {
+    facetName: 'BackupRecoveryViewFacet',
+    address: '0x680ff2cc87B0002f515AaebD768dA9BE5938E162' - manzano done
+  },
+  {
+    "facetName": "PKPNFTFacet",
+    "address": "0x3Cbd54F030890fC562B9EfD2a294560AEDBfaE1d"
+  },
+  {
+    "facetName": "PKPPermissionsFacet",
+    "address": "0x23B8D2a0e92169145498D1E5882536488ac8603B"
+  },
+  {
+    "facetName": "PubkeyRouterFacet",
+    "address": "0x9c8EAE02925ad63cFda337D4e26a91c08030a9AD"
+  },
+  {
+    "facetName": "RateLimitNFTFacet",
+    "address": "0x9D57F8F64eF4a16Ed45f4555017Aac430de7575b"
+  },
+  {
+    "facetName": "RateLimitNFTViewsFacet",
+    "address": "0x0E099a83f158ADE17cDB34d9Dd75B1C5F12B7C4b"
+  },
+  {
+    "facetName": "StakingFacet",
+    "address": "0xc52639C4110a2F64Ee509c003BC4016DBf10eA67" - manzano done
+  },
+  {
+    "facetName": "StakingVersionFacet",
+    "address": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9" - manzano done
+  },
+  {
+    "facetName": "StakingViewsFacet",
+    "address": "0x0e569c5cA4a8601DF14591592083475ab097B78C" - manzano done
+  },
+  {
+    "facetName": "StakingBalancesFacet",
+    "address": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460" - manzano done
+  }
+]
+
+

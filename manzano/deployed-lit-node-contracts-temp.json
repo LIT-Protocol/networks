@@ -11,6 +11,7 @@
   "pkpHelperV2ContractAddress": "0x161F7c12eE886A11527DB21B7c21B891Ab7a633B",
   "pkpPermissionsContractAddress": "0x974856dB1C4259915b709E6BcA26A002fbdd31ea",
   "pkpNftMetadataContractAddress": "0xa87fe043AD341A1Dc8c5E48d75BA9f712256fe7e",
+  "paymentDelegationContractAddress": "0x180BA6Ec983019c578004D91c08897c12d78F516",
   "allowlistContractAddress": "0xC52b72E2AD3dC58B7d23197575fb48A4523fa734",
   "resolverContractAddress": "0x9F0Ede26261451C5E784DC799D71ECf766EB7562",
   "DomainWaleltRegistryAddress": "0x5F902b6f00DECf67E726f0434d484Aa9aCF48a49",
@@ -23,6 +24,24 @@
   "litNodePort": 7470,
   "rocketPort": 7470,
   "facets": {
+    "PaymentDelegation": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xa3371B61761d260EDAaFB50a9d5C386B5b5C5762"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xD1DFD0bf202E3c3446b9CB848E837686BAcb27F0"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xD81b1b1625775E3FA36b11DB664c7f6a2dFD457d"
+      },
+      {
+        "facetName": "PaymentDelegationFacet",
+        "facetAddress": "0x06E81394482FF7429Acc86bdFC695853435FDCD4"
+      }
+    ],
     "StakingBalances": [
       {
         "facetName": "DiamondCutFacet",
@@ -38,7 +57,7 @@
       },
       {
         "facetName": "StakingBalancesFacet",
-        "facetAddress": "0x21FE09dEF856f7176E5f6C76fb33ccDe65152312"
+        "facetAddress": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460"
       }
     ],
     "Staking": [
@@ -56,15 +75,15 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x40cCC0356c85920254d10376A1E7f9bD4515AfAA"
+        "facetAddress": "0xc52639C4110a2F64Ee509c003BC4016DBf10eA67"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x2D0D7934b5f4991987B72eaafd8C8eBc07c5f633"
+        "facetAddress": "0x0e569c5cA4a8601DF14591592083475ab097B78C"
       },
       {
         "facetName": "StakingVersionFacet",
-        "facetAddress": "0xfF39bc2b2D67E064fE30D0169622d6C494E940d6"
+        "facetAddress": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9"
       }
     ],
     "PKPNFT": [
@@ -158,7 +177,15 @@
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x1bcAF72f89D72E8A2156d8E0EECb46b0D7d58A2f"
+        "facetAddress": "0x203aC5C1548157DF14512B8631E58c83a7B05dee"
+      },
+      {
+        "facetName": "BackupRecoveryNodeStatusFacet",
+        "address": "0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790"
+      },
+      {
+        "facetName": "BackupRecoveryViewFacet",
+        "address": "0x680ff2cc87B0002f515AaebD768dA9BE5938E162"
       }
     ]
   }
