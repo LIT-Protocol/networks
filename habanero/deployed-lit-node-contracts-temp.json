@@ -16,6 +16,7 @@
   "DomainWaleltRegistryAddress": "0x59B585c6EF35080de1F0b5DbA4Eca7e9E51f6b3b",
   "DomainWalletOracleAddress": "0x8D33F3540b6F006415c2405F7a006A7fbDDdE14F",
   "hdKeyDeriverContractAddress": "0x112F2e36C46C9E709D9628951Dad740a5EA05E3e",
+  "paymentDelegationContractAddress": "0x4AdDb026fbC0a329a75E77f179FFC78c896ac0e6",
   "chainId": "175177",
   "rpcUrl": "https://lit-protocol.calderachain.xyz/http",
   "chainName": "lit",
@@ -163,6 +164,24 @@
       {
         "facetName": "BackupRecoveryNodeStatusFacet",
         "address": "0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790"
+      }
+    ],
+    "PaymentDelegation": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xEC7a883A043b10349420997045572e6ED96eB4Fa"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xf2ecD091151577fA8692cBc087F3C9dCf02BE8a0"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xa8647EbCB5EE40efd4e10a54Ed94e4f896dc049E"
+      },
+      {
+        "facetName": "PaymentDelegationFacet",
+        "facetAddress": "0xCC3C8c285500cC5243ba170Eb1fB523DDA087644"
       }
     ]
   }
