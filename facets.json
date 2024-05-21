@@ -13,7 +13,7 @@
   },
   {
     "facetName": "StakingFacet",
-    "address": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C"
+    "address": "0x5f86a33e859fdb829768795e459BFA3F3091bA67"
   },
   {
     "facetName": "StakingVersionFacet",
@@ -25,6 +25,6 @@
   },
   {
     "facetName": "StakingBalancesFacet",
-    "address": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460"
+    "address": "0x3d68C0AeF00E2cBD935bb47b6B5E69EFA485c1F4"
   }
 ]
