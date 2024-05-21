@@ -1,27 +1,27 @@
 [
   {
-    "facetName": "BackupRecoveryFacet", - hab done
+    "facetName": "BackupRecoveryFacet",
     "address": "0x203aC5C1548157DF14512B8631E58c83a7B05dee"
   },
   {
-    "facetName": "BackupRecoveryNodeStatusFacet", - hab done
+    "facetName": "BackupRecoveryNodeStatusFacet",
     "address": "0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790"
   },
   {
-    "facetName": "BackupRecoveryViewFacet", - hab done
+    "facetName": "BackupRecoveryViewFacet",
     "address": "0x680ff2cc87B0002f515AaebD768dA9BE5938E162"
   },
   {
     "facetName": "StakingFacet",
-    "address": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C" - habanero done
+    "address": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C"
   },
   {
     "facetName": "StakingVersionFacet",
-    "address": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9" - habanero done
+    "address": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9"
   },
   {
     "facetName": "StakingViewsFacet",
-    "address": "0x7074452d98938635b723AdB3bDd001B8605acdCA" - habanero done
+    "address": "0x7074452d98938635b723AdB3bDd001B8605acdCA"
   },
   {
     "facetName": "StakingBalancesFacet",
