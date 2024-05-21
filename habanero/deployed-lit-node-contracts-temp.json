@@ -38,7 +38,7 @@
       },
       {
         "facetName": "StakingBalancesFacet",
-        "facetAddress": "0x73F090e9C3A994B03Fc477e97F5DaB5511eD3f61"
+        "facetAddress": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460"
       }
     ],
     "Staking": [
@@ -56,15 +56,15 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x6aeEeC4a4Ee32f730a352E64624e58daA81820c2"
+        "facetAddress": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0xB2b751059CC88b4032dcaBE52e910B38689270A7"
+        "facetAddress": "0x7074452d98938635b723AdB3bDd001B8605acdCA"
       },
       {
         "facetName": "StakingVersionFacet",
-        "facetAddress": "0x12dAA7c368b8af40bB7BAE0263240dEEA2F71c91"
+        "facetAddress": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9"
       }
     ],
     "PKPNFT": [
@@ -158,7 +158,11 @@
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x18767DA3F8e1897eB5e6Dd8D0a091d0D0727b1CE"
+        "facetAddress": "0x203aC5C1548157DF14512B8631E58c83a7B05dee"
+      },
+      {
+        "facetName": "BackupRecoveryNodeStatusFacet",
+        "address": "0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790"
       }
     ]
   }

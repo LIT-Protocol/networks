@@ -1,52 +1,30 @@
 [
   {
-    "facetName": "BackupRecoveryFacet",
-    "address": "0x203aC5C1548157DF14512B8631E58c83a7B05dee" - manzano done
+    "facetName": "BackupRecoveryFacet", - hab done
+    "address": "0x203aC5C1548157DF14512B8631E58c83a7B05dee"
   },
   {
-    facetName: 'BackupRecoveryNodeStatusFacet',
-    address: '0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790' - manzano done
+    "facetName": "BackupRecoveryNodeStatusFacet", - hab done
+    "address": "0x8dabe2b11F0AB40f5f6C55D30f5849D67ecc6790"
   },
   {
-    facetName: 'BackupRecoveryViewFacet',
-    address: '0x680ff2cc87B0002f515AaebD768dA9BE5938E162' - manzano done
-  },
-  {
-    "facetName": "PKPNFTFacet",
-    "address": "0x3Cbd54F030890fC562B9EfD2a294560AEDBfaE1d"
-  },
-  {
-    "facetName": "PKPPermissionsFacet",
-    "address": "0x23B8D2a0e92169145498D1E5882536488ac8603B"
-  },
-  {
-    "facetName": "PubkeyRouterFacet",
-    "address": "0x9c8EAE02925ad63cFda337D4e26a91c08030a9AD"
-  },
-  {
-    "facetName": "RateLimitNFTFacet",
-    "address": "0x9D57F8F64eF4a16Ed45f4555017Aac430de7575b"
-  },
-  {
-    "facetName": "RateLimitNFTViewsFacet",
-    "address": "0x0E099a83f158ADE17cDB34d9Dd75B1C5F12B7C4b"
+    "facetName": "BackupRecoveryViewFacet", - hab done
+    "address": "0x680ff2cc87B0002f515AaebD768dA9BE5938E162"
   },
   {
     "facetName": "StakingFacet",
-    "address": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C" - manzano done
+    "address": "0x65C582f2f64565086dC5C9aB05f7A826aFDFA31C" - habanero done
   },
   {
     "facetName": "StakingVersionFacet",
-    "address": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9" - manzano done
+    "address": "0x78A88b016981D4249Eb218e8b62406dd9E8006B9" - habanero done
   },
   {
     "facetName": "StakingViewsFacet",
-    "address": "0x7074452d98938635b723AdB3bDd001B8605acdCA" - manzano done
+    "address": "0x7074452d98938635b723AdB3bDd001B8605acdCA" - habanero done
   },
   {
     "facetName": "StakingBalancesFacet",
-    "address": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460" - manzano done
+    "address": "0x952AECEca84E3a7aF3F22269d6b7F7dAC2373460"
   }
 ]
-
-
