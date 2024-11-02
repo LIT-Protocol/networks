@@ -2,6 +2,7 @@
   "backupRecoveryContractAddress": "0xc4635b2Ad5A9119A26346Ce9F9E1d272f46d4C3b",
   "stakingBalancesContractAddress": "0x757636A30Db381216165B3F40F690F16135817BB",
   "stakingContractAddress": "0x14BfBB1A7355C5558982CFBD1EE71622931C0378",
+  "cloneNetContractAddress": "0x1f4233b6C5b84978c458FA66412E4ae6d0561104",
   "multisenderContractAddress": "0xAa57D9c1eb5888BBa7B6Ff1b6B7e26FeB91352e4",
   "litTokenContractAddress": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
   "pubkeyRouterContractAddress": "0x65C3d057aef28175AfaC61a74cc6b27E88405583",
