@@ -38,7 +38,7 @@
       },
       {
         "facetName": "StakingBalancesFacet",
-        "facetAddress": "0x6a6b56ea620C41D1bC5163F9521A106e2A6B6A1E"
+        "facetAddress": "0xBB9bff96523e07cf1Cc8Fd7c2c0057FEd295DA5b"
       }
     ],
     "Staking": [
@@ -56,15 +56,19 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x2F7851004269322F6dBd535d8F4218075CBb11b1"
+        "facetAddress": "0xbecC1366Bf8B6a1cAD8f647B2ee68e8946705aC1"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x1c5f9D136191f1Ab12D4F4824881dC3D5F25d838"
+        "facetAddress": "0x0C8f4C507A554660158f71A60Dbf3e1aFa284A2E"
       },
       {
         "facetName": "StakingVersionFacet",
         "facetAddress": "0x4E2A2c2489107ACcC857970E6028B80c57EccBbB"
+      },
+      {
+        "facetName": "StakingAdminFacet",
+        "facetAddress": "0x1bA1ea079439A6b3fecc759e6A8E67bbA9bCe002"
       }
     ],
     "PKPNFT": [
@@ -82,7 +86,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0x5998f713FDEF4FD2b001af8b48a27D960e315d37"
+        "facetAddress": "0x1b2342E60334F4Def984DBFCcdBeB4743ef2b9a5"
       }
     ],
     "RateLimitNFT": [
