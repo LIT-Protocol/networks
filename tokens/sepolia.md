@@ -1,3 +1,1 @@
-The testLIT token for Chronicle and Vesuvius is deployed on Sepolia at this address: 0x51141b6f7D82684FDdf9dDe116D2A0771D59E8dc
-
-The tstLPX token for Yellowstone is deployed on Sepolia at this address: 0x68B71312187C576224ae7563B1dE3De359CA607b
+tLit token for testing "Lit L2 test" is deployed on Sepolia at this address: 0x53B886349F69Ea6b4E24143B738128aB572Dd361
