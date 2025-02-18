@@ -1,0 +1,236 @@
+{
+  "backupRecoveryContractAddress": "0xA6F333cf796D33E2bfBC2E558983Bc1872f20E26",
+  "stakingBalancesContractAddress": "0xfbd21A5910aaE5fFe742E0d3007C66622378D948",
+  "stakingContractAddress": "0x32999AF647180A24AcD0BeB2cdD561D7Fd7C6507",
+  "cloneNetContractAddress": "0x4dF559ee27A49820bc925cba77b7B673aC558AcD",
+  "multisenderContractAddress": "0x8122B0bC0864de3A1164E22aAcB3f83B818780f1",
+  "litTokenContractAddress": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
+  "pubkeyRouterContractAddress": "0x31dB7c77ADb38481E3F29429A4D0523Bcc4654a4",
+  "pkpNftContractAddress": "0x4Edd0Ed93D0FE38D399a0c92Fd71742ae04645A3",
+  "rateLimitNftContractAddress": "0xb97ef4ef8341585A2BBD55b9D615008ACe40165B",
+  "pkpHelperContractAddress": "0x6F8Eb5F02149A4cDE0fD1747209f16Fd88d1471d",
+  "pkpHelperV2ContractAddress": "0xD9F67711bc5C3eB8EB3b2b24E5828D5969EED2Cb",
+  "pkpPermissionsContractAddress": "0xdDF3DFb39EeD7d30B30a3aB214B6558Bd46FFd9d",
+  "pkpNftMetadataContractAddress": "0xE9D6696D64C0E1035ba1F64FF57b4c7b4D428cfe",
+  "allowlistContractAddress": "0x9ADFF8e2CeF5Ab863fB7e00D71Bb5bcE3eE95B7a",
+  "resolverContractAddress": "0x0bA012A2e61852Fdb63920720b81636f37E27B06",
+  "domainWalletRegistryAddress": "0x3aD63910ed728136CD2E255077Cd19B7b9cF2ba1",
+  "hdKeyDeriverContractAddress": "0x986803CEc6E8D732591Ade26EA8144723D147243",
+  "paymentDelegationContractAddress": "0x1ecfdD582714577C72699982C169C8b993212eba",
+  "chainId": "175188",
+  "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
+  "chainName": "yellowstone",
+  "litNodeDomainName": "127.0.0.1",
+  "litNodePort": 7470,
+  "rocketPort": 7470,
+  "facets": {
+    "StakingBalances": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x005A6ADC51680f2f6B20a0349D6D81798B7Fb105"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xEEc13dacf3407A2d17DD873b6dE9B6657B6Df93E"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x9030411779C0c3620D42C1117188e22C67686327"
+      },
+      {
+        "facetName": "StakingBalancesFacet",
+        "facetAddress": "0x216B062d0013cFa6aA114c57757D0a1F360a9E68"
+      }
+    ],
+    "Staking": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x52dc8D47f831760f5a584849130F17C7CF50b810"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x3c0B1Cc8DAFb75089224F00fAFC4be0649A06E63"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xBd4cbcA6c6319808B61F409Da0030442EDB0648e"
+      },
+      {
+        "facetName": "StakingFacet",
+        "facetAddress": "0xa5C3f0Ce9112eD4c61845177f42c994Ce98271Bc"
+      },
+      {
+        "facetName": "StakingViewsFacet",
+        "facetAddress": "0x25fBFffBeff57F12a9763f75Ce057d83eB250aD0"
+      },
+      {
+        "facetName": "StakingVersionFacet",
+        "facetAddress": "0xB1Cdb47718Ebd02F515ba61bCC1e4Bf5fCd79AA2"
+      },
+      {
+        "facetName": "StakingAdminFacet",
+        "facetAddress": "0xc78D0B92fFb4D1bb2B465AB3a600EB6B993e918a"
+      }
+    ],
+    "CloneNet": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xef279c55dF481d5D166DFe1456e1684918cb5347"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x124927C01cf0Ce6499216aa2385bE7c599D49a61"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x8dFdDa345eBF72aD41cFD3318B3c66048e074B09"
+      },
+      {
+        "facetName": "CloneNetFacet",
+        "facetAddress": "0x6f3706a2DB3ce749E0AACa3553BeFB8c4da3E3D9"
+      }
+    ],
+    "PKPNFT": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x69A8aD085CAC4a94e2f12a9735CC34c1FaEbA037"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x2Dd396Ebb84130931351A9efF56e9Ad18b5442FE"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xf4e6010a43bD000f4113c00F8aD2eb29eF5b33CA"
+      },
+      {
+        "facetName": "PKPNFTFacet",
+        "facetAddress": "0x0A5950A42F54f1Ef5b7ea45F1Fcf131019154A98"
+      }
+    ],
+    "RateLimitNFT": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x9744E3582E9E703319C64ADfCb7e7e79273cB4C4"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x1cD2f2b1105C8f1C75015694A5258C806110998a"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x757115AA55094a433fFF7Da338Af66D70E767fc5"
+      },
+      {
+        "facetName": "RateLimitNFTFacet",
+        "facetAddress": "0xc223BC0d9ee6DEb0c5E01f56103Fb11afA073605"
+      },
+      {
+        "facetName": "RateLimitNFTViewsFacet",
+        "facetAddress": "0x54E93863C775F11dBB6BB258B840fA14a501509F"
+      }
+    ],
+    "PubkeyRouter": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x88597C3ccB6A8f97612722FcF84F82a9cD52bF3F"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x6C9Fe3f0eAceB556A77C4832E087b4d8265E4409"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xF348bF461Dd2aDA65a60cCf95c4Dcb933D98B15f"
+      },
+      {
+        "facetName": "PubkeyRouterFacet",
+        "facetAddress": "0x349C53412bA841A47a049C8e40Cf71f59A036158"
+      }
+    ],
+    "DomainWalletRegistry": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xF667F7E3Df63a9dA7E033e6a9bfDd0AEb3573429"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x6b33000F37aEde4cc82ACB9409A122Bb5d2d9928"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x7dA622fA3d862633187ff766Bc7eE0D397AA2DEB"
+      },
+      {
+        "facetName": "DomainWalletRegistryFacet",
+        "facetAddress": "0x4Ec4202bdfbD88D97322e78c2Dc864e6100Fc13e"
+      },
+      {
+        "facetName": "DomainWalletRegistryViewsFacet",
+        "facetAddress": "0x339B3569525F626223cFFeA8D6122a42656d63FC"
+      }
+    ],
+    "PKPPermissions": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xA2d4F6CA2610C2C997ADf37a29dA497c010Feecb"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x8551500e666336fEF30895207ccBe65CaEB4236B"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xE11a6e61AD997507FE875171302B0759848acE94"
+      },
+      {
+        "facetName": "PKPPermissionsFacet",
+        "facetAddress": "0x86161c91Fe104688FC353514A31F71087b6878e6"
+      }
+    ],
+    "BackupRecovery": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x98026Ca6c4CDfb5fff9aEC0a354d95e3EffcdE66"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x8142392927d413B759d74afa0e014085E210276B"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x306f780BcF47c1188F568e87D3287caa13779406"
+      },
+      {
+        "facetName": "BackupRecoveryFacet",
+        "facetAddress": "0xFD379D854ca73cEd30E96dAa93BBD49a3dCB8400"
+      },
+      {
+        "facetName": "BackupRecoveryNodeStatusFacet",
+        "facetAddress": "0x468b1053De8c6FFbEd98D99c128c7D573E84656D"
+      },
+      {
+        "facetName": "BackupRecoveryViewFacet",
+        "facetAddress": "0x386A2d077e3dC12a1720a9DdA2b6bdE0dA50eD78"
+      }
+    ],
+    "PaymentDelegation": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x9dc8293b6D9210e48082Cb7B1649597512d60B48"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x09b1Ce93fBF278c2A251298a76025D28Cc518Dce"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xc5d5C2fFBE3c73b788aa6FC4B14a1916E03e337d"
+      },
+      {
+        "facetName": "PaymentDelegationFacet",
+        "facetAddress": "0x039f06F4B1A4638ADEB282E0F8fAB06fDc10a63c"
+      }
+    ]
+  }
+}
