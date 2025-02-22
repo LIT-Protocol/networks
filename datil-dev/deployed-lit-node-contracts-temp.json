@@ -16,6 +16,8 @@
   "domainWalletRegistryAddress": "0x95904bA51F22Bc8c1e77f53D6335bFec23204f18",
   "hdKeyDeriverContractAddress": "0x770D7ff478255a398860Fce25D66098AfF57560f",
   "paymentDelegationContractAddress": "0xbB23168855efe735cE9e6fD6877bAf13E02c410f",
+  "hostCommandsContractAddress": "0x0D2C58A03c000D2215636be7c0b575E1837b8291",
+  "cloneNetContractAddress": "0x007f3Af7C6973af19599E8e1d99D23bfE1b973bc",
   "chainId": "175188",
   "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
   "chainName": "yellowstone",
@@ -211,6 +213,42 @@
       {
         "facetName": "PaymentDelegationFacet",
         "facetAddress": "0xe4e47eC846B36F4f6b6812401EB5C0BE73585917"
+      }
+    ],
+    "HostCommands": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xB10Dd9fe0af46B82168e8f6f548e863581dDD074"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x516Eb8744e8F3C94627059567c1364Ad60b30b54"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xf2F9e74C991eBA22b35746D5825dD49b843a41B5"
+      },
+      {
+        "facetName": "HostCommandsFacet",
+        "facetAddress": "0x45CeC0aC609D0FF5E37DfbA9F226f6Dca21a1460"
+      }
+    ],
+    "CloneNet": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x65DFA51Bea5aF2f39Ec9bFAE25CfE4cD0cB1cdA3"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x5792caA8A5920774d24cb90c0ff807B417181Ea3"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x49FC1DD2aeD67364822B39Ab4D7b760Bc8Ca9928"
+      },
+      {
+        "facetName": "CloneNetFacet",
+        "facetAddress": "0x63DcC4b27650d6F4538EA2AA17157a53372f054f"
       }
     ]
   }
