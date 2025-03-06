@@ -18,6 +18,7 @@
   "paymentDelegationContractAddress": "0xbB23168855efe735cE9e6fD6877bAf13E02c410f",
   "hostCommandsContractAddress": "0x0D2C58A03c000D2215636be7c0b575E1837b8291",
   "cloneNetContractAddress": "0x007f3Af7C6973af19599E8e1d99D23bfE1b973bc",
+  "trustedForwarder": "0x63F15BC77EA4C0b4361a879F6D16D7a5C635DB6C",
   "chainId": "175188",
   "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
   "chainName": "yellowstone",
