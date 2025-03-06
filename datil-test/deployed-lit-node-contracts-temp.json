@@ -8,7 +8,7 @@
   "pubkeyRouterContractAddress": "0x65C3d057aef28175AfaC61a74cc6b27E88405583",
   "pkpNftContractAddress": "0x6a0f439f064B7167A8Ea6B22AcC07ae5360ee0d1",
   "rateLimitNftContractAddress": "0xa17f11B7f828EEc97926E56D98D5AB63A0231b77",
-  "pkpHelperContractAddress": "0x341E5273E2E2ea3c4aDa4101F008b1261E58510D",
+  "pkpHelperContractAddress": "0x7E209fDFBBEe26Df3363354BC55C2Cc89DD030a9",
   "pkpHelperV2ContractAddress": "0x41837a630BD22F893a6bE3ecBE2101Ca2f32ed6b",
   "pkpPermissionsContractAddress": "0x60C1ddC8b9e38F730F0e7B70A2F84C1A98A69167",
   "pkpNftMetadataContractAddress": "0xaC1d01692EBA0E457134Eb7EB8bb96ee9D91FcdD",
@@ -17,6 +17,7 @@
   "domainWalletRegistryAddress": "0x33658584B6818B4e1a6fD541F3e10A42e10b5Ab0",
   "hdKeyDeriverContractAddress": "0x5878C0FE1a184D49d440aAC7cFe5cFA2dEea3724",
   "paymentDelegationContractAddress": "0xd7188e0348F1dA8c9b3d6e614844cbA22329B99E",
+  "hostCommandsContractAddress": "0x2441756D35D0C494C11eab0F0874bc800c80761d",
   "chainId": "175188",
   "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
   "chainName": "yellowstone",
@@ -212,6 +213,24 @@
       {
         "facetName": "PaymentDelegationFacet",
         "facetAddress": "0x3f708A947aad48e241A87AEC8B24B56D81ac6a71"
+      }
+    ],
+    "HostCommands": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x4A5FCFcDcAf39582c32AeA375287Fd4683b0cABC"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xa5378d1E21b55897727AFf2cEF0150189Cdf4FDA"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x333d00E2948199ddF112670F9E50bD8164e2010d"
+      },
+      {
+        "facetName": "HostCommandsFacet",
+        "facetAddress": "0x1e368baDb0674d0152a7141C1B6a0E47f25F175a"
       }
     ]
   }
