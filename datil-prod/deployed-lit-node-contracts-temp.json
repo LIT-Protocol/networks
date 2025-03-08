@@ -7,7 +7,7 @@
   "pubkeyRouterContractAddress": "0xF182d6bEf16Ba77e69372dD096D8B70Bc3d5B475",
   "pkpNftContractAddress": "0x487A9D096BB4B7Ac1520Cb12370e31e677B175EA",
   "rateLimitNftContractAddress": "0x01205d94Fee4d9F59A4aB24bf80D11d4DdAf6Eed",
-  "pkpHelperContractAddress": "0x5B55ee57C459a31072145F2Fc00b35de20520adD",
+  "pkpHelperContractAddress": "0x9123438C2c7c78B53e5081d6d3eA5DFcf51B57f0",
   "pkpHelperV2ContractAddress": "0x3f24953B66Ed4089c6B25Be8C7a83262d6f6255C",
   "pkpPermissionsContractAddress": "0x213Db6E1446928E19588269bEF7dFc9187c4829A",
   "pkpNftMetadataContractAddress": "0x4BB8681d3a24F130cC746C7DC31167C93D72d32b",
@@ -16,6 +16,7 @@
   "domainWalletRegistryAddress": "0xF6f7eb2a1cE7a3F45Ff84609429eC5Ba17caF6B7",
   "hdKeyDeriverContractAddress": "0x1b22C51A3c8d26AA902C37D9556A85E335668B44",
   "paymentDelegationContractAddress": "0xF19ea8634969730cB51BFEe2E2A5353062053C14",
+  "hostCommandsContractAddress": "0xDA622F6946050BC084479d063D866BCf314836aa",
   "chainId": "175188",
   "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
   "chainName": "yellowstone",
@@ -38,7 +39,7 @@
       },
       {
         "facetName": "StakingBalancesFacet",
-        "facetAddress": "0xfaF428698C0D82343aa69f3F03Ca367E9b1a7359"
+        "facetAddress": "0xBB9bff96523e07cf1Cc8Fd7c2c0057FEd295DA5b"
       }
     ],
     "Staking": [
@@ -56,15 +57,19 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0xd8e16D49af10c9742Aa75a428005761a69498686"
+        "facetAddress": "0xbecC1366Bf8B6a1cAD8f647B2ee68e8946705aC1"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x1c5f9D136191f1Ab12D4F4824881dC3D5F25d838"
+        "facetAddress": "0xAa4e18056D6B1B4DC5ec4210b9B6AEa216178981"
       },
       {
         "facetName": "StakingVersionFacet",
         "facetAddress": "0x4EB47Fb5134c58Ba323FefB89FA67c28fD77DDFb"
+      },
+      {
+        "facetName": "StakingAdminFacet",
+        "facetAddress": "0x620ecDaAce5be52eAB35626F794deA6e9E89e45D"
       }
     ],
     "PKPNFT": [
@@ -82,7 +87,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0x74Cf86cf62512E4f8Ec663c95a86C316f5DC7F77"
+        "facetAddress": "0x1db0f6BBb72B59b1DCe9607aacA8A04F1b07085B"
       }
     ],
     "RateLimitNFT": [
@@ -162,7 +167,7 @@
       },
       {
         "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0xDADbF90FB31E01Fc122daE215a0129Ca0d2607cA"
+        "facetAddress": "0xFff9c6f749919CEF50FCEcBb9C2b5c5Ea1B1AFb8"
       }
     ],
     "BackupRecovery": [
@@ -207,6 +212,24 @@
       {
         "facetName": "PaymentDelegationFacet",
         "facetAddress": "0x3f708A947aad48e241A87AEC8B24B56D81ac6a71"
+      }
+    ],
+    "HostCommands": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x585ca2619f34330Bce4220A0737AA7Af6555AFFe"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x25bb7950A2d9ad76ED271E1D4552E4e8610C36a2"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x6BA35B66780Ecc187a517F02434a17E5c9975e80"
+      },
+      {
+        "facetName": "HostCommandsFacet",
+        "facetAddress": "0xCD56c1a3182b557A959436E597872D542304C241"
       }
     ]
   }
