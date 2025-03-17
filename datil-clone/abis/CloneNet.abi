@@ -392,161 +392,165 @@
   },
   {
     "inputs": [],
-    "name": "CallerNotAuthorizedCommandSender",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "CallerNotOwner",
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stakingContractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "adminAddActiveStakingContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stakingContractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "adminRemoveActiveStakingContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "InvalidExpirationTime",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+    "name": "getActiveStakingContracts",
+    "outputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAuthorizedCommandSender",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
       }
     ],
-    "name": "AuthorizedCommandSenderUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "stakeAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expirationTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "force",
-        "type": "bool"
-      }
-    ],
-    "name": "Restart",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "stakeAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expirationTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "releaseBranchName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "releaseId",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "force",
-        "type": "bool"
-      }
-    ],
-    "name": "Upgrade",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "stakeAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "expirationTime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "force",
-        "type": "bool"
-      }
-    ],
-    "name": "restart",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "getAllActiveUnkickedValidatorStructsAndCounts",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_newAuthorizedCommandSender",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "stakingContractAddress",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "epochLength",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "number",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "endTime",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "retries",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "timeout",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct LibStakingStorage.Epoch",
+                "name": "epoch",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint256",
+                "name": "currentValidatorCountForConsensus",
+                "type": "uint256"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint32",
+                    "name": "ip",
+                    "type": "uint32"
+                  },
+                  {
+                    "internalType": "uint128",
+                    "name": "ipv6",
+                    "type": "uint128"
+                  },
+                  {
+                    "internalType": "uint32",
+                    "name": "port",
+                    "type": "uint32"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "nodeAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "reward",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "senderPubKey",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "receiverPubKey",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct LibStakingStorage.Validator[]",
+                "name": "activeUnkickedValidators",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.StakingAggregateDetails",
+            "name": "details",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.KeyedStakingAggregateDetails[]",
+        "name": "",
+        "type": "tuple[]"
       }
     ],
-    "name": "setAuthorizedCommandSender",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "stakeAddress",
-        "type": "address"
-      },
+    "inputs": [],
+    "name": "numActiveStakingContracts",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "expirationTime",
+        "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "releaseBranchName",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "releaseId",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "force",
-        "type": "bool"
       }
     ],
-    "name": "upgrade",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   }
 ]
