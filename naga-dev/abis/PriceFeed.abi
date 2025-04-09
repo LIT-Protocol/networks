@@ -435,6 +435,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newTrustedForwarder",
+        "type": "address"
+      }
+    ],
+    "name": "TrustedForwarderSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "stakingAddress",
@@ -581,11 +594,6 @@
               },
               {
                 "internalType": "uint256",
-                "name": "commission",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
                 "name": "commissionRate",
                 "type": "uint256"
               },
@@ -608,6 +616,21 @@
                 "internalType": "uint256",
                 "name": "delegatedStakeWeight",
                 "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lastRewardEpochClaimedFixedCostRewards",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lastRewardEpochClaimedCommission",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "operatorAddress",
+                "type": "address"
               }
             ],
             "internalType": "struct LibStakingStorage.Validator",
@@ -631,6 +654,19 @@
   {
     "inputs": [],
     "name": "getStakingAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTrustedForwarder",
     "outputs": [
       {
         "internalType": "address",
@@ -814,6 +850,19 @@
       }
     ],
     "name": "setNodeCapacityConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "forwarder",
+        "type": "address"
+      }
+    ],
+    "name": "setTrustedForwarder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

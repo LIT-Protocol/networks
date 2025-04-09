@@ -208,6 +208,19 @@
   },
   {
     "inputs": [],
+    "name": "FORWARDER_CONTRACT",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "HD_KEY_DERIVER_CONTRACT",
     "outputs": [
       {

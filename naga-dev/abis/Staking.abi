@@ -391,11 +391,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "CallerNotOwner",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -458,6 +453,38 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getShawdowRealmIdForStakerAddress",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUnassignedStakerAddresses",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getUnassignedValidators",
     "outputs": [
@@ -505,11 +532,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -532,6 +554,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -638,6 +675,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "numRealms",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -691,11 +741,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -718,6 +763,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",
@@ -727,6 +787,11 @@
     ],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CallerNotOwner",
+    "type": "error"
   },
   {
     "inputs": [],
@@ -741,6 +806,11 @@
   {
     "inputs": [],
     "name": "InvalidNewSharePrice",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSlashPercentage",
     "type": "error"
   },
   {
@@ -1285,6 +1355,29 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "source_realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "target_realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "target_validators",
+        "type": "address[]"
+      }
+    ],
+    "name": "adminSetupShadowSplicing",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "percentage",
         "type": "uint256"
       },
@@ -1553,6 +1646,16 @@
             "internalType": "uint256",
             "name": "minSelfStakeTimelock",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minValidatorCountToClampMinimumThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minThresholdToClampAt",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.GlobalConfig",
@@ -1776,6 +1879,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTotalSupply",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTokenTotalSupplyStandIn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "CallerNotContract",
     "type": "error"
@@ -1960,6 +2076,37 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "rewards",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fromEpoch",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "FixedCostRewardsClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "recordId",
         "type": "uint256"
       },
@@ -2058,6 +2205,50 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newTrustedForwarder",
+        "type": "address"
+      }
+    ],
+    "name": "TrustedForwarderSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewards",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fromEpoch",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "ValidatorCommissionClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "stakerAddress",
@@ -2132,6 +2323,24 @@
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
+        "name": "maxNumberOfEpochsToClaim",
+        "type": "uint256"
+      }
+    ],
+    "name": "claimFixedCostRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "stakerAddress",
         "type": "address"
@@ -2139,6 +2348,11 @@
       {
         "internalType": "uint256",
         "name": "stakeRecordId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxNumberOfEpochsToClaim",
         "type": "uint256"
       }
     ],
@@ -2148,7 +2362,18 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxNumberOfEpochsToClaim",
+        "type": "uint256"
+      }
+    ],
     "name": "claimValidatorCommission",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -2222,7 +2447,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "totalRewards",
+            "name": "totalStakeRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validatorFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validatorCommission",
             "type": "uint256"
           },
           {
@@ -2293,7 +2528,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "totalRewards",
+            "name": "totalStakeRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validatorFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validatorCommission",
             "type": "uint256"
           },
           {
@@ -2336,6 +2581,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getTrustedForwarder",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -2349,7 +2607,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "additionalAmount",
         "type": "uint256"
       }
     ],
@@ -2372,7 +2630,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "newTimeLock",
+        "name": "additionalTimeLock",
         "type": "uint256"
       }
     ],
@@ -2428,6 +2686,19 @@
       }
     ],
     "name": "migrateStakeRecord",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "forwarder",
+        "type": "address"
+      }
+    ],
+    "name": "setTrustedForwarder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2603,6 +2874,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "InvalidAttestedAddress",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "enum LibStakingStorage.States",
@@ -2756,6 +3032,11 @@
       }
     ],
     "name": "SignaledReadyForWrongEpochNumber",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "StakerAddressMismatch",
     "type": "error"
   },
   {
@@ -3047,25 +3328,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "staker",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amountBurned",
-        "type": "uint256"
-      }
-    ],
-    "name": "ValidatorKickedFromNextEpoch",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "reporter",
         "type": "address"
       },
@@ -3189,36 +3451,6 @@
         "internalType": "uint256",
         "name": "realmId",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint32",
-        "name": "ip",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint128",
-        "name": "ipv6",
-        "type": "uint128"
-      },
-      {
-        "internalType": "uint32",
-        "name": "port",
-        "type": "uint32"
-      },
-      {
-        "internalType": "address",
-        "name": "nodeAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "senderPubKey",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "receiverPubKey",
-        "type": "uint256"
       }
     ],
     "name": "requestToJoin",
@@ -3234,34 +3466,45 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint32",
-        "name": "ip",
-        "type": "uint32"
-      },
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "requestToJoinAsAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "uint128",
-        "name": "ipv6",
-        "type": "uint128"
-      },
-      {
-        "internalType": "uint32",
-        "name": "port",
-        "type": "uint32"
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
       },
       {
         "internalType": "address",
         "name": "stakerAddress",
         "type": "address"
-      },
+      }
+    ],
+    "name": "requestToJoinAsForShadowSplicing",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "senderPubKey",
+        "name": "realmId",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "receiverPubKey",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
       }
     ],
     "name": "requestToJoinAsNode",
@@ -3308,7 +3551,7 @@
       },
       {
         "internalType": "address",
-        "name": "nodeAddress",
+        "name": "operatorAddress",
         "type": "address"
       },
       {
@@ -3360,36 +3603,6 @@
       {
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint32",
-        "name": "ip",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint128",
-        "name": "ipv6",
-        "type": "uint128"
-      },
-      {
-        "internalType": "uint32",
-        "name": "port",
-        "type": "uint32"
-      },
-      {
-        "internalType": "address",
-        "name": "nodeAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "senderPubKey",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "receiverPubKey",
         "type": "uint256"
       }
     ],
@@ -3689,6 +3902,11 @@
             "internalType": "address[]",
             "name": "validatorsInCurrentEpoch",
             "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "actualEpochLength",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.RewardEpochGlobalStats",
@@ -3976,11 +4194,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -4003,6 +4216,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -4119,11 +4347,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -4146,6 +4369,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -4412,6 +4650,25 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNonShadowValidators",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "epochNumber",
         "type": "uint256"
       }
@@ -4434,6 +4691,11 @@
             "internalType": "address[]",
             "name": "validatorsInCurrentEpoch",
             "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "actualEpochLength",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.RewardEpochGlobalStats",
@@ -4458,6 +4720,25 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getShadowValidators",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -5049,11 +5330,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -5076,6 +5352,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5140,11 +5431,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -5167,6 +5453,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5231,11 +5532,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -5258,6 +5554,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5412,11 +5723,45 @@
             "internalType": "uint256",
             "name": "minSelfStakeTimelock",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minValidatorCountToClampMinimumThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minThresholdToClampAt",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.GlobalConfig",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "isActiveShadowValidator",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -5686,6 +6031,25 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "operatorAddress",
+        "type": "address"
+      }
+    ],
+    "name": "operatorAddressToStakerAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "base",
         "type": "uint256"
@@ -5913,11 +6277,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "commission",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "commissionRate",
             "type": "uint256"
           },
@@ -5940,6 +6299,21 @@
             "internalType": "uint256",
             "name": "delegatedStakeWeight",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedFixedCostRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastRewardEpochClaimedCommission",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",

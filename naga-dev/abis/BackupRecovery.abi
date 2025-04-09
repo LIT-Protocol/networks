@@ -375,23 +375,23 @@
     "inputs": [
       {
         "internalType": "bytes",
-        "name": "publicKey",
+        "name": "sessionId",
         "type": "bytes"
       },
       {
         "internalType": "bytes",
-        "name": "senderPublicKey",
+        "name": "senderSessionId",
         "type": "bytes"
       },
       {
-        "internalType": "bytes",
-        "name": "blsKey",
-        "type": "bytes"
+        "internalType": "bytes32",
+        "name": "pubkeysHash",
+        "type": "bytes32"
       },
       {
-        "internalType": "bytes",
-        "name": "senderBlsKey",
-        "type": "bytes"
+        "internalType": "bytes32",
+        "name": "sendersPubkeyHash",
+        "type": "bytes32"
       }
     ],
     "name": "BackupKeysMismatch",
@@ -483,56 +483,6 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "bls12381G1EncKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "secp256K1PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p256PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p384PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ristretto25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed448PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "jubjubPubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "decaf377PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "bls12381G1PubKey",
-            "type": "bytes"
-          },
-          {
             "internalType": "uint256",
             "name": "partyThreshold",
             "type": "uint256"
@@ -541,6 +491,23 @@
             "internalType": "address[]",
             "name": "partyMembers",
             "type": "address[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyType",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
+            "name": "registeredRecoveryKeys",
+            "type": "tuple[]"
           }
         ],
         "indexed": false,
@@ -722,14 +689,21 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "publicKey",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encryptedKey",
-        "type": "bytes"
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "pubkey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
+        "name": "recoveryKeys",
+        "type": "tuple[]"
       },
       {
         "internalType": "bytes",
@@ -737,7 +711,7 @@
         "type": "bytes"
       }
     ],
-    "name": "recieveNewKeySet",
+    "name": "receiveNewKeySet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -750,7 +724,7 @@
         "type": "bytes"
       }
     ],
-    "name": "recieveProofBls12381G1",
+    "name": "receiveProofBls12381G1",
     "outputs": [
       {
         "internalType": "bool",
@@ -769,7 +743,7 @@
         "type": "bytes"
       }
     ],
-    "name": "recieveProofsK256",
+    "name": "receiveProofsK256",
     "outputs": [
       {
         "internalType": "bool",
@@ -811,6 +785,11 @@
         "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
         "name": "recoveryKeys",
         "type": "tuple[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "sessionId",
+        "type": "bytes"
       }
     ],
     "name": "registerRecoveryKeys",
@@ -908,58 +887,18 @@
         "components": [
           {
             "internalType": "bytes",
-            "name": "bls12381G1EncKey",
+            "name": "pubkey",
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "secp256K1PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p256PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p384PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ristretto25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed448PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "jubjubPubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "decaf377PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "bls12381G1PubKey",
-            "type": "bytes"
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
           }
         ],
-        "internalType": "struct BackupRecoveryTestFacet.BackupPartyKeys",
+        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
         "name": "keys",
-        "type": "tuple"
+        "type": "tuple[]"
       },
       {
         "internalType": "address[]",
@@ -997,56 +936,6 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "bls12381G1EncKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "secp256K1PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p256PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p384PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ristretto25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed448PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "jubjubPubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "decaf377PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "bls12381G1PubKey",
-            "type": "bytes"
-          },
-          {
             "internalType": "uint256",
             "name": "partyThreshold",
             "type": "uint256"
@@ -1055,6 +944,23 @@
             "internalType": "address[]",
             "name": "partyMembers",
             "type": "address[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyType",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
+            "name": "registeredRecoveryKeys",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct LibBackupRecoveryStorage.BackupRecoveryState",
@@ -1131,6 +1037,11 @@
             "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
             "name": "registeredRecoveryKeys",
             "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "sessionId",
+            "type": "bytes"
           }
         ],
         "internalType": "struct LibBackupRecoveryStorage.NextStateDownloadable",
@@ -1172,56 +1083,6 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "bls12381G1EncKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "secp256K1PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p256PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "p384PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ristretto25519PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ed448PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "jubjubPubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "decaf377PubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "bls12381G1PubKey",
-            "type": "bytes"
-          },
-          {
             "internalType": "uint256",
             "name": "partyThreshold",
             "type": "uint256"
@@ -1230,6 +1091,23 @@
             "internalType": "address[]",
             "name": "partyMembers",
             "type": "address[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyType",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
+            "name": "registeredRecoveryKeys",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct LibBackupRecoveryStorage.BackupRecoveryState",
