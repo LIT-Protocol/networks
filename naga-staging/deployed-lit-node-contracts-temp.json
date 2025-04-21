@@ -1,0 +1,222 @@
+{
+  "backupRecoveryContractAddress": "0x29C082D14cD869C9Eb6F1C40a949d559C32f0f0E",
+  "stakingContractAddress": "0x822E815bdB01fDD9083DC0D7CF17Ff184EEd7F0e",
+  "multisenderContractAddress": "0x3F03D385CC17E242A60d843337c1b3865BF9FF07",
+  "litTokenContractAddress": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
+  "pubkeyRouterContractAddress": "0xc5A3C8467Ee808C8D605592B9fa43218AA601d92",
+  "pkpNftContractAddress": "0x3C5f2EbBe473500e37394b862cd24D05C6bAB2Fe",
+  "pkpHelperContractAddress": "0x028b2E7df71FfCd78B71B3b6FAF84d92D0e92fE1",
+  "pkpHelperV2ContractAddress": "0x661cff67eA112f25396F4124379E80d61B630284",
+  "pkpPermissionsContractAddress": "0x709c0A9D7587A5D852513e75e7105272B365DD93",
+  "pkpNftMetadataContractAddress": "0x64eF3707AdbBe8DE0f4b0bf42DA9b61D571c42b3",
+  "allowlistContractAddress": "0x7aa79e69c306acA5F44AC7c70E43e088d2652deb",
+  "resolverContractAddress": "0x6D314afC06945383E7187Cf2fb3282a3C3748312",
+  "domainWalletRegistryAddress": "0xecf68499cC9475b5419278490bF0bBe2e06dfd4D",
+  "hdKeyDeriverContractAddress": "0x41a33f54D2c4F7C94Dc30a433A9B8d7110A1f2E4",
+  "paymentDelegationContractAddress": "0x545d3840cFC0617D028F328d1B68ed4E49416b8C",
+  "ledgerContractAddress": "0x23e405c30a9a0eFb771b9a2E24BbA5F73B3D308d",
+  "priceFeedContractAddress": "0xB7f54bc1C78a7605ae045BD1AdD7881A815855A8",
+  "forwarderContractAddress": "0x63F15BC77EA4C0b4361a879F6D16D7a5C635DB6C",
+  "chainId": "175188",
+  "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
+  "chainName": "yellowstone",
+  "litNodeDomainName": "127.0.0.1",
+  "litNodePort": 7470,
+  "rocketPort": 7470,
+  "facets": {
+    "Staking": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x6E66c9adaEA5cdb62cD55d7AD4Ff79044eDB6E63"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xCD2bec703Ce0c8D104ADDE92C8E9E3241B017657"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x53c74f75eBa3de5F1D33474F1cD57C2247Ea20D8"
+      },
+      {
+        "facetName": "StakingFacet",
+        "facetAddress": "0xBB2bfFF095C3267751EE03E5B31c6c4aB6bd9D94"
+      },
+      {
+        "facetName": "StakingValidatorFacet",
+        "facetAddress": "0xc22326596C7102391EeB514A68c50DFe82B3a026"
+      },
+      {
+        "facetName": "StakingViewsFacet",
+        "facetAddress": "0xcf1fBFF7435cb676C16c51697014C48d2e2bcA8a"
+      },
+      {
+        "facetName": "StakingVersionFacet",
+        "facetAddress": "0xE7Fb29fEcEf8F58948ADaFEf7e9F70864b92bC75"
+      },
+      {
+        "facetName": "StakingAcrossRealmsFacet",
+        "facetAddress": "0xe1A6309108bE65E6b0635A1CC2af1aDE3175572C"
+      },
+      {
+        "facetName": "StakingAdminFacet",
+        "facetAddress": "0x12486cBDd9114Ef43DD809F429CA162B60Bf0310"
+      }
+    ],
+    "PKPNFT": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xF2dBd24c7Ba58AC5A0f24EaC3174302C2A7De5F8"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x8EBA4739DaaF53B60b2f43D6C4E45e3cFec71ad3"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xF6e468aafE39ca58F7432F8380809d0C99D2E4dF"
+      },
+      {
+        "facetName": "PKPNFTFacet",
+        "facetAddress": "0xc1DFE6484A0FCbddb11e16c466AcD46C67E155dC"
+      }
+    ],
+    "PubkeyRouter": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xd8bbB0fE7a1d45682b4993566724CE7f3d6B6701"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x5948f992BFF446C2c2F0C5AF2a7F72B84bdF58a0"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x48Deb80684885C12fAa04e71A196e54750e1e43F"
+      },
+      {
+        "facetName": "PubkeyRouterFacet",
+        "facetAddress": "0x9EABec2Bd37EDd9E063C1a8f3d3D555DEf96A7a9"
+      }
+    ],
+    "DomainWalletRegistry": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x67062C48187E457e1B32F573d4f69ca9a642Db10"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x8e2E90F6E0a18C4623e0567ED5833E29AC6ef87f"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x2a4d188b3613b0794cF765360Dd1463DEBB4678d"
+      },
+      {
+        "facetName": "DomainWalletRegistryFacet",
+        "facetAddress": "0x2e0a4f647ab2D0bcf5A93623D54f19e854C7f85e"
+      },
+      {
+        "facetName": "DomainWalletRegistryViewsFacet",
+        "facetAddress": "0x093935e89514E88711EF15A2710c64ae735AfB12"
+      }
+    ],
+    "PKPPermissions": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x3982bC082D27A51F0a56dB8b1b0D836A87F53801"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x45C6a2917E549C3d0b5e465205Ab7e58725C973B"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x9E9c910F6276e1459aB3b927a078a9bB39E6ac6c"
+      },
+      {
+        "facetName": "PKPPermissionsFacet",
+        "facetAddress": "0xEe676A16a51F1C46098c2F00b2496b888134B93F"
+      }
+    ],
+    "BackupRecovery": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xc8197859094B2c131079CA52cD2F2E4Af5314a81"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xF467ED0AD8DFe56F34dcfa7B747E86C3d5bf41b8"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x0E51D84F9c44f9D6cA9B82cC3dC5D22Df3E0308A"
+      },
+      {
+        "facetName": "BackupRecoveryFacet",
+        "facetAddress": "0x83a08aCAbEC68F026069C79CfdD5625449471B5a"
+      },
+      {
+        "facetName": "BackupRecoveryNodeStatusFacet",
+        "facetAddress": "0x4438C4854b59A99c36D274c506a02701947798Fe"
+      },
+      {
+        "facetName": "BackupRecoveryViewsFacet",
+        "facetAddress": "0x41c4734a192feb5169838a527f06af4FB0F5c9B6"
+      }
+    ],
+    "PaymentDelegation": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xF10B54DB9A311529894CBf9b4CeeA6E91Ea5F470"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x8Bcdc1BaF492eB462737b4F364FD802bd3F4432b"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x6608f346f8f31EAF82647D3e07Ada6cC062fa642"
+      },
+      {
+        "facetName": "PaymentDelegationFacet",
+        "facetAddress": "0xc3bADa51B51DB1b8386FE13b5B3A463c49B21cD3"
+      }
+    ],
+    "Ledger": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0xC310a774ac2E964CA36a77A41C3d80e2ecAdb25F"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0x450416157A624a40D9f61dc40A877fD634D7d855"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0xe01Bb7a8d3f4D20190d8B27579d829396944A52e"
+      },
+      {
+        "facetName": "LedgerFacet",
+        "facetAddress": "0xd5123EF184B397229AFAa3F117aa9c43B5502007"
+      }
+    ],
+    "PriceFeed": [
+      {
+        "facetName": "DiamondCutFacet",
+        "facetAddress": "0x3242188Ace88ef065E4312cd5dCD0CA8ca554f13"
+      },
+      {
+        "facetName": "DiamondLoupeFacetNoERC165",
+        "facetAddress": "0xbFBBa49cD6fD54FE40fB100cFDcCc82Be874B52D"
+      },
+      {
+        "facetName": "OwnershipFacet",
+        "facetAddress": "0x72d632E9135fbF75191bD17e1c9B2A84FB406F95"
+      },
+      {
+        "facetName": "PriceFeedFacet",
+        "facetAddress": "0x1b02521F19344361866f49ef67a3e2473dAbeDa4"
+      }
+    ]
+  }
+}
