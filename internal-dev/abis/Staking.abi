@@ -1345,6 +1345,24 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "validatorsForNextEpoch",
+        "type": "address[]"
+      }
+    ],
+    "name": "adminSetValidatorsInNextEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "source_realmId",
         "type": "uint256"
       },
@@ -2744,7 +2762,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       },
       {
@@ -4803,12 +4821,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "userStakerAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       }
     ],
@@ -4827,16 +4845,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "userStakerAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       }
     ],
-    "name": "getStakeRecordsForValidator",
+    "name": "getStakeRecordsForUser",
     "outputs": [
       {
         "components": [
