@@ -670,6 +670,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",
@@ -1337,6 +1342,24 @@
       }
     ],
     "name": "adminSetValidatorsInCurrentEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "validatorsForNextEpoch",
+        "type": "address[]"
+      }
+    ],
+    "name": "adminSetValidatorsInNextEpoch",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2744,7 +2767,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       },
       {
@@ -4173,6 +4196,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -4326,6 +4354,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -4803,12 +4836,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "userStakerAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       }
     ],
@@ -4827,16 +4860,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "userStakerAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "stakerAddress",
+        "name": "operatorStakerAddress",
         "type": "address"
       }
     ],
-    "name": "getStakeRecordsForValidator",
+    "name": "getStakeRecordsForUser",
     "outputs": [
       {
         "components": [
@@ -5341,6 +5374,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5442,6 +5480,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5543,6 +5586,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -6038,6 +6086,44 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      }
+    ],
+    "name": "permittedRealmsForValidator",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      }
+    ],
+    "name": "permittedValidators",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "base",
         "type": "uint256"
@@ -6163,6 +6249,25 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "stakerToValidatorsTheyStakedTo",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -6307,6 +6412,11 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uniqueDelegatingStakerCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",
