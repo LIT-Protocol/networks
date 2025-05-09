@@ -603,6 +603,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "REALM_ID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -668,6 +681,36 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRecoveredPeerIds",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "node_address",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "old_peer_id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "new_peer_id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibBackupRecoveryStorage.RecoveredPeerId[]",
+        "name": "peer_ids",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -824,6 +867,24 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "old_peer_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "new_peer_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "setRecoveredPeerId",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "CURRENT",
     "outputs": [
@@ -884,21 +945,9 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
+        "internalType": "bytes[]",
         "name": "keys",
-        "type": "tuple[]"
+        "type": "bytes[]"
       },
       {
         "internalType": "address[]",

@@ -631,6 +631,11 @@
                 "internalType": "address",
                 "name": "operatorAddress",
                 "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "uniqueDelegatingStakerCount",
+                "type": "uint256"
               }
             ],
             "internalType": "struct LibStakingStorage.Validator",
