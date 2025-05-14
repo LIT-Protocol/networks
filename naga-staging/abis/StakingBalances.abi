@@ -327,6 +327,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "_interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -372,67 +391,24 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "sessionId",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "senderSessionId",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "pubkeysHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "sendersPubkeyHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "BackupKeysMismatch",
+    "inputs": [],
+    "name": "ActiveValidatorsCannotLeave",
     "type": "error"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "peer",
+        "name": "aliasAccount",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "stakerAddress",
         "type": "address"
       }
     ],
-    "name": "BackupMemberNotMappedToNode",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "members",
-        "type": "address[]"
-      }
-    ],
-    "name": "BackupSetIncomplete",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "pubkey",
-        "type": "bytes"
-      }
-    ],
-    "name": "BackupStateAlreadyRegistered",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "BackupStateNotRegistered",
+    "name": "AliasNotOwnedBySender",
     "type": "error"
   },
   {
@@ -444,79 +420,140 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "addr",
+        "name": "aliasAccount",
         "type": "address"
       }
     ],
-    "name": "InvalidCaller",
+    "name": "CannotRemoveAliasOfActiveValidator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotStakeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotWithdrawZero",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "aliasCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxAliasCountReached",
     "type": "error"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "addr",
+        "name": "sender",
         "type": "address"
       }
     ],
-    "name": "NodesAllMappedToBackupMembers",
+    "name": "OnlyStakingContract",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "ProofExpired",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountStaked",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minimumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "StakeMustBeGreaterThanMinimumStake",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "WrongVerificationVersion",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountStaked",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maximumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "StakeMustBeLessThanMaximumStake",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "StakerNotPermitted",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "yourBalance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestedWithdrawlAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "TryingToWithdrawMoreThanStaked",
     "type": "error"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "sessionId",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "partyThreshold",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address[]",
-            "name": "partyMembers",
-            "type": "address[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-            "name": "registeredRecoveryKeys",
-            "type": "tuple[]"
-          }
-        ],
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
         "indexed": false,
-        "internalType": "struct LibBackupRecoveryStorage.BackupRecoveryState",
-        "name": "state",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "aliasAccount",
+        "type": "address"
       }
     ],
-    "name": "BackupKeysRegistered",
+    "name": "AliasAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "aliasAccount",
+        "type": "address"
+      }
+    ],
+    "name": "AliasRemoved",
     "type": "event"
   },
   {
@@ -525,11 +562,76 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "partyTheshold",
+        "name": "newMaxAliasCount",
         "type": "uint256"
       }
     ],
-    "name": "BackupPartyRegistered",
+    "name": "MaxAliasCountSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaximumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaximumStakeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMinimumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "MinimumStakeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "PermittedStakerAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "PermittedStakerRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "permittedStakersOn",
+        "type": "bool"
+      }
+    ],
+    "name": "PermittedStakersOnChanged",
     "type": "event"
   },
   {
@@ -542,7 +644,45 @@
         "type": "address"
       }
     ],
-    "name": "ContractResolverAddressSet",
+    "name": "ResolverContractAddressSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "reward",
+        "type": "uint256"
+      }
+    ],
+    "name": "RewardPaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Staked",
     "type": "event"
   },
   {
@@ -550,61 +690,138 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "newTokenRewardPerTokenPerEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokenRewardPerTokenPerEpochSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
-        "name": "backupMemberAddress",
+        "name": "staker",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "NodeAddress",
+        "name": "aliasAccount",
         "type": "address"
       }
     ],
-    "name": "NodeAssignedToBackupMember",
+    "name": "ValidatorNotRewardedBecauseAlias",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          }
-        ],
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
         "indexed": false,
-        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey",
-        "name": "recoveryKey",
-        "type": "tuple"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "name": "RecoveryKeySet",
+    "name": "ValidatorRewarded",
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "BASE_EC_OP_ADDRESS",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ValidatorTokensPenalized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Withdrawn",
+    "type": "event"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "aliasAccount",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "addAlias",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "REALM_ID",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "addPermittedStaker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "stakers",
+        "type": "address[]"
+      }
+    ],
+    "name": "addPermittedStakers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
     "outputs": [
       {
         "internalType": "uint256",
@@ -619,11 +836,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "sender",
+        "name": "account",
         "type": "address"
       }
     ],
-    "name": "_checkValidatorSetForAddress",
+    "name": "checkStakingAmounts",
     "outputs": [
       {
         "internalType": "bool",
@@ -636,10 +853,36 @@
   },
   {
     "inputs": [],
-    "name": "_getStakingViewsFacet",
+    "name": "contractResolver",
     "outputs": [
       {
-        "internalType": "contract StakingViewsFacet",
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStakingAddress",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -649,24 +892,11 @@
   },
   {
     "inputs": [],
-    "name": "getNodeAddressesForDkg",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "nodes",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getNodeForBackupMember",
+    "name": "getTokenAddress",
     "outputs": [
       {
         "internalType": "address",
-        "name": "peer",
+        "name": "",
         "type": "address"
       }
     ],
@@ -674,8 +904,27 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "isPermittedStaker",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "getProofSubmissionForBackupPartyMember",
+    "name": "maximumStake",
     "outputs": [
       {
         "internalType": "uint256",
@@ -688,105 +937,38 @@
   },
   {
     "inputs": [],
-    "name": "getRecoveredPeerIds",
+    "name": "minimumStake",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "node_address",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "old_peer_id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "new_peer_id",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.RecoveredPeerId[]",
-        "name": "peer_ids",
-        "type": "tuple[]"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "penalizeTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "getStakerAddressesForDkg",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "nodes",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-        "name": "recoveryKeys",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "sessionId",
-        "type": "bytes"
-      }
-    ],
-    "name": "receiveNewKeySet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "proof",
-        "type": "bytes"
-      }
-    ],
-    "name": "receiveProofBls12381G1",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "proof",
-        "type": "bytes"
-      }
-    ],
-    "name": "receiveProofsK256",
+    "name": "permittedStakersOn",
     "outputs": [
       {
         "internalType": "bool",
@@ -800,12 +982,12 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "partyMembers",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "aliasAccount",
+        "type": "address"
       }
     ],
-    "name": "registerNewBackupParty",
+    "name": "removeAlias",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -813,29 +995,67 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-        "name": "recoveryKeys",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "sessionId",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
       }
     ],
-    "name": "registerRecoveryKeys",
+    "name": "removePermittedStaker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
+      }
+    ],
+    "name": "restakePenaltyTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "rewardOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "rewardValidator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -854,15 +1074,15 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "setMemberForDkg",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address",
-        "name": "bp",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "newMaxAliasCount",
+        "type": "uint256"
       }
     ],
+    "name": "setMaxAliasCount",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -870,245 +1090,90 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "old_peer_id",
+        "name": "newMaximumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaximumStake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newMinimumStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumStake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "permitted",
+        "type": "bool"
+      }
+    ],
+    "name": "setPermittedStakersOn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "new_peer_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "setRecoveredPeerId",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "CURRENT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "clearNodeRecoveryStatus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getNodeRecoveryStatus",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "node_address",
-            "type": "address"
-          },
-          {
-            "internalType": "enum LibBackupRecoveryStorage.NodeRecoveryStatus",
-            "name": "status",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.NodeRecoveryStatusMap[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "enum LibBackupRecoveryStorage.NodeRecoveryStatus",
-        "name": "status",
-        "type": "uint8"
-      }
-    ],
-    "name": "setNodeRecoveryStatus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes[]",
-        "name": "keys",
-        "type": "bytes[]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "partyMembers",
-        "type": "address[]"
-      }
-    ],
-    "name": "setBackupPartyState",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "allBackupMembersMapped",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "mapped",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getBackupPartyState",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "sessionId",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "partyThreshold",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address[]",
-            "name": "partyMembers",
-            "type": "address[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-            "name": "registeredRecoveryKeys",
-            "type": "tuple[]"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.BackupRecoveryState",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getDecryptionThreshold",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getMemberForNodeDkg",
-    "outputs": [
-      {
         "internalType": "address",
-        "name": "bp",
+        "name": "account",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "stake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getNextBackupPartyMembers",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address[]",
-        "name": "backupMembers",
-        "type": "address[]"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "stakeForValidator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "getNextBackupState",
+    "name": "totalStaked",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "address[]",
-            "name": "partyMembers",
-            "type": "address[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-            "name": "registeredRecoveryKeys",
-            "type": "tuple[]"
-          },
-          {
-            "internalType": "bytes",
-            "name": "sessionId",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.NextStateDownloadable",
-        "name": "nextState",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getNonSubmitingBackupMembersInNextState",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "missingRecoveryMembers",
-        "type": "address[]"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1117,80 +1182,57 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "sessionId",
-        "type": "bytes"
-      }
-    ],
-    "name": "getPastBackupState",
-    "outputs": [
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
+      },
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "sessionId",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "partyThreshold",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address[]",
-            "name": "partyMembers",
-            "type": "address[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct LibBackupRecoveryStorage.RecoveryKey[]",
-            "name": "registeredRecoveryKeys",
-            "type": "tuple[]"
-          }
-        ],
-        "internalType": "struct LibBackupRecoveryStorage.BackupRecoveryState",
-        "name": "partyState",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "transferPenaltyTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "isNodeForDkg",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "inSet",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "isRecoveryDkgCompleted",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "withdrawPenaltyTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
