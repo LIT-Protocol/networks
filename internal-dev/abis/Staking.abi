@@ -460,7 +460,7 @@
         "type": "address"
       }
     ],
-    "name": "getShawdowRealmIdForStakerAddress",
+    "name": "getShadowRealmIdForStakerAddress",
     "outputs": [
       {
         "internalType": "uint256",
@@ -675,6 +675,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",
@@ -1012,6 +1017,12 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "newEpochEndTime",
         "type": "uint256"
       }
@@ -1025,6 +1036,12 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "newEpochLength",
         "type": "uint256"
       }
@@ -1035,6 +1052,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "uint256",
@@ -1324,6 +1347,24 @@
       }
     ],
     "name": "adminResetEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "validatorAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "disabled",
+        "type": "bool"
+      }
+    ],
+    "name": "adminSetValidatorRegisterAttestedWalletDisabled",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -3093,6 +3134,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ValidatorRegisterAttestedWalletDisabled",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "string",
@@ -4201,6 +4247,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -4359,6 +4410,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5379,6 +5435,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5485,6 +5546,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -5591,6 +5657,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator[]",
@@ -6417,6 +6488,11 @@
             "internalType": "uint256",
             "name": "uniqueDelegatingStakerCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "registerAttestedWalletDisabled",
+            "type": "bool"
           }
         ],
         "internalType": "struct LibStakingStorage.Validator",
