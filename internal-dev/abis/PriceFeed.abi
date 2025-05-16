@@ -636,6 +636,11 @@
                 "internalType": "uint256",
                 "name": "uniqueDelegatingStakerCount",
                 "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "registerAttestedWalletDisabled",
+                "type": "bool"
               }
             ],
             "internalType": "struct LibStakingStorage.Validator",
