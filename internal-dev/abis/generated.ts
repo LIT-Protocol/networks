@@ -937,10 +937,10 @@ export const backupRecoveryDiamondAbi = [
   {
     type: 'error',
     inputs: [
-      { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'senderPublicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'blsKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'senderBlsKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+      { name: 'senderSessionId', internalType: 'bytes', type: 'bytes' },
+      { name: 'pubkeysHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'sendersPubkeyHash', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'BackupKeysMismatch',
   },
@@ -983,17 +983,20 @@ export const backupRecoveryDiamondAbi = [
         type: 'tuple',
         components: [
           { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
           { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
           {
             name: 'partyMembers',
             internalType: 'address[]',
             type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
           },
         ],
         indexed: false,
@@ -1073,7 +1076,7 @@ export const backupRecoveryDiamondAbi = [
   {
     type: 'function',
     inputs: [],
-    name: '_calculatePartyThreshold',
+    name: 'REALM_ID',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -1087,96 +1090,9 @@ export const backupRecoveryDiamondAbi = [
   {
     type: 'function',
     inputs: [],
-    name: '_getStakingViewFacet',
+    name: '_getStakingViewsFacet',
     outputs: [
       { name: '', internalType: 'contract StakingViewsFacet', type: 'address' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'allBackupMembersMapped',
-    outputs: [{ name: 'mapped', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getBackupPartyState',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
-        type: 'tuple',
-        components: [
-          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
-          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getDecryptionThreshold',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMemberForNodeDkg',
-    outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getNextBackupPartyMembers',
-    outputs: [
-      { name: 'backupMembers', internalType: 'address[]', type: 'address[]' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getNextBackupState',
-    outputs: [
-      {
-        name: 'nextState',
-        internalType: 'struct LibBackupRecoveryStorage.NextStateDownloadable',
-        type: 'tuple',
-        components: [
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-          {
-            name: 'registeredRecoveryKeys',
-            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
-              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
-            ],
-          },
-        ],
-      },
     ],
     stateMutability: 'view',
   },
@@ -1196,37 +1112,27 @@ export const backupRecoveryDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'sessionId', internalType: 'bytes', type: 'bytes' }],
-    name: 'getPastBackupState',
-    outputs: [
-      {
-        name: 'partyState',
-        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
-        type: 'tuple',
-        components: [
-          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
-          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-        ],
-      },
-    ],
+    inputs: [],
+    name: 'getProofSubmissionForBackupPartyMember',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'getProofSubmissionForBackupPartyMember',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRecoveredPeerIds',
+    outputs: [
+      {
+        name: 'peer_ids',
+        internalType: 'struct LibBackupRecoveryStorage.RecoveredPeerId[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'node_address', internalType: 'address', type: 'address' },
+          { name: 'old_peer_id', internalType: 'uint256', type: 'uint256' },
+          { name: 'new_peer_id', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
     stateMutability: 'view',
   },
   {
@@ -1238,40 +1144,33 @@ export const backupRecoveryDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'isNodeForDkg',
-    outputs: [{ name: 'inSet', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'isRecoveryDkgCompleted',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [
-      { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'encryptedKey', internalType: 'bytes', type: 'bytes' },
+      {
+        name: 'recoveryKeys',
+        internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
       { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'recieveNewKeySet',
+    name: 'receiveNewKeySet',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [{ name: 'proof', internalType: 'bytes', type: 'bytes' }],
-    name: 'recieveProofBls12381G1',
+    name: 'receiveProofBls12381G1',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [{ name: 'proof', internalType: 'bytes', type: 'bytes' }],
-    name: 'recieveProofsK256',
+    name: 'receiveProofsK256',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
@@ -1296,6 +1195,7 @@ export const backupRecoveryDiamondAbi = [
           { name: 'keyType', internalType: 'uint256', type: 'uint256' },
         ],
       },
+      { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'registerRecoveryKeys',
     outputs: [],
@@ -1315,6 +1215,16 @@ export const backupRecoveryDiamondAbi = [
     inputs: [],
     name: 'setMemberForDkg',
     outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'old_peer_id', internalType: 'uint256', type: 'uint256' },
+      { name: 'new_peer_id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setRecoveredPeerId',
+    outputs: [],
     stateMutability: 'nonpayable',
   },
   {
@@ -1368,13 +1278,103 @@ export const backupRecoveryDiamondAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'secp256K1EcdsaPubKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'keys', internalType: 'bytes[]', type: 'bytes[]' },
       { name: 'partyMembers', internalType: 'address[]', type: 'address[]' },
     ],
     name: 'setBackupPartyState',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'allBackupMembersMapped',
+    outputs: [{ name: 'mapped', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBackupPartyState',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
+        type: 'tuple',
+        components: [
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getDecryptionThreshold',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMemberForNodeDkg',
+    outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getNextBackupPartyMembers',
+    outputs: [
+      { name: 'backupMembers', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getNextBackupState',
+    outputs: [
+      {
+        name: 'nextState',
+        internalType: 'struct LibBackupRecoveryStorage.NextStateDownloadable',
+        type: 'tuple',
+        components: [
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1389,6 +1389,51 @@ export const backupRecoveryDiamondAbi = [
     ],
     stateMutability: 'view',
   },
+  {
+    type: 'function',
+    inputs: [{ name: 'sessionId', internalType: 'bytes', type: 'bytes' }],
+    name: 'getPastBackupState',
+    outputs: [
+      {
+        name: 'partyState',
+        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
+        type: 'tuple',
+        components: [
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'isNodeForDkg',
+    outputs: [{ name: 'inSet', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'isRecoveryDkgCompleted',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1399,10 +1444,10 @@ export const backupRecoveryFacetAbi = [
   {
     type: 'error',
     inputs: [
-      { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'senderPublicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'blsKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'senderBlsKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+      { name: 'senderSessionId', internalType: 'bytes', type: 'bytes' },
+      { name: 'pubkeysHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'sendersPubkeyHash', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'BackupKeysMismatch',
   },
@@ -1445,17 +1490,20 @@ export const backupRecoveryFacetAbi = [
         type: 'tuple',
         components: [
           { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
           { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
           {
             name: 'partyMembers',
             internalType: 'address[]',
             type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
           },
         ],
         indexed: false,
@@ -1535,7 +1583,7 @@ export const backupRecoveryFacetAbi = [
   {
     type: 'function',
     inputs: [],
-    name: '_calculatePartyThreshold',
+    name: 'REALM_ID',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -1549,96 +1597,9 @@ export const backupRecoveryFacetAbi = [
   {
     type: 'function',
     inputs: [],
-    name: '_getStakingViewFacet',
+    name: '_getStakingViewsFacet',
     outputs: [
       { name: '', internalType: 'contract StakingViewsFacet', type: 'address' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'allBackupMembersMapped',
-    outputs: [{ name: 'mapped', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getBackupPartyState',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
-        type: 'tuple',
-        components: [
-          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
-          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getDecryptionThreshold',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMemberForNodeDkg',
-    outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getNextBackupPartyMembers',
-    outputs: [
-      { name: 'backupMembers', internalType: 'address[]', type: 'address[]' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getNextBackupState',
-    outputs: [
-      {
-        name: 'nextState',
-        internalType: 'struct LibBackupRecoveryStorage.NextStateDownloadable',
-        type: 'tuple',
-        components: [
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-          {
-            name: 'registeredRecoveryKeys',
-            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
-              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
-            ],
-          },
-        ],
-      },
     ],
     stateMutability: 'view',
   },
@@ -1658,37 +1619,27 @@ export const backupRecoveryFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'sessionId', internalType: 'bytes', type: 'bytes' }],
-    name: 'getPastBackupState',
-    outputs: [
-      {
-        name: 'partyState',
-        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
-        type: 'tuple',
-        components: [
-          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
-          { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'secp256K1EcdsaPubKey',
-            internalType: 'bytes',
-            type: 'bytes',
-          },
-          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'partyMembers',
-            internalType: 'address[]',
-            type: 'address[]',
-          },
-        ],
-      },
-    ],
+    inputs: [],
+    name: 'getProofSubmissionForBackupPartyMember',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'getProofSubmissionForBackupPartyMember',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRecoveredPeerIds',
+    outputs: [
+      {
+        name: 'peer_ids',
+        internalType: 'struct LibBackupRecoveryStorage.RecoveredPeerId[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'node_address', internalType: 'address', type: 'address' },
+          { name: 'old_peer_id', internalType: 'uint256', type: 'uint256' },
+          { name: 'new_peer_id', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
     stateMutability: 'view',
   },
   {
@@ -1700,40 +1651,33 @@ export const backupRecoveryFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'isNodeForDkg',
-    outputs: [{ name: 'inSet', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'isRecoveryDkgCompleted',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [
-      { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'encryptedKey', internalType: 'bytes', type: 'bytes' },
+      {
+        name: 'recoveryKeys',
+        internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
       { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'recieveNewKeySet',
+    name: 'receiveNewKeySet',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [{ name: 'proof', internalType: 'bytes', type: 'bytes' }],
-    name: 'recieveProofBls12381G1',
+    name: 'receiveProofBls12381G1',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [{ name: 'proof', internalType: 'bytes', type: 'bytes' }],
-    name: 'recieveProofsK256',
+    name: 'receiveProofsK256',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
@@ -1758,6 +1702,7 @@ export const backupRecoveryFacetAbi = [
           { name: 'keyType', internalType: 'uint256', type: 'uint256' },
         ],
       },
+      { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'registerRecoveryKeys',
     outputs: [],
@@ -1777,6 +1722,16 @@ export const backupRecoveryFacetAbi = [
     inputs: [],
     name: 'setMemberForDkg',
     outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'old_peer_id', internalType: 'uint256', type: 'uint256' },
+      { name: 'new_peer_id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setRecoveredPeerId',
+    outputs: [],
     stateMutability: 'nonpayable',
   },
 ] as const;
@@ -1844,8 +1799,7 @@ export const backupRecoveryTestFacetAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'bls12381G1EncKey', internalType: 'bytes', type: 'bytes' },
-      { name: 'secp256K1EcdsaPubKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'keys', internalType: 'bytes[]', type: 'bytes[]' },
       { name: 'partyMembers', internalType: 'address[]', type: 'address[]' },
     ],
     name: 'setBackupPartyState',
@@ -1855,10 +1809,101 @@ export const backupRecoveryTestFacetAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BackupRecoveryViewFacet
+// BackupRecoveryViewsFacet
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const backupRecoveryViewFacetAbi = [
+export const backupRecoveryViewsFacetAbi = [
+  {
+    type: 'function',
+    inputs: [],
+    name: 'allBackupMembersMapped',
+    outputs: [{ name: 'mapped', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBackupPartyState',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
+        type: 'tuple',
+        components: [
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getDecryptionThreshold',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMemberForNodeDkg',
+    outputs: [{ name: 'bp', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getNextBackupPartyMembers',
+    outputs: [
+      { name: 'backupMembers', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getNextBackupState',
+    outputs: [
+      {
+        name: 'nextState',
+        internalType: 'struct LibBackupRecoveryStorage.NextStateDownloadable',
+        type: 'tuple',
+        components: [
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
   {
     type: 'function',
     inputs: [],
@@ -1870,6 +1915,51 @@ export const backupRecoveryViewFacetAbi = [
         type: 'address[]',
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'sessionId', internalType: 'bytes', type: 'bytes' }],
+    name: 'getPastBackupState',
+    outputs: [
+      {
+        name: 'partyState',
+        internalType: 'struct LibBackupRecoveryStorage.BackupRecoveryState',
+        type: 'tuple',
+        components: [
+          { name: 'sessionId', internalType: 'bytes', type: 'bytes' },
+          { name: 'partyThreshold', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'partyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'registeredRecoveryKeys',
+            internalType: 'struct LibBackupRecoveryStorage.RecoveryKey[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+              { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'isNodeForDkg',
+    outputs: [{ name: 'inSet', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'isRecoveryDkgCompleted',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
 ] as const;
@@ -2032,13 +2122,6 @@ export const contractResolverAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'CLONE_NET_CONTRACT',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
@@ -2047,6 +2130,13 @@ export const contractResolverAbi = [
     type: 'function',
     inputs: [],
     name: 'DOMAIN_WALLET_REGISTRY',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'FORWARDER_CONTRACT',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
@@ -4967,6 +5057,41 @@ export const erc20VotesAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC2771
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc2771Abi = [
+  { type: 'error', inputs: [], name: 'CallerNotOwner' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERC721BurnableUpgradeable
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5558,6 +5683,189 @@ export const erc721UpgradeableAbi = [
     name: 'transferFrom',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FixedPointMathLib
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const fixedPointMathLibAbi = [
+  { type: 'error', inputs: [], name: 'DivFailed' },
+  { type: 'error', inputs: [], name: 'DivWadFailed' },
+  { type: 'error', inputs: [], name: 'ExpOverflow' },
+  { type: 'error', inputs: [], name: 'FactorialOverflow' },
+  { type: 'error', inputs: [], name: 'FullMulDivFailed' },
+  { type: 'error', inputs: [], name: 'LnWadUndefined' },
+  { type: 'error', inputs: [], name: 'MantissaOverflow' },
+  { type: 'error', inputs: [], name: 'MulDivFailed' },
+  { type: 'error', inputs: [], name: 'MulWadFailed' },
+  { type: 'error', inputs: [], name: 'OutOfDomain' },
+  { type: 'error', inputs: [], name: 'RPowOverflow' },
+  { type: 'error', inputs: [], name: 'SDivWadFailed' },
+  { type: 'error', inputs: [], name: 'SMulWadFailed' },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Forwarder
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const forwarderAbi = [
+  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
+  { type: 'error', inputs: [], name: 'InvalidShortString' },
+  { type: 'error', inputs: [], name: 'SignatureDoesNotMatch' },
+  {
+    type: 'error',
+    inputs: [{ name: 'str', internalType: 'string', type: 'string' }],
+    name: 'StringTooLong',
+  },
+  { type: 'error', inputs: [], name: 'TransactionRevertedSilently' },
+  { type: 'event', anonymous: false, inputs: [], name: 'EIP712DomainChanged' },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'eip712Domain',
+    outputs: [
+      { name: 'fields', internalType: 'bytes1', type: 'bytes1' },
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'version', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+      { name: 'verifyingContract', internalType: 'address', type: 'address' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'extensions', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'req',
+        internalType: 'struct Forwarder.ForwardRequest',
+        type: 'tuple',
+        components: [
+          { name: 'from', internalType: 'address', type: 'address' },
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'gas', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'execute',
+    outputs: [
+      { name: '', internalType: 'bool', type: 'bool' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'from', internalType: 'address', type: 'address' }],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'req',
+        internalType: 'struct Forwarder.ForwardRequest',
+        type: 'tuple',
+        components: [
+          { name: 'from', internalType: 'address', type: 'address' },
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'gas', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'verify',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FunctionSelectorHelper
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const functionSelectorHelperAbi = [
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSelectorsStakingAcrossRealmsFacet',
+    outputs: [{ name: '', internalType: 'bytes4[]', type: 'bytes4[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSelectorsStakingAdminFacet',
+    outputs: [{ name: '', internalType: 'bytes4[]', type: 'bytes4[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSelectorsStakingFacet',
+    outputs: [{ name: '', internalType: 'bytes4[]', type: 'bytes4[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSelectorsStakingValidatorFacet',
+    outputs: [{ name: '', internalType: 'bytes4[]', type: 'bytes4[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSelectorsStakingViewsFacet',
+    outputs: [{ name: '', internalType: 'bytes4[]', type: 'bytes4[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSignaturesStakingAcrossRealmsFacet',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSignaturesStakingAdminFacet',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSignaturesStakingFacet',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSignaturesStakingValidatorFacet',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getSignaturesStakingViewsFacet',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
   },
 ] as const;
 
@@ -6569,267 +6877,6 @@ export const ierc173Abi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC20
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc20Abi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'spender',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'value',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'value',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'spender', internalType: 'address', type: 'address' },
-    ],
-    name: 'allowance',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transfer',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC20Metadata
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc20MetadataAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'spender',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'value',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'value',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'spender', internalType: 'address', type: 'address' },
-    ],
-    name: 'allowance',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'decimals',
-    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transfer',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC20Permit
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc20PermitAbi = [
-  {
-    type: 'function',
-    inputs: [],
-    name: 'DOMAIN_SEPARATOR',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'nonces',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'deadline', internalType: 'uint256', type: 'uint256' },
-      { name: 'v', internalType: 'uint8', type: 'uint8' },
-      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-      { name: 's', internalType: 'bytes32', type: 'bytes32' },
-    ],
-    name: 'permit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IERC5267
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -6997,1088 +7044,6 @@ export const ierc6372Abi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721Abi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Enumerable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721EnumerableAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'index', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'tokenOfOwnerByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721EnumerableUpgradeable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721EnumerableUpgradeableAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'index', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'tokenOfOwnerByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Metadata
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721MetadataAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721MetadataUpgradeable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721MetadataUpgradeableAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Receiver
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721ReceiverAbi = [
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'onERC721Received',
-    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721ReceiverUpgradeable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721ReceiverUpgradeableAbi = [
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'onERC721Received',
-    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Upgradeable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721UpgradeableAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IHDKeyDeriver
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -8118,6 +7083,249 @@ export const iKeyDeriverAbi = [
       { name: '', internalType: 'bytes', type: 'bytes' },
     ],
     stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMulticall3
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iMulticall3Abi = [
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'returnData', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call3[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'allowFailure', internalType: 'bool', type: 'bool' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate3',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct IMulticall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call3Value[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'allowFailure', internalType: 'bool', type: 'bool' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate3Value',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct IMulticall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'blockAndAggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      {
+        name: 'returnData',
+        internalType: 'struct IMulticall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBasefee',
+    outputs: [{ name: 'basefee', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'blockNumber', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBlockHash',
+    outputs: [{ name: 'blockHash', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlockNumber',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getChainId',
+    outputs: [{ name: 'chainid', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockCoinbase',
+    outputs: [{ name: 'coinbase', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockDifficulty',
+    outputs: [{ name: 'difficulty', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockGasLimit',
+    outputs: [{ name: 'gaslimit', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockTimestamp',
+    outputs: [{ name: 'timestamp', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'addr', internalType: 'address', type: 'address' }],
+    name: 'getEthBalance',
+    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getLastBlockHash',
+    outputs: [{ name: 'blockHash', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'requireSuccess', internalType: 'bool', type: 'bool' },
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'tryAggregate',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct IMulticall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'requireSuccess', internalType: 'bool', type: 'bool' },
+      {
+        name: 'calls',
+        internalType: 'struct IMulticall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'tryBlockAndAggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      {
+        name: 'returnData',
+        internalType: 'struct IMulticall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'payable',
   },
 ] as const;
 
@@ -9309,6 +8517,7 @@ export const ledgerDiamondAbi = [
   { type: 'error', inputs: [], name: 'InsufficientWithdrawAmount' },
   { type: 'error', inputs: [], name: 'MustBeNonzero' },
   { type: 'error', inputs: [], name: 'NodeNotStakingNode' },
+  { type: 'error', inputs: [], name: 'PercentageMustBeLessThan100' },
   { type: 'error', inputs: [], name: 'SessionAlreadyUsed' },
   { type: 'error', inputs: [], name: 'ValueExceedsUint128MaxLimit' },
   { type: 'error', inputs: [], name: 'WithdrawalDelayNotPassed' },
@@ -9369,6 +8578,32 @@ export const ledgerDiamondAbi = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'FoundationRewardsWithdrawn',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'percentage',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LitFoundationSplitPercentageSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'user', internalType: 'address', type: 'address', indexed: true },
       {
         name: 'amount',
@@ -9405,6 +8640,19 @@ export const ledgerDiamondAbi = [
       },
     ],
     name: 'RewardWithdrawRequest',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
   },
   {
     type: 'event',
@@ -9512,6 +8760,13 @@ export const ledgerDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
     name: 'latestRewardWithdrawRequest',
     outputs: [
@@ -9546,6 +8801,20 @@ export const ledgerDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'litFoundationRewards',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'litFoundationSplitPercentage',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
     name: 'requestRewardWithdraw',
     outputs: [],
@@ -9574,8 +8843,22 @@ export const ledgerDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'percentage', internalType: 'uint256', type: 'uint256' }],
+    name: 'setLitFoundationSplitPercentage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'delay', internalType: 'uint256', type: 'uint256' }],
     name: 'setRewardWithdrawDelay',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -9588,6 +8871,13 @@ export const ledgerDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
+    name: 'stableBalance',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'userWithdrawDelay',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -9597,6 +8887,13 @@ export const ledgerDiamondAbi = [
     type: 'function',
     inputs: [{ name: 'amount', internalType: 'int256', type: 'int256' }],
     name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdrawFoundationRewards',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -9621,6 +8918,7 @@ export const ledgerFacetAbi = [
   { type: 'error', inputs: [], name: 'InsufficientWithdrawAmount' },
   { type: 'error', inputs: [], name: 'MustBeNonzero' },
   { type: 'error', inputs: [], name: 'NodeNotStakingNode' },
+  { type: 'error', inputs: [], name: 'PercentageMustBeLessThan100' },
   { type: 'error', inputs: [], name: 'SessionAlreadyUsed' },
   { type: 'error', inputs: [], name: 'ValueExceedsUint128MaxLimit' },
   { type: 'error', inputs: [], name: 'WithdrawalDelayNotPassed' },
@@ -9681,6 +8979,32 @@ export const ledgerFacetAbi = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'FoundationRewardsWithdrawn',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'percentage',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LitFoundationSplitPercentageSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'user', internalType: 'address', type: 'address', indexed: true },
       {
         name: 'amount',
@@ -9717,6 +9041,19 @@ export const ledgerFacetAbi = [
       },
     ],
     name: 'RewardWithdrawRequest',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
   },
   {
     type: 'event',
@@ -9824,6 +9161,13 @@ export const ledgerFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
     name: 'latestRewardWithdrawRequest',
     outputs: [
@@ -9858,6 +9202,20 @@ export const ledgerFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'litFoundationRewards',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'litFoundationSplitPercentage',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
     name: 'requestRewardWithdraw',
     outputs: [],
@@ -9886,8 +9244,22 @@ export const ledgerFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'percentage', internalType: 'uint256', type: 'uint256' }],
+    name: 'setLitFoundationSplitPercentage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'delay', internalType: 'uint256', type: 'uint256' }],
     name: 'setRewardWithdrawDelay',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -9900,6 +9272,13 @@ export const ledgerFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
+    name: 'stableBalance',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'userWithdrawDelay',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -9909,6 +9288,13 @@ export const ledgerFacetAbi = [
     type: 'function',
     inputs: [{ name: 'amount', internalType: 'int256', type: 'int256' }],
     name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdrawFoundationRewards',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -10039,6 +9425,17 @@ export const multisenderAbi = [
       { name: 'tokenContract', internalType: 'address', type: 'address' },
     ],
     name: 'sendTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_recipients', internalType: 'address[]', type: 'address[]' },
+      { name: 'tokenContract', internalType: 'address', type: 'address' },
+      { name: 'amountPerRecipient', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'sendTokensExact',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -11098,7 +10495,7 @@ export const pkpnftAbi = [
       },
       {
         name: '_args',
-        internalType: 'struct StakingArgs',
+        internalType: 'struct PKPNFTArgs',
         type: 'tuple',
         components: [
           { name: 'owner', internalType: 'address', type: 'address' },
@@ -11645,6 +11042,19 @@ export const pkpnftDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
@@ -11680,6 +11090,7 @@ export const pkpnftDiamondAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
       {
@@ -11769,6 +11180,13 @@ export const pkpnftDiamondAbi = [
     type: 'function',
     inputs: [],
     name: 'getStakingAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -11896,6 +11314,13 @@ export const pkpnftDiamondAbi = [
     type: 'function',
     inputs: [{ name: 'newMintCost', internalType: 'uint256', type: 'uint256' }],
     name: 'setMintCost',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -12096,6 +11521,19 @@ export const pkpnftFacetAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
@@ -12131,6 +11569,7 @@ export const pkpnftFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
       {
@@ -12220,6 +11659,13 @@ export const pkpnftFacetAbi = [
     type: 'function',
     inputs: [],
     name: 'getStakingAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -12347,6 +11793,13 @@ export const pkpnftFacetAbi = [
     type: 'function',
     inputs: [{ name: 'newMintCost', internalType: 'uint256', type: 'uint256' }],
     name: 'setMintCost',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -13097,6 +12550,19 @@ export const pkpPermissionsDiamondAbi = [
     name: 'RootHashUpdated',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
@@ -13293,6 +12759,13 @@ export const pkpPermissionsDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'authMethodType', internalType: 'uint256', type: 'uint256' },
       { name: 'id', internalType: 'bytes', type: 'bytes' },
@@ -13404,6 +12877,13 @@ export const pkpPermissionsDiamondAbi = [
       { name: 'root', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'setRootHash',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -13577,6 +13057,19 @@ export const pkpPermissionsFacetAbi = [
     name: 'RootHashUpdated',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
@@ -13773,6 +13266,13 @@ export const pkpPermissionsFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'authMethodType', internalType: 'uint256', type: 'uint256' },
       { name: 'id', internalType: 'bytes', type: 'bytes' },
@@ -13884,6 +13384,13 @@ export const pkpPermissionsFacetAbi = [
       { name: 'root', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'setRootHash',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -14683,6 +14190,571 @@ export const paymentDelegationFacetAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PermittedValidatorsTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const permittedValidatorsTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToNotPermit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_PermittedValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToNotPermitRealm1',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToNotPermitRealm2',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_PermittedValidators_2Realms',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PriceFeed
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15171,6 +15243,19 @@ export const priceFeedDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'stakingAddress',
         internalType: 'address',
         type: 'address',
@@ -15202,7 +15287,43 @@ export const priceFeedDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getNodeCapacityConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibPriceFeedStorage.NodeCapacityConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'pkpSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'encSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'globalMaxCapacity',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'productIds', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'getNodesForRequest',
@@ -15239,6 +15360,52 @@ export const priceFeedDiamondAbi = [
                 internalType: 'uint256',
                 type: 'uint256',
               },
+              {
+                name: 'commissionRate',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpoch',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+              {
+                name: 'delegatedStakeAmount',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'delegatedStakeWeight',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpochClaimedFixedCostRewards',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpochClaimedCommission',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'operatorAddress',
+                internalType: 'address',
+                type: 'address',
+              },
+              {
+                name: 'uniqueDelegatingStakerCount',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'registerAttestedWalletDisabled',
+                internalType: 'bool',
+                type: 'bool',
+              },
             ],
           },
           { name: 'prices', internalType: 'uint256[]', type: 'uint256[]' },
@@ -15251,6 +15418,13 @@ export const priceFeedDiamondAbi = [
     type: 'function',
     inputs: [],
     name: 'getStakingAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -15321,6 +15495,48 @@ export const priceFeedDiamondAbi = [
       { name: 'productIds', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'setMaxNetworkPrices',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'config',
+        internalType: 'struct LibPriceFeedStorage.NodeCapacityConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'pkpSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'encSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'globalMaxCapacity',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'setNodeCapacityConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -15395,6 +15611,19 @@ export const priceFeedFacetAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'stakingAddress',
         internalType: 'address',
         type: 'address',
@@ -15426,7 +15655,43 @@ export const priceFeedFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getNodeCapacityConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibPriceFeedStorage.NodeCapacityConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'pkpSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'encSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'globalMaxCapacity',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'productIds', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'getNodesForRequest',
@@ -15463,6 +15728,52 @@ export const priceFeedFacetAbi = [
                 internalType: 'uint256',
                 type: 'uint256',
               },
+              {
+                name: 'commissionRate',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpoch',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+              {
+                name: 'delegatedStakeAmount',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'delegatedStakeWeight',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpochClaimedFixedCostRewards',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'lastRewardEpochClaimedCommission',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'operatorAddress',
+                internalType: 'address',
+                type: 'address',
+              },
+              {
+                name: 'uniqueDelegatingStakerCount',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'registerAttestedWalletDisabled',
+                internalType: 'bool',
+                type: 'bool',
+              },
             ],
           },
           { name: 'prices', internalType: 'uint256[]', type: 'uint256[]' },
@@ -15475,6 +15786,13 @@ export const priceFeedFacetAbi = [
     type: 'function',
     inputs: [],
     name: 'getStakingAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -15545,6 +15863,48 @@ export const priceFeedFacetAbi = [
       { name: 'productIds', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'setMaxNetworkPrices',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'config',
+        internalType: 'struct LibPriceFeedStorage.NodeCapacityConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'pkpSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'encSignMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'globalMaxCapacity',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'setNodeCapacityConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -16054,6 +16414,31 @@ export const pubkeyRouterDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'message',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'DebugEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'tokenId',
         internalType: 'uint256',
         type: 'uint256',
@@ -16105,6 +16490,38 @@ export const pubkeyRouterDiamondAbi = [
     name: 'RootKeySet',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'ToggleEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
@@ -16134,6 +16551,7 @@ export const pubkeyRouterDiamondAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'signatures',
         internalType: 'struct IPubkeyRouter.Signature[]',
@@ -16145,11 +16563,6 @@ export const pubkeyRouterDiamondAbi = [
         ],
       },
       { name: 'signedMessage', internalType: 'bytes', type: 'bytes' },
-      {
-        name: 'stakingContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
     ],
     name: 'checkNodeSignatures',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -16239,6 +16652,13 @@ export const pubkeyRouterDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'isRouted',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -16298,6 +16718,13 @@ export const pubkeyRouterDiamondAbi = [
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'setRoutingDataAsAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -16349,6 +16776,31 @@ export const pubkeyRouterFacetAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'message',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'DebugEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'tokenId',
         internalType: 'uint256',
         type: 'uint256',
@@ -16400,6 +16852,38 @@ export const pubkeyRouterFacetAbi = [
     name: 'RootKeySet',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'ToggleEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
@@ -16429,6 +16913,7 @@ export const pubkeyRouterFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'signatures',
         internalType: 'struct IPubkeyRouter.Signature[]',
@@ -16440,11 +16925,6 @@ export const pubkeyRouterFacetAbi = [
         ],
       },
       { name: 'signedMessage', internalType: 'bytes', type: 'bytes' },
-      {
-        name: 'stakingContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
     ],
     name: 'checkNodeSignatures',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -16534,6 +17014,13 @@ export const pubkeyRouterFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'isRouted',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -16598,6 +17085,13 @@ export const pubkeyRouterFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [
       {
         name: 'stakingContractAddress',
@@ -16617,1667 +17111,6 @@ export const pubkeyRouterFacetAbi = [
     name: 'voteForRootKeys',
     outputs: [],
     stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RateLimitNFT
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const rateLimitNftAbi = [
-  {
-    type: 'constructor',
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-      },
-      {
-        name: '_args',
-        internalType: 'struct StakingArgs',
-        type: 'tuple',
-        components: [
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'init', internalType: 'address', type: 'address' },
-          { name: 'initCalldata', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'contractResolver',
-            internalType: 'address',
-            type: 'address',
-          },
-          {
-            name: 'env',
-            internalType: 'enum ContractResolver.Env',
-            type: 'uint8',
-          },
-        ],
-      },
-    ],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotAddFunctionToDiamondThatAlreadyExists',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotAddSelectorsToZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveFunctionThatDoesNotExist',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionThatDoesNotExists',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotReplaceFunctionsFromFacetWithZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
-    ],
-    name: 'FunctionNotFound',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_action', internalType: 'uint8', type: 'uint8' }],
-    name: 'IncorrectFacetCutAction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: '_initializationContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'InitializationFunctionReverted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_contractAddress', internalType: 'address', type: 'address' },
-      { name: '_message', internalType: 'string', type: 'string' },
-    ],
-    name: 'NoBytecodeAtAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'NoSelectorsProvidedForFacetForCut',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'RemoveFacetAddressMustBeZeroAddress',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-        indexed: false,
-      },
-      {
-        name: '_init',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: '_calldata',
-        internalType: 'bytes',
-        type: 'bytes',
-        indexed: false,
-      },
-    ],
-    name: 'DiamondCut',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'previousOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  { type: 'fallback', stateMutability: 'payable' },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RateLimitNFTDiamond
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const rateLimitNftDiamondAbi = [
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotAddFunctionToDiamondThatAlreadyExists',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotAddSelectorsToZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveFunctionThatDoesNotExist',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionThatDoesNotExists',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotReplaceFunctionsFromFacetWithZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_action', internalType: 'uint8', type: 'uint8' }],
-    name: 'IncorrectFacetCutAction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: '_initializationContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'InitializationFunctionReverted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_contractAddress', internalType: 'address', type: 'address' },
-      { name: '_message', internalType: 'string', type: 'string' },
-    ],
-    name: 'NoBytecodeAtAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'NoSelectorsProvidedForFacetForCut',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_user', internalType: 'address', type: 'address' },
-      { name: '_contractOwner', internalType: 'address', type: 'address' },
-    ],
-    name: 'NotContractOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'RemoveFacetAddressMustBeZeroAddress',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-        indexed: false,
-      },
-      {
-        name: '_init',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: '_calldata',
-        internalType: 'bytes',
-        type: 'bytes',
-        indexed: false,
-      },
-    ],
-    name: 'DiamondCut',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-      },
-      { name: '_init', internalType: 'address', type: 'address' },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'diamondCut',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
-    ],
-    name: 'facetAddress',
-    outputs: [
-      { name: 'facetAddress_', internalType: 'address', type: 'address' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'facetAddresses',
-    outputs: [
-      { name: 'facetAddresses_', internalType: 'address[]', type: 'address[]' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_facet', internalType: 'address', type: 'address' }],
-    name: 'facetFunctionSelectors',
-    outputs: [
-      {
-        name: '_facetFunctionSelectors',
-        internalType: 'bytes4[]',
-        type: 'bytes4[]',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'facets',
-    outputs: [
-      {
-        name: 'facets_',
-        internalType: 'struct IDiamondLoupe.Facet[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'previousOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: 'owner_', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newAdditionalRequestsPerKilosecondCost',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'AdditionalRequestsPerKilosecondCostSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newFreeMintSigner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'FreeMintSignerSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newFreeRequestsPerRateLimitWindow',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'FreeRequestsPerRateLimitWindowSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'version', internalType: 'uint8', type: 'uint8', indexed: false },
-    ],
-    name: 'Initialized',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newRLIHolderRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RLIHolderRateLimitWindowSecondsSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RateLimitWindowSecondsSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Withdrew',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'burn',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'msgHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'v', internalType: 'uint8', type: 'uint8' },
-      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'sVal', internalType: 'bytes32', type: 'bytes32' },
-    ],
-    name: 'freeMint',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'initialize',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'expiresAt', internalType: 'uint256', type: 'uint256' }],
-    name: 'mint',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newAdditionalRequestsPerKilosecondCost',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setAdditionalRequestsPerKilosecondCost',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newFreeMintSigner', internalType: 'address', type: 'address' },
-    ],
-    name: 'setFreeMintSigner',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newFreeRequestsPerRateLimitWindow',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setFreeRequestsPerRateLimitWindow',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newMaxExpirationSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setMaxExpirationSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newMaxRequestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setMaxRequestsPerKilosecond',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newRLIHolderRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setRLIHolderRateLimitWindowSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setRateLimitWindowSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'index', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'tokenOfOwnerByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'RLIHolderRateLimitWindowSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'additionalRequestsPerKilosecondCost',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'calculateCost',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'payingAmount', internalType: 'uint256', type: 'uint256' },
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'calculateRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'capacity',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibRateLimitNFTStorage.RateLimit',
-        type: 'tuple',
-        components: [
-          {
-            name: 'requestsPerKilosecond',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'requestedRequestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'checkBelowMaxRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'currentSoldRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'defaultRateLimitWindowSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'msgHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'v', internalType: 'uint8', type: 'uint8' },
-      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'sVal', internalType: 'bytes32', type: 'bytes32' },
-    ],
-    name: 'freeMintSigTest',
-    outputs: [],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'freeMintSigner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'freeRequestsPerRateLimitWindow',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'isExpired',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maxExpirationSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maxRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'hash', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'prefixed',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-    stateMutability: 'pure',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'msgHash', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'redeemedFreeMints',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'tokenIdCounter',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenSVG',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'expiresAt', internalType: 'uint256', type: 'uint256' }],
-    name: 'totalSoldRequestsPerKilosecondByExpirationTime',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RateLimitNFTFacet
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const rateLimitNftFacetAbi = [
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newAdditionalRequestsPerKilosecondCost',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'AdditionalRequestsPerKilosecondCostSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'approved',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'operator',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newFreeMintSigner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'FreeMintSignerSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newFreeRequestsPerRateLimitWindow',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'FreeRequestsPerRateLimitWindowSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'version', internalType: 'uint8', type: 'uint8', indexed: false },
-    ],
-    name: 'Initialized',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newRLIHolderRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RLIHolderRateLimitWindowSecondsSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RateLimitWindowSecondsSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      {
-        name: 'tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Withdrew',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'burn',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'msgHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'v', internalType: 'uint8', type: 'uint8' },
-      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'sVal', internalType: 'bytes32', type: 'bytes32' },
-    ],
-    name: 'freeMint',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'initialize',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'expiresAt', internalType: 'uint256', type: 'uint256' }],
-    name: 'mint',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newAdditionalRequestsPerKilosecondCost',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setAdditionalRequestsPerKilosecondCost',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newFreeMintSigner', internalType: 'address', type: 'address' },
-    ],
-    name: 'setFreeMintSigner',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newFreeRequestsPerRateLimitWindow',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setFreeRequestsPerRateLimitWindow',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newMaxExpirationSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setMaxExpirationSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newMaxRequestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setMaxRequestsPerKilosecond',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newRLIHolderRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setRLIHolderRateLimitWindowSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newRateLimitWindowSeconds',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setRateLimitWindowSeconds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'index', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'tokenOfOwnerByIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalSupply',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RateLimitNFTViewsFacet
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const rateLimitNftViewsFacetAbi = [
-  {
-    type: 'function',
-    inputs: [],
-    name: 'RLIHolderRateLimitWindowSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'additionalRequestsPerKilosecondCost',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'calculateCost',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'payingAmount', internalType: 'uint256', type: 'uint256' },
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'calculateRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'capacity',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibRateLimitNFTStorage.RateLimit',
-        type: 'tuple',
-        components: [
-          {
-            name: 'requestsPerKilosecond',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'requestedRequestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'checkBelowMaxRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'currentSoldRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'defaultRateLimitWindowSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'expiresAt', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestsPerKilosecond',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      { name: 'msgHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'v', internalType: 'uint8', type: 'uint8' },
-      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'sVal', internalType: 'bytes32', type: 'bytes32' },
-    ],
-    name: 'freeMintSigTest',
-    outputs: [],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'freeMintSigner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'freeRequestsPerRateLimitWindow',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'isExpired',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maxExpirationSeconds',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maxRequestsPerKilosecond',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'hash', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'prefixed',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-    stateMutability: 'pure',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'msgHash', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'redeemedFreeMints',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'tokenIdCounter',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenSVG',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'expiresAt', internalType: 'uint256', type: 'uint256' }],
-    name: 'totalSoldRequestsPerKilosecondByExpirationTime',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ReentrancyGuardUpgradeable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const reentrancyGuardUpgradeableAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'version', internalType: 'uint8', type: 'uint8', indexed: false },
-    ],
-    name: 'Initialized',
   },
 ] as const;
 
@@ -18888,6 +17721,566 @@ export const releaseRegisterAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SafeCast
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const safeCastAbi = [
+  {
+    type: 'error',
+    inputs: [
+      { name: 'bits', internalType: 'uint8', type: 'uint8' },
+      { name: 'value', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'SafeCastOverflowedIntDowncast',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    name: 'SafeCastOverflowedIntToUint',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'bits', internalType: 'uint8', type: 'uint8' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SafeCastOverflowedUintDowncast',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    name: 'SafeCastOverflowedUintToInt',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SetupAndUtils
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const setupAndUtilsAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ShortStrings
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19100,22 +18493,178 @@ export const stakingAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingAcrossRealmsFacet
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingAcrossRealmsFacetAbi = [
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'RealmIdNotFound',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllUnkickedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getCurrentRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getShadowRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'isRecentValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInCurrentEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInCurrentOrNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'nodeAddressToStakerAddressAcrossRealms',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'numRealms',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'validator_by_staker_address',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator',
+        type: 'tuple',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // StakingAdminFacet
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const stakingAdminFacetAbi = [
   { type: 'error', inputs: [], name: 'CallerNotOwner' },
   { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
+  { type: 'error', inputs: [], name: 'CannotModifyUnfrozen' },
+  { type: 'error', inputs: [], name: 'CannotStakeZero' },
+  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
+  { type: 'error', inputs: [], name: 'InvalidSlashPercentage' },
   {
     type: 'error',
     inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'MustBeInActiveOrUnlockedOrPausedState',
+    name: 'MinTimeLockNotMet',
   },
   {
     type: 'error',
@@ -19128,94 +18677,49 @@ export const stakingAdminFacetAbi = [
     ],
     name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
   },
+  { type: 'error', inputs: [], name: 'NoEmptyStakingSlot' },
   {
-    type: 'event',
-    anonymous: false,
+    type: 'error',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'StakeAmountNotMet',
+  },
+  {
+    type: 'error',
     inputs: [
+      { name: 'validator', internalType: 'address', type: 'address' },
       {
-        name: 'reason',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'config',
-        internalType: 'struct LibStakingStorage.ComplaintConfig',
-        type: 'tuple',
-        components: [
-          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
-          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'kickPenaltyPercent',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-        ],
-        indexed: false,
+        name: 'validatorsInNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
       },
     ],
-    name: 'ComplaintConfigSet',
+    name: 'ValidatorIsNotInNextEpoch',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'newTokenRewardPerTokenPerEpoch',
+        name: 'dataType',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newKeyTypes',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-        indexed: false,
-      },
-      {
-        name: 'newMinimumValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxConcurrentRequests',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxTripleCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMinTripleCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newPeerCheckingIntervalSecs',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxTripleConcurrency',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newRpcHealthcheckEnabled',
-        internalType: 'bool',
-        type: 'bool',
         indexed: false,
       },
     ],
-    name: 'ConfigSet',
+    name: 'ClearOfflinePhaseData',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'dataType',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'CountOfflinePhaseData',
   },
   {
     type: 'event',
@@ -19235,6 +18739,12 @@ export const stakingAdminFacetAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
         name: 'newEpochEndTime',
         internalType: 'uint256',
         type: 'uint256',
@@ -19248,6 +18758,12 @@ export const stakingAdminFacetAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
         name: 'newEpochLength',
         internalType: 'uint256',
         type: 'uint256',
@@ -19260,6 +18776,12 @@ export const stakingAdminFacetAbi = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
       {
         name: 'newEpochTimeout',
         internalType: 'uint256',
@@ -19306,13 +18828,50 @@ export const stakingAdminFacetAbi = [
     anonymous: false,
     inputs: [
       {
-        name: 'newStakingTokenAddress',
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
         internalType: 'address',
         type: 'address',
         indexed: false,
       },
     ],
-    name: 'StakingTokenSet',
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Staked',
   },
   {
     type: 'event',
@@ -19337,11 +18896,18 @@ export const stakingAdminFacetAbi = [
         type: 'address',
         indexed: true,
       },
+    ],
+    name: 'ValidatorBanned',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
-        name: 'amountBurned',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
       },
     ],
     name: 'ValidatorKickedFromNextEpoch',
@@ -19361,6 +18927,13 @@ export const stakingAdminFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'addRealm',
+    outputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [
       {
         name: 'validatorStakerAddress',
@@ -19374,22 +18947,33 @@ export const stakingAdminFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
     name: 'adminRejoinValidator',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'adminResetEpoch',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'disabled', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'adminSetValidatorRegisterAttestedWalletDisabled',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [
-      { name: 'validators', internalType: 'address[]', type: 'address[]' },
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'validatorsForCurrentEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
     ],
     name: 'adminSetValidatorsInCurrentEpoch',
     outputs: [],
@@ -19398,12 +18982,37 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
+        name: 'validatorsForNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
       },
-      { name: 'amountToPenalize', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'adminSetValidatorsInNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'source_realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'target_realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'target_validators',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'adminSetupShadowSplicing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'percentage', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
     ],
     name: 'adminSlashValidator',
     outputs: [],
@@ -19412,10 +19021,72 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'staker', internalType: 'address', type: 'address' },
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
       { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'adminStakeForValidator',
+    name: 'adminStakeForUser',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'adminUnfreezeForUser',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseRewardPool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'dataType', internalType: 'uint256', type: 'uint256' }],
+    name: 'emitClearOfflinePhaseData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'dataType', internalType: 'uint256', type: 'uint256' }],
+    name: 'emitCountOfflinePhaseData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseRewardPool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'removeRealm',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -19435,6 +19106,11 @@ export const stakingAdminFacetAbi = [
             internalType: 'uint256',
             type: 'uint256',
           },
+          {
+            name: 'kickPenaltyDemerits',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
         ],
       },
     ],
@@ -19447,21 +19123,11 @@ export const stakingAdminFacetAbi = [
     inputs: [
       {
         name: 'newConfig',
-        internalType: 'struct LibStakingStorage.Config',
+        internalType: 'struct LibStakingStorage.GlobalConfig',
         type: 'tuple',
         components: [
           {
             name: 'tokenRewardPerTokenPerEpoch',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintTolerance',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintIntervalSecs',
             internalType: 'uint256',
             type: 'uint256',
           },
@@ -19472,23 +19138,43 @@ export const stakingAdminFacetAbi = [
             type: 'uint256',
           },
           {
-            name: 'maxConcurrentRequests',
+            name: 'rewardEpochDuration',
             internalType: 'uint256',
             type: 'uint256',
           },
-          { name: 'maxTripleCount', internalType: 'uint256', type: 'uint256' },
-          { name: 'minTripleCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmin', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmax', internalType: 'uint256', type: 'uint256' },
+          { name: 'k', internalType: 'uint256', type: 'uint256' },
+          { name: 'p', internalType: 'uint256', type: 'uint256' },
+          { name: 'enableStakeAutolock', internalType: 'bool', type: 'bool' },
+          { name: 'tokenPrice', internalType: 'uint256', type: 'uint256' },
           {
-            name: 'peerCheckingIntervalSecs',
+            name: 'profitMultiplier',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'usdCostPerMonth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxEmissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'minStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minSelfStake', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minSelfStakeTimelock',
             internalType: 'uint256',
             type: 'uint256',
           },
           {
-            name: 'maxTripleConcurrency',
+            name: 'minValidatorCountToClampMinimumThreshold',
             internalType: 'uint256',
             type: 'uint256',
           },
-          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
+          {
+            name: 'minThresholdToClampAt',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
         ],
       },
     ],
@@ -19508,6 +19194,15 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'newThreshold', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setDemeritRejoinThreshold',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
       { name: 'newDevopsAdmin', internalType: 'address', type: 'address' },
     ],
     name: 'setDevopsAdmin',
@@ -19517,6 +19212,7 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'newEpochEndTime', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'setEpochEndTime',
@@ -19526,6 +19222,7 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'newEpochLength', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'setEpochLength',
@@ -19535,6 +19232,7 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'newState',
         internalType: 'enum LibStakingStorage.States',
@@ -19548,6 +19246,7 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'newEpochTimeout', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'setEpochTimeout',
@@ -19557,685 +19256,725 @@ export const stakingAdminFacetAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'reason', internalType: 'uint256', type: 'uint256' },
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
-        name: 'newKickPenaltyPercent',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setKickPenaltyPercent',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// StakingBalances
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const stakingBalancesAbi = [
-  {
-    type: 'constructor',
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-      },
-      {
-        name: '_args',
-        internalType: 'struct StakingArgs',
+        name: 'newConfig',
+        internalType: 'struct LibStakingStorage.LitActionConfig',
         type: 'tuple',
         components: [
-          { name: 'owner', internalType: 'address', type: 'address' },
-          { name: 'init', internalType: 'address', type: 'address' },
-          { name: 'initCalldata', internalType: 'bytes', type: 'bytes' },
+          { name: 'timeoutMs', internalType: 'uint256', type: 'uint256' },
+          { name: 'memoryLimitMb', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxCodeLength', internalType: 'uint256', type: 'uint256' },
           {
-            name: 'contractResolver',
-            internalType: 'address',
-            type: 'address',
+            name: 'maxResponseLength',
+            internalType: 'uint256',
+            type: 'uint256',
           },
           {
-            name: 'env',
-            internalType: 'enum ContractResolver.Env',
-            type: 'uint8',
+            name: 'maxConsoleLogLength',
+            internalType: 'uint256',
+            type: 'uint256',
           },
+          { name: 'maxFetchCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxSignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxContractCallCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxBroadcastAndCollectCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxCallDepth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxRetries', internalType: 'uint256', type: 'uint256' },
+          { name: 'asyncActionsEnabled', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotAddFunctionToDiamondThatAlreadyExists',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotAddSelectorsToZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveFunctionThatDoesNotExist',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionThatDoesNotExists',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotReplaceFunctionsFromFacetWithZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
-    ],
-    name: 'FunctionNotFound',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_action', internalType: 'uint8', type: 'uint8' }],
-    name: 'IncorrectFacetCutAction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: '_initializationContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'InitializationFunctionReverted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_contractAddress', internalType: 'address', type: 'address' },
-      { name: '_message', internalType: 'string', type: 'string' },
-    ],
-    name: 'NoBytecodeAtAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'NoSelectorsProvidedForFacetForCut',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'RemoveFacetAddressMustBeZeroAddress',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-        indexed: false,
-      },
-      {
-        name: '_init',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: '_calldata',
-        internalType: 'bytes',
-        type: 'bytes',
-        indexed: false,
-      },
-    ],
-    name: 'DiamondCut',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'previousOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  { type: 'fallback', stateMutability: 'payable' },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// StakingBalancesDiamond
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const stakingBalancesDiamondAbi = [
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotAddFunctionToDiamondThatAlreadyExists',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotAddSelectorsToZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveFunctionThatDoesNotExist',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotRemoveImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionThatDoesNotExists',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-    name: 'CannotReplaceFunctionsFromFacetWithZeroAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'CannotReplaceImmutableFunction',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: '_action', internalType: 'uint8', type: 'uint8' }],
-    name: 'IncorrectFacetCutAction',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: '_initializationContractAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'InitializationFunctionReverted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_contractAddress', internalType: 'address', type: 'address' },
-      { name: '_message', internalType: 'string', type: 'string' },
-    ],
-    name: 'NoBytecodeAtAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'NoSelectorsProvidedForFacetForCut',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_user', internalType: 'address', type: 'address' },
-      { name: '_contractOwner', internalType: 'address', type: 'address' },
-    ],
-    name: 'NotContractOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: '_facetAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'RemoveFacetAddressMustBeZeroAddress',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-        indexed: false,
-      },
-      {
-        name: '_init',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: '_calldata',
-        internalType: 'bytes',
-        type: 'bytes',
-        indexed: false,
-      },
-    ],
-    name: 'DiamondCut',
+    name: 'setLitActionConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [
-      {
-        name: '_diamondCut',
-        internalType: 'struct IDiamond.FacetCut[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
-          {
-            name: 'action',
-            internalType: 'enum IDiamond.FacetCutAction',
-            type: 'uint8',
-          },
-          {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
-          },
-        ],
-      },
-      { name: '_init', internalType: 'address', type: 'address' },
-      { name: '_calldata', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'diamondCut',
+    inputs: [{ name: 'newTimeout', internalType: 'uint256', type: 'uint256' }],
+    name: 'setPendingRejoinTimeout',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [
-      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'validatorsToSet', internalType: 'address[]', type: 'address[]' },
     ],
-    name: 'facetAddress',
-    outputs: [
-      { name: 'facetAddress_', internalType: 'address', type: 'address' },
-    ],
-    stateMutability: 'view',
+    name: 'setPermittedValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'facetAddresses',
-    outputs: [
-      { name: 'facetAddresses_', internalType: 'address[]', type: 'address[]' },
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
     ],
-    stateMutability: 'view',
+    name: 'setPermittedValidatorsOn',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [{ name: '_facet', internalType: 'address', type: 'address' }],
-    name: 'facetFunctionSelectors',
-    outputs: [
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
-        name: '_facetFunctionSelectors',
-        internalType: 'bytes4[]',
-        type: 'bytes4[]',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'facets',
-    outputs: [
-      {
-        name: 'facets_',
-        internalType: 'struct IDiamondLoupe.Facet[]',
-        type: 'tuple[]',
+        name: 'newConfig',
+        internalType: 'struct LibStakingStorage.RealmConfig',
+        type: 'tuple',
         components: [
-          { name: 'facetAddress', internalType: 'address', type: 'address' },
           {
-            name: 'functionSelectors',
-            internalType: 'bytes4[]',
-            type: 'bytes4[]',
+            name: 'maxConcurrentRequests',
+            internalType: 'uint256',
+            type: 'uint256',
           },
+          { name: 'maxPresignCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minPresignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'peerCheckingIntervalSecs',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxPresignConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
+          {
+            name: 'minEpochForRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
-    stateMutability: 'view',
+    name: 'setRealmConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [{ name: '_interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
+    inputs: [
+      { name: 'newTotalSupply', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setTokenTotalSupplyStandIn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingAdminTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingAdminTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
-    type: 'event',
-    anonymous: false,
+    type: 'function',
     inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
       {
-        name: 'previousOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
       },
     ],
-    name: 'OwnershipTransferred',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'owner',
-    outputs: [{ name: 'owner_', internalType: 'address', type: 'address' }],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: '_newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
     outputs: [],
     stateMutability: 'nonpayable',
   },
-  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
   {
-    type: 'error',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'AliasNotOwnedBySender',
-  },
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotRemoveAliasOfActiveValidator',
-  },
-  { type: 'error', inputs: [], name: 'CannotStakeZero' },
-  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
-  {
-    type: 'error',
-    inputs: [{ name: 'aliasCount', internalType: 'uint256', type: 'uint256' }],
-    name: 'MaxAliasCountReached',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'OnlyStakingContract',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'amountStaked', internalType: 'uint256', type: 'uint256' },
-      { name: 'minimumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'StakeMustBeGreaterThanMinimumStake',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'amountStaked', internalType: 'uint256', type: 'uint256' },
-      { name: 'maximumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'StakeMustBeLessThanMaximumStake',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'StakerNotPermitted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
       {
-        name: 'requestedWithdrawlAmount',
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToMigrateTo',
         internalType: 'uint256',
         type: 'uint256',
       },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'TryingToWithdrawMoreThanStaked',
+    name: 'testFuzz_AdminStakesUnfreezesForUser',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    type: 'event',
-    anonymous: false,
+    type: 'function',
     inputs: [
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'AliasAdded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'AliasRemoved',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newMaxAliasCount',
+        name: 'operatorStakerIndexToKick',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
       },
+      { name: 'secondKickIsByAdmin', internalType: 'bool', type: 'bool' },
     ],
-    name: 'MaxAliasCountSet',
+    name: 'testFuzz_KickBeforeAndAfterAdminRejoinValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingCommon
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingCommonAbi = [
+  { type: 'error', inputs: [], name: 'CannotModifyUnfrozen' },
+  { type: 'error', inputs: [], name: 'NoEmptyStakingSlot' },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'newMaximumStake',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MaximumStakeSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newMinimumStake',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MinimumStakeSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
+        name: 'stakerAddress',
         internalType: 'address',
         type: 'address',
         indexed: false,
       },
-    ],
-    name: 'PermittedStakerAdded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'PermittedStakerRemoved',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'permittedStakersOn',
-        internalType: 'bool',
-        type: 'bool',
-        indexed: false,
-      },
-    ],
-    name: 'PermittedStakersOnChanged',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newResolverAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'ResolverContractAddressSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'reward',
+        name: 'recordId',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
     ],
-    name: 'RewardPaid',
+    name: 'StakeRecordCreated',
   },
   {
     type: 'event',
@@ -20255,924 +19994,6 @@ export const stakingBalancesDiamondAbi = [
       },
     ],
     name: 'Staked',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newTokenRewardPerTokenPerEpoch',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'TokenRewardPerTokenPerEpochSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorNotRewardedBecauseAlias',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorRewarded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorTokensPenalized',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Withdrawn',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'addAlias',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'addPermittedStaker',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'stakers', internalType: 'address[]', type: 'address[]' }],
-    name: 'addPermittedStakers',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'checkStakingAmounts',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'contractResolver',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'getReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getStakingAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getTokenAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'isPermittedStaker',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maximumStake',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'minimumStake',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'penalizeTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'permittedStakersOn',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'removeAlias',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'removePermittedStaker',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'staker', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'restakePenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'rewardOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'rewardValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newResolverAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'setContractResolver',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMaxAliasCount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMaxAliasCount',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMaximumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMaximumStake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMinimumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMinimumStake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'permitted', internalType: 'bool', type: 'bool' }],
-    name: 'setPermittedStakersOn',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'stake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-      { name: 'sender', internalType: 'address', type: 'address' },
-    ],
-    name: 'stakeForValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalStaked',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'recipient', internalType: 'address', type: 'address' },
-    ],
-    name: 'transferPenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    name: 'withdrawPenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// StakingBalancesFacet
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const stakingBalancesFacetAbi = [
-  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'AliasNotOwnedBySender',
-  },
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotRemoveAliasOfActiveValidator',
-  },
-  { type: 'error', inputs: [], name: 'CannotStakeZero' },
-  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
-  {
-    type: 'error',
-    inputs: [{ name: 'aliasCount', internalType: 'uint256', type: 'uint256' }],
-    name: 'MaxAliasCountReached',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'OnlyStakingContract',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'amountStaked', internalType: 'uint256', type: 'uint256' },
-      { name: 'minimumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'StakeMustBeGreaterThanMinimumStake',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'amountStaked', internalType: 'uint256', type: 'uint256' },
-      { name: 'maximumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'StakeMustBeLessThanMaximumStake',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'StakerNotPermitted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestedWithdrawlAmount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'TryingToWithdrawMoreThanStaked',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'AliasAdded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'AliasRemoved',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newMaxAliasCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MaxAliasCountSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newMaximumStake',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MaximumStakeSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newMinimumStake',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MinimumStakeSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'PermittedStakerAdded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'PermittedStakerRemoved',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'permittedStakersOn',
-        internalType: 'bool',
-        type: 'bool',
-        indexed: false,
-      },
-    ],
-    name: 'PermittedStakersOnChanged',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newResolverAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'ResolverContractAddressSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'reward',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RewardPaid',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Staked',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newTokenRewardPerTokenPerEpoch',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'TokenRewardPerTokenPerEpochSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'aliasAccount',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorNotRewardedBecauseAlias',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorRewarded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ValidatorTokensPenalized',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Withdrawn',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'addAlias',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'addPermittedStaker',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'stakers', internalType: 'address[]', type: 'address[]' }],
-    name: 'addPermittedStakers',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'checkStakingAmounts',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'contractResolver',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'getReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getStakingAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getTokenAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'isPermittedStaker',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'maximumStake',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'minimumStake',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'penalizeTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'permittedStakersOn',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'aliasAccount', internalType: 'address', type: 'address' },
-    ],
-    name: 'removeAlias',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'removePermittedStaker',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'staker', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'restakePenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'rewardOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'rewardValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newResolverAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'setContractResolver',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMaxAliasCount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMaxAliasCount',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMaximumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMaximumStake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newMinimumStake', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setMinimumStake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'permitted', internalType: 'bool', type: 'bool' }],
-    name: 'setPermittedStakersOn',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'stake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-      { name: 'sender', internalType: 'address', type: 'address' },
-    ],
-    name: 'stakeForValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'totalStaked',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'recipient', internalType: 'address', type: 'address' },
-    ],
-    name: 'transferPenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'account', internalType: 'address', type: 'address' },
-    ],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    name: 'withdrawPenaltyTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
   },
 ] as const;
 
@@ -21432,18 +20253,167 @@ export const stakingDiamondAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
   {
     type: 'error',
     inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'RealmIdNotFound',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllUnkickedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getCurrentRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getShadowRealmIdForStakerAddress',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'isRecentValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInCurrentEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInCurrentOrNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isValidatorInNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'nodeAddressToStakerAddressAcrossRealms',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'numRealms',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'validator_by_staker_address',
+    outputs: [
       {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator',
+        type: 'tuple',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
       },
     ],
-    name: 'MustBeInActiveOrUnlockedOrPausedState',
+    stateMutability: 'view',
+  },
+  { type: 'error', inputs: [], name: 'CallerNotOwner' },
+  { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
+  { type: 'error', inputs: [], name: 'CannotModifyUnfrozen' },
+  { type: 'error', inputs: [], name: 'CannotStakeZero' },
+  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
+  { type: 'error', inputs: [], name: 'InvalidSlashPercentage' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'MinTimeLockNotMet',
   },
   {
     type: 'error',
@@ -21456,94 +20426,49 @@ export const stakingDiamondAbi = [
     ],
     name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
   },
+  { type: 'error', inputs: [], name: 'NoEmptyStakingSlot' },
   {
-    type: 'event',
-    anonymous: false,
+    type: 'error',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'StakeAmountNotMet',
+  },
+  {
+    type: 'error',
     inputs: [
+      { name: 'validator', internalType: 'address', type: 'address' },
       {
-        name: 'reason',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'config',
-        internalType: 'struct LibStakingStorage.ComplaintConfig',
-        type: 'tuple',
-        components: [
-          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
-          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'kickPenaltyPercent',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-        ],
-        indexed: false,
+        name: 'validatorsInNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
       },
     ],
-    name: 'ComplaintConfigSet',
+    name: 'ValidatorIsNotInNextEpoch',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'newTokenRewardPerTokenPerEpoch',
+        name: 'dataType',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newKeyTypes',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-        indexed: false,
-      },
-      {
-        name: 'newMinimumValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxConcurrentRequests',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxTripleCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMinTripleCount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newPeerCheckingIntervalSecs',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newMaxTripleConcurrency',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'newRpcHealthcheckEnabled',
-        internalType: 'bool',
-        type: 'bool',
         indexed: false,
       },
     ],
-    name: 'ConfigSet',
+    name: 'ClearOfflinePhaseData',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'dataType',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'CountOfflinePhaseData',
   },
   {
     type: 'event',
@@ -21563,6 +20488,12 @@ export const stakingDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
         name: 'newEpochEndTime',
         internalType: 'uint256',
         type: 'uint256',
@@ -21576,6 +20507,12 @@ export const stakingDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
         name: 'newEpochLength',
         internalType: 'uint256',
         type: 'uint256',
@@ -21588,6 +20525,12 @@ export const stakingDiamondAbi = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
       {
         name: 'newEpochTimeout',
         internalType: 'uint256',
@@ -21634,6 +20577,7640 @@ export const stakingDiamondAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Staked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newState',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+        indexed: false,
+      },
+    ],
+    name: 'StateChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorBanned',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorKickedFromNextEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'ValidatorRejoinedNextEpoch',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'addRealm',
+    outputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'validatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'adminKickValidatorInNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'adminRejoinValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'disabled', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'adminSetValidatorRegisterAttestedWalletDisabled',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'validatorsForCurrentEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'adminSetValidatorsInCurrentEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'validatorsForNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'adminSetValidatorsInNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'source_realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'target_realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'target_validators',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'adminSetupShadowSplicing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'percentage', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'adminSlashValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'adminStakeForUser',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'adminUnfreezeForUser',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseRewardPool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'dataType', internalType: 'uint256', type: 'uint256' }],
+    name: 'emitClearOfflinePhaseData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'dataType', internalType: 'uint256', type: 'uint256' }],
+    name: 'emitCountOfflinePhaseData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseRewardPool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'removeRealm',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'reason', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'config',
+        internalType: 'struct LibStakingStorage.ComplaintConfig',
+        type: 'tuple',
+        components: [
+          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
+          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'kickPenaltyPercent',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'kickPenaltyDemerits',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'setComplaintConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'newConfig',
+        internalType: 'struct LibStakingStorage.GlobalConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'tokenRewardPerTokenPerEpoch',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'minimumValidatorCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'rewardEpochDuration',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmin', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmax', internalType: 'uint256', type: 'uint256' },
+          { name: 'k', internalType: 'uint256', type: 'uint256' },
+          { name: 'p', internalType: 'uint256', type: 'uint256' },
+          { name: 'enableStakeAutolock', internalType: 'bool', type: 'bool' },
+          { name: 'tokenPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'profitMultiplier',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'usdCostPerMonth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxEmissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'minStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minSelfStake', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minSelfStakeTimelock',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minValidatorCountToClampMinimumThreshold',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minThresholdToClampAt',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'setConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newResolverAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'setContractResolver',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newThreshold', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setDemeritRejoinThreshold',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newDevopsAdmin', internalType: 'address', type: 'address' },
+    ],
+    name: 'setDevopsAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'newEpochEndTime', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setEpochEndTime',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'newEpochLength', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setEpochLength',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'newState',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'setEpochState',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'newEpochTimeout', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setEpochTimeout',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'newConfig',
+        internalType: 'struct LibStakingStorage.LitActionConfig',
+        type: 'tuple',
+        components: [
+          { name: 'timeoutMs', internalType: 'uint256', type: 'uint256' },
+          { name: 'memoryLimitMb', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxCodeLength', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxResponseLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxConsoleLogLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFetchCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxSignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxContractCallCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxBroadcastAndCollectCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxCallDepth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxRetries', internalType: 'uint256', type: 'uint256' },
+          { name: 'asyncActionsEnabled', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'setLitActionConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newTimeout', internalType: 'uint256', type: 'uint256' }],
+    name: 'setPendingRejoinTimeout',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'validatorsToSet', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'setPermittedValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setPermittedValidatorsOn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'newConfig',
+        internalType: 'struct LibStakingStorage.RealmConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'maxConcurrentRequests',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxPresignCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minPresignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'peerCheckingIntervalSecs',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxPresignConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
+          {
+            name: 'minEpochForRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'setRealmConfig',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newTotalSupply', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setTokenTotalSupplyStandIn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'CallerNotContract' },
+  { type: 'error', inputs: [], name: 'CannotMigrateFromValidator' },
+  { type: 'error', inputs: [], name: 'CannotWithdrawFrozen' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'checkpoint', internalType: 'uint256', type: 'uint256' },
+      { name: 'currentEpoch', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'CheckpointAheadOfCurrentEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'InsufficientSelfStake',
+  },
+  { type: 'error', inputs: [], name: 'InvalidRatio' },
+  { type: 'error', inputs: [], name: 'NewTimeLockMustBeGreaterThanCurrent' },
+  { type: 'error', inputs: [], name: 'RewardsMustBeClaimed' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'slahedAddress', internalType: 'address', type: 'address' },
+      { name: 'slashedRealmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'senderAddress', internalType: 'address', type: 'address' },
+      { name: 'senderRealmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SlashingMustOccurInSameRealm',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakedAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'minimumStake', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeMustBeGreaterThanMinimumStake',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeRecordNotFound',
+  },
+  { type: 'error', inputs: [], name: 'TimeLockNotMet' },
+  { type: 'error', inputs: [], name: 'TooSoonToWithdraw' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'ValidatorNotRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'FixedCostRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'userStakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordRemoved',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ValidatorCommissionClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Withdrawn',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'checkStakingAmounts',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimFixedCostRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimStakeRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimValidatorCommission',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMaximumStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMinimumSelfStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMinimumStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRewardEpoch',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochEnd', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'totalStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'totalStakeRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'slope', internalType: 'uint256', type: 'uint256' },
+          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePriceAtLastUpdate',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'initial', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRewardEpochView',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochEnd', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'totalStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'totalStakeRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'slope', internalType: 'uint256', type: 'uint256' },
+          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePriceAtLastUpdate',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'initial', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseStakeRecordAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseStakeRecordTimelock',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'isInitial', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'initializeRewardEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorAddressToMigrateFrom',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorAddressToMigrateTo',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'migrateStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'rate', internalType: 'uint256', type: 'uint256' }],
+    name: 'setValidatorCommissionRate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'splitStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'stake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'unfreezeStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
+  {
+    type: 'error',
+    inputs: [],
+    name: 'CannotKickBelowCurrentValidatorThreshold',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakingAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotRejoinBecauseBanned',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakingAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotRejoinUntilNextEpochBecauseKicked',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'CannotReuseCommsKeys',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotVoteTwice',
+  },
+  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
+  {
+    type: 'error',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'CouldNotMapNodeAddressToStakerAddress',
+  },
+  { type: 'error', inputs: [], name: 'InvalidAttestedAddress' },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInActiveOrUnlockedOrPausedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInActiveOrUnlockedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochOrRestoreState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInReadyForNextEpochState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'MustBeValidatorInNextEpochToKick',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeout', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'NotEnoughTimeElapsedForTimeoutSinceLastEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'NotEnoughTimeElapsedSinceLastEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'minimumValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotEnoughValidatorsInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'currentReadyValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'nextReadyValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'minimumValidatorCountToBeReady',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotEnoughValidatorsReadyForNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentEpochNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'receivedEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SignaledReadyForWrongEpochNumber',
+  },
+  { type: 'error', inputs: [], name: 'StakerAddressMismatch' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'requestedWithdrawlAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'TryingToWithdrawMoreThanStaked',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'ValidatorAlreadyInNextValidatorSet',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'staker', internalType: 'address', type: 'address' },
+      { name: 'existingRealmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ValidatorAlreadyInRealm',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'ValidatorNotInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ValidatorNotPermitted',
+  },
+  {
+    type: 'error',
+    inputs: [],
+    name: 'ValidatorRegisterAttestedWalletDisabled',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'valueName', internalType: 'string', type: 'string' }],
+    name: 'ValueMustBeNonzero',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'epochNumber',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'AdvancedEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'attestedAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'attestedPubKey',
+        internalType: 'struct LibStakingStorage.UncompressedK256Key',
+        type: 'tuple',
+        components: [
+          { name: 'x', internalType: 'uint256', type: 'uint256' },
+          { name: 'y', internalType: 'uint256', type: 'uint256' },
+        ],
+        indexed: true,
+      },
+    ],
+    name: 'AttestedWalletRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'reason',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'config',
+        internalType: 'struct LibStakingStorage.ComplaintConfig',
+        type: 'tuple',
+        components: [
+          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
+          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'kickPenaltyPercent',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'kickPenaltyDemerits',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'ComplaintConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTokenRewardPerTokenPerEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newKeyTypes',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+      {
+        name: 'newMinimumValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxConcurrentRequests',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxPresignCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMinPresignCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newPeerCheckingIntervalSecs',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxPresignConcurrency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newRpcHealthcheckEnabled',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'ConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'message',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'DebugEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'epochNumber',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ReadyForNextEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'token',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Recovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToLeave',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newDuration',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'RewardsDurationUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newStakingTokenAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakingTokenSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'reporter',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'validatorToKickStakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'reason',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'VotedToKickValidatorInNextEpoch',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'advanceEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'checkActiveOrUnlockedOrPausedState',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'exit',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'attestedAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getAttestedPubKey',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'validatorToKickStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'reason', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'kickValidatorInNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'lockValidatorsForNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'attestedAddress', internalType: 'address', type: 'address' },
+      { name: 'attestedPubKey', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'registerAttestedWallet',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'requestToJoin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsForShadowSplicing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsNode',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'requestToLeave',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'requestToLeaveAsNode',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'ip', internalType: 'uint32', type: 'uint32' },
+      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+      { name: 'port', internalType: 'uint32', type: 'uint32' },
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
+      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setIpPortNodeAddressAndCommunicationPubKeys',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'signalReadyForNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'index',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'version',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'VersionRequirementsUpdated',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'version',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'checkVersion',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMaxVersion',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMaxVersionString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMinVersion',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMinVersionString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'version',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'setMaxVersion',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'version',
+        internalType: 'struct LibStakingStorage.Version',
+        type: 'tuple',
+        components: [
+          { name: 'major', internalType: 'uint256', type: 'uint256' },
+          { name: 'minor', internalType: 'uint256', type: 'uint256' },
+          { name: 'patch', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'setMinVersion',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'InvalidTimeLock' },
+  { type: 'error', inputs: [], name: 'NodeAddressNotFoundForStaker' },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'globalStats',
+        internalType: 'struct LibStakingStorage.RewardEpochGlobalStats',
+        type: 'tuple',
+        components: [
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'stakeWeight', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorsInCurrentEpoch',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'actualEpochLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'calculateRewardsPerDay',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'calculateStakeWeight',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
+    name: 'complaintConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.ComplaintConfig',
+        type: 'tuple',
+        components: [
+          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
+          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'kickPenaltyPercent',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'kickPenaltyDemerits',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'contractResolver',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'countOfCurrentValidatorsReadyForNextEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'countOfNextValidatorsReadyForNextEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'currentValidatorCountForConsensus',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'epoch',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Epoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
+          { name: 'number', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'rewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'nextRewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'endTime', internalType: 'uint256', type: 'uint256' },
+          { name: 'retries', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeout', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTime', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getActiveUnkickedValidatorCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getActiveUnkickedValidatorStructs',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getActiveUnkickedValidatorStructsAndCounts',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Epoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
+          { name: 'number', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'rewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'nextRewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'endTime', internalType: 'uint256', type: 'uint256' },
+          { name: 'retries', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeout', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTime', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getActiveUnkickedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllReserveValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getDelegatedStakersWithUnfreezingStakes',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getDelegatedStakersWithUnfreezingStakesCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getKeyTypes',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getKickedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'user', internalType: 'address', type: 'address' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getLastStakeRecord',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getLitCirc',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getLowestRewardEpochNumber',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'getNodeAttestedPubKeyMappings',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.PubKeyMapping[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'pubKey',
+            internalType: 'struct LibStakingStorage.UncompressedK256Key',
+            type: 'tuple',
+            components: [
+              { name: 'x', internalType: 'uint256', type: 'uint256' },
+              { name: 'y', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getNodeDemerits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'getNodeStakerAddressMappings',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.AddressMapping[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getNonShadowValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'epochNumber', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRewardEpochGlobalStats',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpochGlobalStats',
+        type: 'tuple',
+        components: [
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'stakeWeight', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorsInCurrentEpoch',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'actualEpochLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRewardEpochNumber',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getSelfStakeRecordCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getShadowValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getStakeRecord',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getStakeRecordCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getStakeRecordsForUser',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getStakeWeightInEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakeRecord',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getTimelockInEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTokenContractAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTokenPrice',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakeRecord',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getTokensStaked',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getTotalStake',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'user', internalType: 'address', type: 'address' },
+    ],
+    name: 'getTotalStakeByUser',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getUnfrozenStakeCountForUser',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
+    name: 'getValidatorsDelegated',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsInCurrentEpoch',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsInCurrentEpochLength',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsInNextEpoch',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddresses', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'getValidatorsStructs',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsStructsInCurrentEpoch',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsStructsInNextEpoch',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochNumber', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'validatorToBeKickedStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'voterStakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getVotingStatusToKickValidator',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bool', type: 'bool' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'globalConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.GlobalConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'tokenRewardPerTokenPerEpoch',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'minimumValidatorCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'rewardEpochDuration',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmin', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmax', internalType: 'uint256', type: 'uint256' },
+          { name: 'k', internalType: 'uint256', type: 'uint256' },
+          { name: 'p', internalType: 'uint256', type: 'uint256' },
+          { name: 'enableStakeAutolock', internalType: 'bool', type: 'bool' },
+          { name: 'tokenPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'profitMultiplier',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'usdCostPerMonth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxEmissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'minStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minSelfStake', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minSelfStakeTimelock',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minValidatorCountToClampMinimumThreshold',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minThresholdToClampAt',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveShadowValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidatorByNodeAddress',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'nodeAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidatorByNodeAddressForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidatorForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'isReadyForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddresses', internalType: 'address', type: 'address' },
+    ],
+    name: 'isRecentValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'validator', internalType: 'address', type: 'address' }],
+    name: 'isValidatorBanned',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
+    name: 'kickPenaltyPercentByReason',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'litActionsConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.LitActionConfig',
+        type: 'tuple',
+        components: [
+          { name: 'timeoutMs', internalType: 'uint256', type: 'uint256' },
+          { name: 'memoryLimitMb', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxCodeLength', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxResponseLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxConsoleLogLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFetchCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxSignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxContractCallCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxBroadcastAndCollectCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxCallDepth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxRetries', internalType: 'uint256', type: 'uint256' },
+          { name: 'asyncActionsEnabled', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'maxStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'maxTimeLock',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minSelfStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minTimeLock',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'nextValidatorCountForConsensus',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'nodeAddressToStakerAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'operatorAddressToStakerAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'validator', internalType: 'address', type: 'address' }],
+    name: 'permittedRealmsForValidator',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'permittedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'base', internalType: 'uint256', type: 'uint256' },
+      { name: 'exponent', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'pow',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'readyForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'realmConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RealmConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'maxConcurrentRequests',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxPresignCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minPresignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'peerCheckingIntervalSecs',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxPresignConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
+          {
+            name: 'minEpochForRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'shouldKickValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'stakerToValidatorsTheyStakedTo',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'state',
+    outputs: [
+      {
+        name: '',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakerInCurrentValidatorSet',
+        internalType: 'bool',
+        type: 'bool',
+      },
+    ],
+    name: 'validatorSelfStakeWillExpire',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'validators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.Validator',
+        type: 'tuple',
+        components: [
+          { name: 'ip', internalType: 'uint32', type: 'uint32' },
+          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
+          { name: 'port', internalType: 'uint32', type: 'uint32' },
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          { name: 'reward', internalType: 'uint256', type: 'uint256' },
+          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingFacet
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingFacetAbi = [
+  { type: 'error', inputs: [], name: 'CallerNotContract' },
+  { type: 'error', inputs: [], name: 'CallerNotOwner' },
+  { type: 'error', inputs: [], name: 'CannotMigrateFromValidator' },
+  { type: 'error', inputs: [], name: 'CannotModifyUnfrozen' },
+  { type: 'error', inputs: [], name: 'CannotStakeZero' },
+  { type: 'error', inputs: [], name: 'CannotWithdrawFrozen' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'checkpoint', internalType: 'uint256', type: 'uint256' },
+      { name: 'currentEpoch', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'CheckpointAheadOfCurrentEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'InsufficientSelfStake',
+  },
+  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
+  { type: 'error', inputs: [], name: 'InvalidRatio' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'MinTimeLockNotMet',
+  },
+  { type: 'error', inputs: [], name: 'NewTimeLockMustBeGreaterThanCurrent' },
+  { type: 'error', inputs: [], name: 'NoEmptyStakingSlot' },
+  { type: 'error', inputs: [], name: 'RewardsMustBeClaimed' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'slahedAddress', internalType: 'address', type: 'address' },
+      { name: 'slashedRealmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'senderAddress', internalType: 'address', type: 'address' },
+      { name: 'senderRealmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SlashingMustOccurInSameRealm',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'StakeAmountNotMet',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'StakeAmountNotMet',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakedAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'minimumStake', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeMustBeGreaterThanMinimumStake',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeRecordNotFound',
+  },
+  { type: 'error', inputs: [], name: 'TimeLockNotMet' },
+  { type: 'error', inputs: [], name: 'TooSoonToWithdraw' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'ValidatorNotRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'FixedCostRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'userStakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordRemoved',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Staked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTrustedForwarder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'TrustedForwarderSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'fromEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'toEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ValidatorCommissionClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Withdrawn',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'checkStakingAmounts',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimFixedCostRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimStakeRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxNumberOfEpochsToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'claimValidatorCommission',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMaximumStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMinimumSelfStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMinimumStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRewardEpoch',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochEnd', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'totalStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'totalStakeRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'slope', internalType: 'uint256', type: 'uint256' },
+          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePriceAtLastUpdate',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'initial', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRewardEpochView',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpoch',
+        type: 'tuple',
+        components: [
+          { name: 'epochEnd', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'totalStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'totalStakeRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'validatorCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'slope', internalType: 'uint256', type: 'uint256' },
+          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorSharePriceAtLastUpdate',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'initial', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTrustedForwarder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseStakeRecordAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseStakeRecordTimelock',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'isInitial', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'initializeRewardEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorAddressToMigrateFrom',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorAddressToMigrateTo',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'migrateStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'setTrustedForwarder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'rate', internalType: 'uint256', type: 'uint256' }],
+    name: 'setValidatorCommissionRate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'splitStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'stake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'unfreezeStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingHandler
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingHandlerAbi = [
+  {
+    type: 'constructor',
+    inputs: [
+      {
+        name: '_stakingDiamondAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: '_owner', internalType: 'address', type: 'address' },
+      { name: '_token', internalType: 'contract LITToken', type: 'address' },
+      { name: '_wallets', internalType: 'address[]', type: 'address[]' },
+      { name: '_commsKeys', internalType: 'uint256[]', type: 'uint256[]' },
+      {
+        name: '_testingConfig',
+        internalType: 'struct StakingHandler.TestingConfig',
+        type: 'tuple',
+        components: [
+          { name: 'maxRealms', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'initialStakeAndJoinedValidators',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxStakeTimeLock',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllRealmIds',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllWallets',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllWalletsWithStake',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRewardEpochNumberHistory',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_claimFixedCostRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmIdIndex', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToClaimFrom',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'stakeRecordIndexToClaim',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_claimStakeRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_claimValidatorCommission',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeRecordIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_increaseStakeRecordAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeRecordIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_increaseStakeRecordTimelock',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'probability', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_kickValidatorInNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmIdIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochsToAdvance', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_lockSignalAndAdvance',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmIdIndex', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToMigrateFrom',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'stakeRecordIndexToMigrate',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToMigrateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_migrateStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmIdIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_requestToJoin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_requestToLeave',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeRecordIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_splitStakeRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeTimeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeMode', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_stakeAndSetNodeInfo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeRecordIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_unfreezeStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeRecordIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'handle_withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalStaked',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unfreezeCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingInvariantsTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingInvariantsTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'invariant_NodeAddressToStakerAddressMappings',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'invariant_REStakeAmountLEQTotalStakedAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'invariant_StakeRecordsStakeAmountEQTotalStakedAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'invariant_UnfreezeCount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'invariant_ValidatorCountAboveMinimum',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingMigrateTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingMigrateTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerThatWillGoDarkIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatedStakerMigrateFromValidatorWhoWentDark',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerThatWillGoDarkIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatedStakerMigrateFromValidatorWhoWentDark_UnfrozenStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToKick',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_ActiveValidatorSlashedViaRejoinTimeout',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'percentage', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_AdminSlashValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToSlash',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_AdminSlashValidator_SlashedValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'p', internalType: 'uint256', type: 'uint256' },
+      { name: 'k', internalType: 'uint256', type: 'uint256' },
+      { name: 'b_min', internalType: 'uint256', type: 'uint256' },
+      { name: 'b_max', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_CalcRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_CalcRewards_Vector3',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_CalcStakeweight',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'randomKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_CannotWithdrawFrozen',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToSwitchRealms',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatingStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_ClaimRewards_2Realms',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToDelegateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_DelegatedStakeBeforeValidatorRequestsToJoin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToDelegateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_DelegatedStakeSplitsStake_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToSplitStake',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_DelegatedStakerSplitsStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatedStakersWithUnfreezingStakes',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_DelegatingStakerStakesAgain_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_DelegatingStakerStakesAgain_InactiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatingStakerStakesTwice_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatingStakerStakesTwice_JoiningValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_DelegatingStakerWithdrawsBeforeValidatorJoins',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numActiveValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_GetAllReserveValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToIncreaseAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_IncreaseDelegatedStakeRecordAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToDelegateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_IncreaseDelegatedStakeRecordTimelock',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToIncreaseAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_IncreaseStakeRecordAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToIncreaseAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'additionalAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_IncreaseStakeRecordAmountInvalidAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToIncreaseTimelock',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_IncreaseStakeRecordTimelock',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'withSlashing', internalType: 'bool', type: 'bool' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_KickValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToStakeAgain',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_OperatorStakesAgain_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToStakeAgain',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_OperatorStakesAgain_InactiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToLeave',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_RegisterAttestedWalletDisabledForActiveValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_RequestToLeave',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToUnfreeze',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_RequestToLeaveHalfwayUnfreeze_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_SetValidatorCommissionRate_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_SetValidatorInfoWithInvalidParameters',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToSplit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_SplitStakeRecordInvalidRatio',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'operatorStakerIndexToSplitStake',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'makeValidatorInactive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_SplitsStake',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_StakeAndJoinAfterRemovingMiddleRealm',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_StakeAndJoin_ValidatorState',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_StakeInvalidAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_StakerToValidatorsTheyStakedTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operatorStakerIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'randomKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_Unfreeze',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToUnfreeze',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_UnfreezeSlope_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToUnfreeze',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_UnfreezeStake_ActiveValidator_2Realms',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToDelegateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_UniqueDelegatingStakerCount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToKick',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatingStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_ValidatorKickedButRejoins',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_ValidatorSlashedViaKickBeforeAdvanceEpoch_JoiningValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_ValidatorSlashedViaRejoinTimeout_JoiningValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToUnfreeze',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_ValidatorStakeAgainHalfwayUnfreeze_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeTwice',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_ValidatorStakesTwice_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeTwice',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_ValidatorStakesTwice_JoiningValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToStakeAgainst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_ValidatorWithDelegatingStakerKickedBeforeAdvanceEpoch_JoiningValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToLeave',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_Withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_rewardEpochAndGlobalStats_1Realm',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_rewardEpochAndGlobalStats_2Realms',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_CalcRewards_Vector1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_CalcRewards_Vector2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_CalcStakeWeight_Vector1',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_CalcStakeWeight_Vector2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_ClaimMonthsOfRewards_Skip',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_DelegatingStakerWithdraws_ActiveValidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingUtilsLib
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingUtilsLibAbi = [
+  { type: 'error', inputs: [], name: 'CallerNotOwner' },
+  { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
+  { type: 'error', inputs: [], name: 'CannotStakeZero' },
+  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
+  { type: 'error', inputs: [], name: 'InvalidSlashPercentage' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'MinTimeLockNotMet',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInActiveOrUnlockedOrPausedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'minimumValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotEnoughValidatorsInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'StakeAmountNotMet',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeRecordNotFound',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validator', internalType: 'address', type: 'address' },
+      {
+        name: 'validatorsInNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'ValidatorIsNotInNextEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newState',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+        indexed: false,
+      },
+    ],
+    name: 'StateChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorBanned',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorKickedFromNextEpoch',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingValidatorFacet
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingValidatorFacetAbi = [
+  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
+  { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
+  {
+    type: 'error',
+    inputs: [],
+    name: 'CannotKickBelowCurrentValidatorThreshold',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakingAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotRejoinBecauseBanned',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakingAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotRejoinUntilNextEpochBecauseKicked',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'CannotReuseCommsKeys',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'CannotVoteTwice',
+  },
+  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
+  {
+    type: 'error',
+    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
+    name: 'CouldNotMapNodeAddressToStakerAddress',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'InsufficientSelfStake',
+  },
+  { type: 'error', inputs: [], name: 'InvalidAttestedAddress' },
+  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
+  { type: 'error', inputs: [], name: 'InvalidSlashPercentage' },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInActiveOrUnlockedOrPausedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInActiveOrUnlockedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochOrRestoreState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInNextValidatorSetLockedState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'MustBeInReadyForNextEpochState',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'MustBeValidatorInNextEpochToKick',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeout', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'NotEnoughTimeElapsedForTimeoutSinceLastEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
+      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'NotEnoughTimeElapsedSinceLastEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'minimumValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotEnoughValidatorsInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'currentReadyValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'nextReadyValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'minimumValidatorCountToBeReady',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotEnoughValidatorsReadyForNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'currentEpochNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'receivedEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SignaledReadyForWrongEpochNumber',
+  },
+  { type: 'error', inputs: [], name: 'StakerAddressMismatch' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'requestedWithdrawlAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'TryingToWithdrawMoreThanStaked',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'ValidatorAlreadyInNextValidatorSet',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'staker', internalType: 'address', type: 'address' },
+      { name: 'existingRealmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ValidatorAlreadyInRealm',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validator', internalType: 'address', type: 'address' },
+      {
+        name: 'validatorsInNextEpoch',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    name: 'ValidatorIsNotInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'ValidatorNotInNextEpoch',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ValidatorNotPermitted',
+  },
+  {
+    type: 'error',
+    inputs: [],
+    name: 'ValidatorRegisterAttestedWalletDisabled',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'valueName', internalType: 'string', type: 'string' }],
+    name: 'ValueMustBeNonzero',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'epochNumber',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'AdvancedEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'attestedAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'attestedPubKey',
+        internalType: 'struct LibStakingStorage.UncompressedK256Key',
+        type: 'tuple',
+        components: [
+          { name: 'x', internalType: 'uint256', type: 'uint256' },
+          { name: 'y', internalType: 'uint256', type: 'uint256' },
+        ],
+        indexed: true,
+      },
+    ],
+    name: 'AttestedWalletRegistered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'reason',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'config',
+        internalType: 'struct LibStakingStorage.ComplaintConfig',
+        type: 'tuple',
+        components: [
+          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
+          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'kickPenaltyPercent',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'kickPenaltyDemerits',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'ComplaintConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newTokenRewardPerTokenPerEpoch',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newKeyTypes',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+      {
+        name: 'newMinimumValidatorCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxConcurrentRequests',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxPresignCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMinPresignCount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newPeerCheckingIntervalSecs',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newMaxPresignConcurrency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newRpcHealthcheckEnabled',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'ConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'message',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'DebugEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newEpochLength',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'EpochLengthSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'reason',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'newKickPenaltyPercent',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'KickPenaltyPercentSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'epochNumber',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ReadyForNextEpoch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'token',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Recovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToLeave',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newResolverContractAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'ResolverContractAddressSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newDuration',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'RewardsDurationUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'newStakingTokenAddress',
         internalType: 'address',
         type: 'address',
@@ -21665,11 +28242,18 @@ export const stakingDiamondAbi = [
         type: 'address',
         indexed: true,
       },
+    ],
+    name: 'ValidatorBanned',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
-        name: 'amountBurned',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
+        name: 'staker',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
       },
     ],
     name: 'ValidatorKickedFromNextEpoch',
@@ -21688,472 +28272,6 @@ export const stakingDiamondAbi = [
     name: 'ValidatorRejoinedNextEpoch',
   },
   {
-    type: 'function',
-    inputs: [
-      {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-    ],
-    name: 'adminKickValidatorInNextEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
-    name: 'adminRejoinValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'adminResetEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'validators', internalType: 'address[]', type: 'address[]' },
-    ],
-    name: 'adminSetValidatorsInCurrentEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: 'amountToPenalize', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'adminSlashValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'staker', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'adminStakeForValidator',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'reason', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'config',
-        internalType: 'struct LibStakingStorage.ComplaintConfig',
-        type: 'tuple',
-        components: [
-          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
-          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'kickPenaltyPercent',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-        ],
-      },
-    ],
-    name: 'setComplaintConfig',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newConfig',
-        internalType: 'struct LibStakingStorage.Config',
-        type: 'tuple',
-        components: [
-          {
-            name: 'tokenRewardPerTokenPerEpoch',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintTolerance',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
-          {
-            name: 'minimumValidatorCount',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxConcurrentRequests',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'maxTripleCount', internalType: 'uint256', type: 'uint256' },
-          { name: 'minTripleCount', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'peerCheckingIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxTripleConcurrency',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
-        ],
-      },
-    ],
-    name: 'setConfig',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newResolverAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'setContractResolver',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newDevopsAdmin', internalType: 'address', type: 'address' },
-    ],
-    name: 'setDevopsAdmin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newEpochEndTime', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setEpochEndTime',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newEpochLength', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setEpochLength',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'newState',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'setEpochState',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'newEpochTimeout', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setEpochTimeout',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'reason', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'newKickPenaltyPercent',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'setKickPenaltyPercent',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
-  {
-    type: 'error',
-    inputs: [],
-    name: 'CannotKickBelowCurrentValidatorThreshold',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakingAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotRejoinUntilNextEpochBecauseKicked',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'CannotReuseCommsKeys',
-  },
-  { type: 'error', inputs: [], name: 'CannotStakeZero' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotVoteTwice',
-  },
-  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
-  {
-    type: 'error',
-    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
-    name: 'CouldNotMapNodeAddressToStakerAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInActiveOrUnlockedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochOrRestoreState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInReadyForNextEpochState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'MustBeValidatorInNextEpochToKick',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
-      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
-      { name: 'timeout', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'NotEnoughTimeElapsedForTimeoutSinceLastEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
-      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'NotEnoughTimeElapsedSinceLastEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'minimumValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NotEnoughValidatorsInNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'currentReadyValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'nextReadyValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'minimumValidatorCountToBeReady',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NotEnoughValidatorsReadyForNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentEpochNumber', internalType: 'uint256', type: 'uint256' },
-      { name: 'receivedEpochNumber', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'SignaledReadyForWrongEpochNumber',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'StakerNotPermitted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestedWithdrawlAmount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'TryingToWithdrawMoreThanStaked',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'validator', internalType: 'address', type: 'address' },
-      {
-        name: 'validatorsInNextEpoch',
-        internalType: 'address[]',
-        type: 'address[]',
-      },
-    ],
-    name: 'ValidatorIsNotInNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'valueName', internalType: 'string', type: 'string' }],
-    name: 'ValueMustBeNonzero',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'epochNumber',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ReadyForNextEpoch',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'token',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Recovered',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'RequestToJoin',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'RequestToLeave',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'newDuration',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'RewardsDurationUpdated',
-  },
-  {
     type: 'event',
     anonymous: false,
     inputs: [
@@ -22164,7 +28282,7 @@ export const stakingDiamondAbi = [
         indexed: true,
       },
       {
-        name: 'validatorStakerAddress',
+        name: 'validatorToKickStakerAddress',
         internalType: 'address',
         type: 'address',
         indexed: true,
@@ -22181,22 +28299,8 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'advanceEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'exit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getReward',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -22204,7 +28308,36 @@ export const stakingDiamondAbi = [
     type: 'function',
     inputs: [
       {
-        name: 'validatorStakerAddress',
+        name: 'state',
+        internalType: 'enum LibStakingStorage.States',
+        type: 'uint8',
+      },
+    ],
+    name: 'checkActiveOrUnlockedOrPausedState',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'exit',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'attestedAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getAttestedPubKey',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'validatorToKickStakerAddress',
         internalType: 'address',
         type: 'address',
       },
@@ -22217,7 +28350,7 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'lockValidatorsForNextEpoch',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -22225,14 +28358,48 @@ export const stakingDiamondAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'ip', internalType: 'uint32', type: 'uint32' },
-      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-      { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'attestedAddress', internalType: 'address', type: 'address' },
+      { name: 'attestedPubKey', internalType: 'bytes', type: 'bytes' },
     ],
+    name: 'registerAttestedWallet',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'requestToJoin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsForShadowSplicing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'requestToJoinAsNode',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -22245,7 +28412,7 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'requestToLeaveAsNode',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -22256,7 +28423,7 @@ export const stakingDiamondAbi = [
       { name: 'ip', internalType: 'uint32', type: 'uint32' },
       { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
       { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
       { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
       { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
     ],
@@ -22266,888 +28433,29 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'epochNumber', internalType: 'uint256', type: 'uint256' }],
-    name: 'signalReadyForNextEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'stake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
     inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'ip', internalType: 'uint32', type: 'uint32' },
-      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-      { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'stakeAndJoin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'index',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'version',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-        indexed: false,
-      },
-    ],
-    name: 'VersionRequirementsUpdated',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'version',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    name: 'checkVersion',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMaxVersion',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMaxVersionString',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMinVersion',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getMinVersionString',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'version',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    name: 'setMaxVersion',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'version',
-        internalType: 'struct LibStakingStorage.Version',
-        type: 'tuple',
-        components: [
-          { name: 'major', internalType: 'uint256', type: 'uint256' },
-          { name: 'minor', internalType: 'uint256', type: 'uint256' },
-          { name: 'patch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    name: 'setMinVersion',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
-    name: 'complaintConfig',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.ComplaintConfig',
-        type: 'tuple',
-        components: [
-          { name: 'tolerance', internalType: 'uint256', type: 'uint256' },
-          { name: 'intervalSecs', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'kickPenaltyPercent',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'config',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Config',
-        type: 'tuple',
-        components: [
-          {
-            name: 'tokenRewardPerTokenPerEpoch',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintTolerance',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
-          {
-            name: 'minimumValidatorCount',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxConcurrentRequests',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'maxTripleCount', internalType: 'uint256', type: 'uint256' },
-          { name: 'minTripleCount', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'peerCheckingIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxTripleConcurrency',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'contractResolver',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'countOfCurrentValidatorsReadyForNextEpoch',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'countOfNextValidatorsReadyForNextEpoch',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'currentValidatorCountForConsensus',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'epoch',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Epoch',
-        type: 'tuple',
-        components: [
-          { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
-          { name: 'number', internalType: 'uint256', type: 'uint256' },
-          { name: 'endTime', internalType: 'uint256', type: 'uint256' },
-          { name: 'retries', internalType: 'uint256', type: 'uint256' },
-          { name: 'timeout', internalType: 'uint256', type: 'uint256' },
-          { name: 'startTime', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getActiveUnkickedValidatorStructs',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getActiveUnkickedValidatorStructsAndCounts',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Epoch',
-        type: 'tuple',
-        components: [
-          { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
-          { name: 'number', internalType: 'uint256', type: 'uint256' },
-          { name: 'endTime', internalType: 'uint256', type: 'uint256' },
-          { name: 'retries', internalType: 'uint256', type: 'uint256' },
-          { name: 'timeout', internalType: 'uint256', type: 'uint256' },
-          { name: 'startTime', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-      { name: '', internalType: 'uint256', type: 'uint256' },
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getActiveUnkickedValidators',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getKeyTypes',
-    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getKickedValidators',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
-    ],
-    name: 'getNodeStakerAddressMappings',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.AddressMapping[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'stakerAddress', internalType: 'address', type: 'address' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getStakingBalancesAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getTokenAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsInCurrentEpoch',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsInCurrentEpochLength',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsInNextEpoch',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
-    ],
-    name: 'getValidatorsStructs',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsStructsInCurrentEpoch',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsStructsInNextEpoch',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'epochNumber', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: 'voterStakerAddress', internalType: 'address', type: 'address' },
     ],
-    name: 'getVotingStatusToKickValidator',
-    outputs: [
-      { name: '', internalType: 'uint256', type: 'uint256' },
-      { name: '', internalType: 'bool', type: 'bool' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'isActiveValidator',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'isActiveValidatorByNodeAddress',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'isReadyForNextEpoch',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'isRecentValidator',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
-    name: 'kickPenaltyPercentByReason',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'nextValidatorCountForConsensus',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
-    name: 'nodeAddressToStakerAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'readyForNextEpoch',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'shouldKickValidator',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'state',
-    outputs: [
-      {
-        name: '',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'validators',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Validator',
-        type: 'tuple',
-        components: [
-          { name: 'ip', internalType: 'uint32', type: 'uint32' },
-          { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-          { name: 'port', internalType: 'uint32', type: 'uint32' },
-          { name: 'nodeAddress', internalType: 'address', type: 'address' },
-          { name: 'reward', internalType: 'uint256', type: 'uint256' },
-          { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-          { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
+    name: 'signalReadyForNextEpoch',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// StakingValidatorFacet
+// StakingValidatorTest
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const stakingFacetAbi = [
-  { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
-  {
-    type: 'error',
-    inputs: [],
-    name: 'CannotKickBelowCurrentValidatorThreshold',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakingAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotRejoinUntilNextEpochBecauseKicked',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'CannotReuseCommsKeys',
-  },
-  { type: 'error', inputs: [], name: 'CannotStakeZero' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'CannotVoteTwice',
-  },
-  { type: 'error', inputs: [], name: 'CannotWithdrawZero' },
-  {
-    type: 'error',
-    inputs: [{ name: 'nodeAddress', internalType: 'address', type: 'address' }],
-    name: 'CouldNotMapNodeAddressToStakerAddress',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInActiveOrUnlockedOrPausedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInActiveOrUnlockedOrPausedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInActiveOrUnlockedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochOrRestoreState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInReadyForNextEpochState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'MustBeValidatorInNextEpochToKick',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
-      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
-      { name: 'timeout', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'NotEnoughTimeElapsedForTimeoutSinceLastEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentTimestamp', internalType: 'uint256', type: 'uint256' },
-      { name: 'epochEndTime', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'NotEnoughTimeElapsedSinceLastEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'minimumValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NotEnoughValidatorsInNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'currentReadyValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'nextReadyValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'minimumValidatorCountToBeReady',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NotEnoughValidatorsReadyForNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'currentEpochNumber', internalType: 'uint256', type: 'uint256' },
-      { name: 'receivedEpochNumber', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'SignaledReadyForWrongEpochNumber',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'stakerAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'StakerNotPermitted',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'yourBalance', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'requestedWithdrawlAmount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'TryingToWithdrawMoreThanStaked',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'validator', internalType: 'address', type: 'address' },
-      {
-        name: 'validatorsInNextEpoch',
-        internalType: 'address[]',
-        type: 'address[]',
-      },
-    ],
-    name: 'ValidatorIsNotInNextEpoch',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'valueName', internalType: 'string', type: 'string' }],
-    name: 'ValueMustBeNonzero',
-  },
+export const stakingValidatorTestAbi = [
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'epochNumber',
+        name: 'validatorId',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ReadyForNextEpoch',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'token',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Recovered',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
         indexed: true,
       },
     ],
@@ -23158,299 +28466,547 @@ export const stakingFacetAbi = [
     anonymous: false,
     inputs: [
       {
-        name: 'staker',
+        name: 'stakerAddress',
         internalType: 'address',
         type: 'address',
-        indexed: true,
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
       },
     ],
-    name: 'RequestToLeave',
+    name: 'StakeRecordCreated',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'newDuration',
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
     ],
-    name: 'RewardsDurationUpdated',
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'newState',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
         indexed: false,
       },
     ],
-    name: 'StateChanged',
+    name: 'log_array',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
       },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
-        name: 'amountBurned',
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
     ],
-    name: 'ValidatorKickedFromNextEpoch',
+    name: 'log_named_decimal_int',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amountBurned',
+        name: 'decimals',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
     ],
-    name: 'ValidatorKickedFromNextEpoch',
+    name: 'log_named_decimal_uint',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
-      {
-        name: 'reporter',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'reason',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      { name: 'data', internalType: 'bytes', type: 'bytes', indexed: false },
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
     ],
-    name: 'VotedToKickValidatorInNextEpoch',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'advanceEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'exit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      {
-        name: 'validatorStakerAddress',
-        internalType: 'address',
-        type: 'address',
-      },
-      { name: 'reason', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'kickValidatorInNextEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'lockValidatorsForNextEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'ip', internalType: 'uint32', type: 'uint32' },
-      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-      { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'requestToJoin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'requestToLeave',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'requestToLeaveAsNode',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'ip', internalType: 'uint32', type: 'uint32' },
-      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-      { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setIpPortNodeAddressAndCommunicationPubKeys',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'epochNumber', internalType: 'uint256', type: 'uint256' }],
-    name: 'signalReadyForNextEpoch',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'stake',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-      { name: 'ip', internalType: 'uint32', type: 'uint32' },
-      { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
-      { name: 'port', internalType: 'uint32', type: 'uint32' },
-      { name: 'nodeAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'stakeAndJoin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// StakingUtilsLib
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const stakingUtilsLibAbi = [
-  { type: 'error', inputs: [], name: 'CallerNotOwner' },
-  { type: 'error', inputs: [], name: 'CallerNotOwnerOrDevopsAdmin' },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInActiveOrUnlockedOrPausedState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      {
-        name: 'state',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-      },
-    ],
-    name: 'MustBeInNextValidatorSetLockedOrReadyForNextEpochState',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'validatorCount', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'minimumValidatorCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NotEnoughValidatorsInNextEpoch',
+    name: 'log_named_int',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
-      {
-        name: 'newState',
-        internalType: 'enum LibStakingStorage.States',
-        type: 'uint8',
-        indexed: false,
-      },
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
     ],
-    name: 'StateChanged',
+    name: 'log_named_string',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
       {
-        name: 'staker',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amountBurned',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
       },
     ],
-    name: 'ValidatorKickedFromNextEpoch',
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'operatorStakerIndexToKick',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_BannedValidatorJoinsAnotherRealm',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'realmIdToRemoveFirst',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_CannotRemoveFinalRealm',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'test_CannotRemoveRealmWithActiveValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const;
 
@@ -23471,6 +29027,12 @@ export const stakingVersionFacetAbi = [
         indexed: false,
       },
       {
+        name: 'realmId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
         name: 'version',
         internalType: 'struct LibStakingStorage.Version',
         type: 'tuple',
@@ -23487,6 +29049,7 @@ export const stakingVersionFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'version',
         internalType: 'struct LibStakingStorage.Version',
@@ -23504,7 +29067,7 @@ export const stakingVersionFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getMaxVersion',
     outputs: [
       {
@@ -23522,14 +29085,14 @@ export const stakingVersionFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getMaxVersionString',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getMinVersion',
     outputs: [
       {
@@ -23547,7 +29110,7 @@ export const stakingVersionFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getMinVersionString',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
     stateMutability: 'view',
@@ -23555,6 +29118,7 @@ export const stakingVersionFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'version',
         internalType: 'struct LibStakingStorage.Version',
@@ -23573,6 +29137,7 @@ export const stakingVersionFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       {
         name: 'version',
         internalType: 'struct LibStakingStorage.Version',
@@ -23595,6 +29160,52 @@ export const stakingVersionFacetAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const stakingViewsFacetAbi = [
+  { type: 'error', inputs: [], name: 'InvalidTimeLock' },
+  { type: 'error', inputs: [], name: 'NodeAddressNotFoundForStaker' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'stakeRecordId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'StakeRecordNotFound',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'globalStats',
+        internalType: 'struct LibStakingStorage.RewardEpochGlobalStats',
+        type: 'tuple',
+        components: [
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'stakeWeight', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorsInCurrentEpoch',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'actualEpochLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'calculateRewardsPerDay',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'calculateStakeWeight',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
   {
     type: 'function',
     inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
@@ -23612,60 +29223,11 @@ export const stakingViewsFacetAbi = [
             internalType: 'uint256',
             type: 'uint256',
           },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'config',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct LibStakingStorage.Config',
-        type: 'tuple',
-        components: [
           {
-            name: 'tokenRewardPerTokenPerEpoch',
+            name: 'kickPenaltyDemerits',
             internalType: 'uint256',
             type: 'uint256',
           },
-          {
-            name: 'DEPRECATED_complaintTolerance',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'DEPRECATED_complaintIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
-          {
-            name: 'minimumValidatorCount',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxConcurrentRequests',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'maxTripleCount', internalType: 'uint256', type: 'uint256' },
-          { name: 'minTripleCount', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'peerCheckingIntervalSecs',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'maxTripleConcurrency',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
@@ -23680,28 +29242,28 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'countOfCurrentValidatorsReadyForNextEpoch',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'countOfNextValidatorsReadyForNextEpoch',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'currentValidatorCountForConsensus',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'epoch',
     outputs: [
       {
@@ -23711,6 +29273,16 @@ export const stakingViewsFacetAbi = [
         components: [
           { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
           { name: 'number', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'rewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'nextRewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
           { name: 'endTime', internalType: 'uint256', type: 'uint256' },
           { name: 'retries', internalType: 'uint256', type: 'uint256' },
           { name: 'timeout', internalType: 'uint256', type: 'uint256' },
@@ -23722,7 +29294,14 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getActiveUnkickedValidatorCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getActiveUnkickedValidatorStructs',
     outputs: [
       {
@@ -23738,6 +29317,40 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
@@ -23745,7 +29358,7 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getActiveUnkickedValidatorStructsAndCounts',
     outputs: [
       {
@@ -23755,6 +29368,16 @@ export const stakingViewsFacetAbi = [
         components: [
           { name: 'epochLength', internalType: 'uint256', type: 'uint256' },
           { name: 'number', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'rewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'nextRewardEpochNumber',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
           { name: 'endTime', internalType: 'uint256', type: 'uint256' },
           { name: 'retries', internalType: 'uint256', type: 'uint256' },
           { name: 'timeout', internalType: 'uint256', type: 'uint256' },
@@ -23775,6 +29398,40 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
@@ -23782,9 +29439,43 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getActiveUnkickedValidators',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllReserveValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getAllValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getDelegatedStakersWithUnfreezingStakes',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'validatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getDelegatedStakersWithUnfreezingStakesCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -23796,9 +29487,106 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getKickedValidators',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'user', internalType: 'address', type: 'address' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getLastStakeRecord',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getLitCirc',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getLowestRewardEpochNumber',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'getNodeAttestedPubKeyMappings',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.PubKeyMapping[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'pubKey',
+            internalType: 'struct LibStakingStorage.UncompressedK256Key',
+            type: 'tuple',
+            components: [
+              { name: 'x', internalType: 'uint256', type: 'uint256' },
+              { name: 'y', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getNodeDemerits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -23822,35 +29610,343 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'getStakingBalancesAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getTokenAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'getValidatorsInCurrentEpoch',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getNonShadowValidators',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'getValidatorsInCurrentEpochLength',
+    inputs: [{ name: 'epochNumber', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRewardEpochGlobalStats',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RewardEpochGlobalStats',
+        type: 'tuple',
+        components: [
+          { name: 'stakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'stakeWeight', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'validatorsInCurrentEpoch',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'actualEpochLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getRewardEpochNumber',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getSelfStakeRecordCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getShadowValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getStakeRecord',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getStakeRecordCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getStakeRecordsForUser',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.StakeRecord[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'recordId', internalType: 'uint256', type: 'uint256' },
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getStakeWeightInEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakeRecord',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getTimelockInEpoch',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [],
+    name: 'getTokenContractAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTokenPrice',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakeRecord',
+        internalType: 'struct LibStakingStorage.StakeRecord',
+        type: 'tuple',
+        components: [
+          { name: 'id', internalType: 'uint256', type: 'uint256' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'unfreezeStart', internalType: 'uint256', type: 'uint256' },
+          { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'lastUpdateTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimed',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'initialSharePrice',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'loaded', internalType: 'bool', type: 'bool' },
+          { name: 'frozen', internalType: 'bool', type: 'bool' },
+          {
+            name: 'attributionAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+      { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getTokensStaked',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getTotalStake',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      { name: 'user', internalType: 'address', type: 'address' },
+    ],
+    name: 'getTotalStakeByUser',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'userStakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'operatorStakerAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'getUnfrozenStakeCountForUser',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
+    name: 'getValidatorsDelegated',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsInCurrentEpoch',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getValidatorsInCurrentEpochLength',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getValidatorsInNextEpoch',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
     stateMutability: 'view',
@@ -23858,7 +29954,7 @@ export const stakingViewsFacetAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'addresses', internalType: 'address[]', type: 'address[]' },
+      { name: 'stakerAddresses', internalType: 'address[]', type: 'address[]' },
     ],
     name: 'getValidatorsStructs',
     outputs: [
@@ -23875,6 +29971,40 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
@@ -23882,7 +30012,7 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getValidatorsStructsInCurrentEpoch',
     outputs: [
       {
@@ -23898,6 +30028,40 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
@@ -23905,7 +30069,7 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getValidatorsStructsInNextEpoch',
     outputs: [
       {
@@ -23921,6 +30085,40 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
@@ -23929,9 +30127,10 @@ export const stakingViewsFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'epochNumber', internalType: 'uint256', type: 'uint256' },
       {
-        name: 'validatorStakerAddress',
+        name: 'validatorToBeKickedStakerAddress',
         internalType: 'address',
         type: 'address',
       },
@@ -23946,29 +30145,139 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    inputs: [],
+    name: 'globalConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.GlobalConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'tokenRewardPerTokenPerEpoch',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'keyTypes', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'minimumValidatorCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'rewardEpochDuration',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'minTimeLock', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmin', internalType: 'uint256', type: 'uint256' },
+          { name: 'bmax', internalType: 'uint256', type: 'uint256' },
+          { name: 'k', internalType: 'uint256', type: 'uint256' },
+          { name: 'p', internalType: 'uint256', type: 'uint256' },
+          { name: 'enableStakeAutolock', internalType: 'bool', type: 'bool' },
+          { name: 'tokenPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'profitMultiplier',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'usdCostPerMonth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxEmissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'minStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxStakeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minSelfStake', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minSelfStakeTimelock',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minValidatorCountToClampMinimumThreshold',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'minThresholdToClampAt',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveShadowValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
     name: 'isActiveValidator',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
     name: 'isActiveValidatorByNodeAddress',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'nodeAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidatorByNodeAddressForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'isActiveValidatorForNextEpoch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'isReadyForNextEpoch',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddresses', internalType: 'address', type: 'address' },
+    ],
     name: 'isRecentValidator',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'validator', internalType: 'address', type: 'address' }],
+    name: 'isValidatorBanned',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
@@ -23981,7 +30290,85 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'litActionsConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.LitActionConfig',
+        type: 'tuple',
+        components: [
+          { name: 'timeoutMs', internalType: 'uint256', type: 'uint256' },
+          { name: 'memoryLimitMb', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxCodeLength', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxResponseLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxConsoleLogLength',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFetchCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxSignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxContractCallCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxBroadcastAndCollectCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxCallDepth', internalType: 'uint256', type: 'uint256' },
+          { name: 'maxRetries', internalType: 'uint256', type: 'uint256' },
+          { name: 'asyncActionsEnabled', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
+    name: 'maxStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'maxTimeLock',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minSelfStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'minTimeLock',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'nextValidatorCountForConsensus',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
@@ -23996,6 +30383,40 @@ export const stakingViewsFacetAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'operatorAddressToStakerAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'validator', internalType: 'address', type: 'address' }],
+    name: 'permittedRealmsForValidator',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'permittedValidators',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'base', internalType: 'uint256', type: 'uint256' },
+      { name: 'exponent', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'pow',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'stakerAddress', internalType: 'address', type: 'address' },
     ],
     name: 'readyForNextEpoch',
@@ -24004,7 +30425,47 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'realmConfig',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.RealmConfig',
+        type: 'tuple',
+        components: [
+          {
+            name: 'maxConcurrentRequests',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxPresignCount', internalType: 'uint256', type: 'uint256' },
+          { name: 'minPresignCount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'peerCheckingIntervalSecs',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxPresignConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'rpcHealthcheckEnabled', internalType: 'bool', type: 'bool' },
+          {
+            name: 'minEpochForRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'permittedValidatorsOn', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'stakerAddress', internalType: 'address', type: 'address' },
     ],
     name: 'shouldKickValidator',
@@ -24013,7 +30474,14 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [],
+    inputs: [{ name: 'staker', internalType: 'address', type: 'address' }],
+    name: 'stakerToValidatorsTheyStakedTo',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'state',
     outputs: [
       {
@@ -24022,6 +30490,21 @@ export const stakingViewsFacetAbi = [
         type: 'uint8',
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'realmId', internalType: 'uint256', type: 'uint256' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+      {
+        name: 'stakerInCurrentValidatorSet',
+        internalType: 'bool',
+        type: 'bool',
+      },
+    ],
+    name: 'validatorSelfStakeWillExpire',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
@@ -24044,10 +30527,11166 @@ export const stakingViewsFacetAbi = [
           { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
           { name: 'lastActiveEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'commissionRate', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRewardEpoch', internalType: 'uint256', type: 'uint256' },
+          { name: 'lastRealmId', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'delegatedStakeAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'delegatedStakeWeight',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedFixedCostRewards',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'lastRewardEpochClaimedCommission',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'operatorAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'uniqueDelegatingStakerCount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'registerAttestedWalletDisabled',
+            internalType: 'bool',
+            type: 'bool',
+          },
         ],
       },
     ],
     stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StdAssertions
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stdAssertionsAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StdInvariant
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stdInvariantAbi = [
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Test
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const testAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ValidatorCountTest
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const validatorCountTestAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RequestToJoin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakerAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'stakerAddressClient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRecordCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'validatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'recordId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'rewards',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeRewardsClaimed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'address', type: 'address', indexed: false },
+    ],
+    name: 'log_named_address',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'uint256[]',
+        type: 'uint256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'int256[]',
+        type: 'int256[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'val',
+        internalType: 'address[]',
+        type: 'address[]',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_array',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'log_named_bytes',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'bytes32', type: 'bytes32', indexed: false },
+    ],
+    name: 'log_named_bytes32',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+      {
+        name: 'decimals',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'log_named_decimal_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'int256', type: 'int256', indexed: false },
+    ],
+    name: 'log_named_int',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_named_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'key', internalType: 'string', type: 'string', indexed: false },
+      { name: 'val', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_named_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'string', type: 'string', indexed: false },
+    ],
+    name: 'log_string',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'log_uint',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: '', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'logs',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'IS_TEST',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddresses',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numAddresses', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateAddressesWithOffset',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'stakers', internalType: 'uint256', type: 'uint256' }],
+    name: '_generatePubKeys',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'numUint256s', internalType: 'uint256', type: 'uint256' }],
+    name: '_generateUint256s',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numUint256s', internalType: 'uint256', type: 'uint256' },
+      { name: 'offset', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateUint256sWithOffset',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'numValidators', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: '_generateValidators',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SetupAndUtils.TestValidator[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakerAddress', internalType: 'address', type: 'address' },
+          { name: 'commsKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeArtifacts',
+    outputs: [
+      {
+        name: 'excludedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeContracts',
+    outputs: [
+      {
+        name: 'excludedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSelectors',
+    outputs: [
+      {
+        name: 'excludedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'excludeSenders',
+    outputs: [
+      {
+        name: 'excludedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'failed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'setUp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifactSelectors',
+    outputs: [
+      {
+        name: 'targetedArtifactSelectors_',
+        internalType: 'struct StdInvariant.FuzzArtifactSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'artifact', internalType: 'string', type: 'string' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetArtifacts',
+    outputs: [
+      {
+        name: 'targetedArtifacts_',
+        internalType: 'string[]',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetContracts',
+    outputs: [
+      {
+        name: 'targetedContracts_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetInterfaces',
+    outputs: [
+      {
+        name: 'targetedInterfaces_',
+        internalType: 'struct StdInvariant.FuzzInterface[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'artifacts', internalType: 'string[]', type: 'string[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSelectors',
+    outputs: [
+      {
+        name: 'targetedSelectors_',
+        internalType: 'struct StdInvariant.FuzzSelector[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'targetSenders',
+    outputs: [
+      {
+        name: 'targetedSenders_',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'numValidatorsStakeAndJoining',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'numValidatorsStakeOnly',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_AfterJoining',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'numValidatorsStakeAndJoining',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'numValidatorsStakeOnly',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToKick',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'withSlashing', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_AfterKicking',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'numValidatorsStakeAndJoining',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'numValidatorsStakeOnly',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToLeave',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'testFuzz_AfterLeaving',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'numValidatorsStakeAndJoining',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'numValidatorsStakeOnly',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToMigrateFrom',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToMigrateTo',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'migrateLastSelfStake', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_AfterMigrating',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'numValidatorsStakeAndJoining',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'numValidatorsStakeOnly',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'operatorStakerIndexToWithdraw',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'withdrawLastSelfStake', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_AfterWithdrawing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Vm
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const vmAbi = [
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'access',
+        internalType: 'struct VmSafe.AccessListItem[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'storageKeys', internalType: 'bytes32[]', type: 'bytes32[]' },
+        ],
+      },
+    ],
+    name: 'accessList',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
+    name: 'accesses',
+    outputs: [
+      { name: 'readSlots', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'writeSlots', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'activeFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'addr',
+    outputs: [{ name: 'keyAddr', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'allowCheatcodes',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'condition', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertFalse',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assertFalse',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assertTrue',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'condition', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertTrue',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assume',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'potentialReverts',
+        internalType: 'struct VmSafe.PotentialRevert[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'reverter', internalType: 'address', type: 'address' },
+          { name: 'partialMatch', internalType: 'bool', type: 'bool' },
+          { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'potentialRevert',
+        internalType: 'struct VmSafe.PotentialRevert',
+        type: 'tuple',
+        components: [
+          { name: 'reverter', internalType: 'address', type: 'address' },
+          { name: 'partialMatch', internalType: 'bool', type: 'bool' },
+          { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'blob', internalType: 'bytes', type: 'bytes' }],
+    name: 'attachBlob',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    name: 'attachDelegation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'attachDelegation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newBlobBaseFee', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'blobBaseFee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'hashes', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    name: 'blobhashes',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'char', internalType: 'string', type: 'string' }],
+    name: 'breakpoint',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'char', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'breakpoint',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'signer', internalType: 'address', type: 'address' }],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'broadcastRawTransaction',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newChainId', internalType: 'uint256', type: 'uint256' }],
+    name: 'chainId',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'clearMockedCalls',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'source', internalType: 'address', type: 'address' },
+      { name: 'target', internalType: 'address', type: 'address' },
+    ],
+    name: 'cloneAccount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'closeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newCoinbase', internalType: 'address', type: 'address' }],
+    name: 'coinbase',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'initCodeHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'computeCreate2Address',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'initCodeHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'deployer', internalType: 'address', type: 'address' },
+    ],
+    name: 'computeCreate2Address',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'deployer', internalType: 'address', type: 'address' },
+      { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'computeCreateAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'subject', internalType: 'string', type: 'string' },
+      { name: 'search', internalType: 'string', type: 'string' },
+    ],
+    name: 'contains',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
+    name: 'cool',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'coolSlot',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'string', type: 'string' },
+      { name: 'to', internalType: 'string', type: 'string' },
+    ],
+    name: 'copyFile',
+    outputs: [{ name: 'copied', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+    ],
+    name: 'copyStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'recursive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'createDir',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'urlOrAlias', internalType: 'string', type: 'string' }],
+    name: 'createFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'createFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createSelectFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'createSelectFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'urlOrAlias', internalType: 'string', type: 'string' }],
+    name: 'createSelectFork',
+    outputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'walletLabel', internalType: 'string', type: 'string' }],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletLabel', internalType: 'string', type: 'string' },
+    ],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'newBalance', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deal',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'deleteSnapshot',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'deleteSnapshots',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'deleteStateSnapshot',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'deleteStateSnapshots',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+      { name: 'language', internalType: 'string', type: 'string' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+      { name: 'language', internalType: 'string', type: 'string' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newDifficulty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'difficulty',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'pathToStateJson', internalType: 'string', type: 'string' },
+    ],
+    name: 'dumpState',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'ensNamehash',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envAddress',
+    outputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envAddress',
+    outputs: [{ name: 'value', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBool',
+    outputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBool',
+    outputs: [{ name: 'value', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBytes',
+    outputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBytes',
+    outputs: [{ name: 'value', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBytes32',
+    outputs: [{ name: 'value', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBytes32',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envExists',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envInt',
+    outputs: [{ name: 'value', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envInt',
+    outputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'address', type: 'address' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envString',
+    outputs: [{ name: 'value', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envString',
+    outputs: [{ name: 'value', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envUint',
+    outputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envUint',
+    outputs: [{ name: 'value', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'newRuntimeBytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'etch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'fromBlock', internalType: 'uint256', type: 'uint256' },
+      { name: 'toBlock', internalType: 'uint256', type: 'uint256' },
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'eth_getLogs',
+    outputs: [
+      {
+        name: 'logs',
+        internalType: 'struct VmSafe.EthGetLogs[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'emitter', internalType: 'address', type: 'address' },
+          { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'transactionHash', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'transactionIndex', internalType: 'uint64', type: 'uint64' },
+          { name: 'logIndex', internalType: 'uint256', type: 'uint256' },
+          { name: 'removed', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'exists',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'gas', internalType: 'uint64', type: 'uint64' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'gas', internalType: 'uint64', type: 'uint64' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'expectCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'minGas', internalType: 'uint64', type: 'uint64' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'expectCallMinGas',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'minGas', internalType: 'uint64', type: 'uint64' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectCallMinGas',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+      { name: 'deployer', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectCreate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+      { name: 'deployer', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectCreate2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'count', internalType: 'uint64', type: 'uint64' }],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+      { name: 'emitter', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'emitter', internalType: 'address', type: 'address' }],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'emitter', internalType: 'address', type: 'address' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+      { name: 'emitter', internalType: 'address', type: 'address' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectEmit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'expectEmitAnonymous',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'emitter', internalType: 'address', type: 'address' }],
+    name: 'expectEmitAnonymous',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic0', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+      { name: 'emitter', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectEmitAnonymous',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'checkTopic0', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic1', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic2', internalType: 'bool', type: 'bool' },
+      { name: 'checkTopic3', internalType: 'bool', type: 'bool' },
+      { name: 'checkData', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'expectEmitAnonymous',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'revertData', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'expectPartialRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'reverter', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectPartialRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'reverter', internalType: 'address', type: 'address' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'reverter', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'count', internalType: 'uint64', type: 'uint64' }],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+      { name: 'reverter', internalType: 'address', type: 'address' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'reverter', internalType: 'address', type: 'address' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'revertData', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+      { name: 'reverter', internalType: 'address', type: 'address' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'reverter', internalType: 'address', type: 'address' }],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'revertData', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'count', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'revertData', internalType: 'bytes', type: 'bytes' }],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'expectRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'min', internalType: 'uint64', type: 'uint64' },
+      { name: 'max', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectSafeMemory',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'min', internalType: 'uint64', type: 'uint64' },
+      { name: 'max', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'expectSafeMemoryCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newBasefee', internalType: 'uint256', type: 'uint256' }],
+    name: 'fee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'commandInput', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'ffi',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    name: 'foundryVersionAtLeast',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    name: 'foundryVersionCmp',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'fsMetadata',
+    outputs: [
+      {
+        name: 'metadata',
+        internalType: 'struct VmSafe.FsMetadata',
+        type: 'tuple',
+        components: [
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+          { name: 'length', internalType: 'uint256', type: 'uint256' },
+          { name: 'readOnly', internalType: 'bool', type: 'bool' },
+          { name: 'modified', internalType: 'uint256', type: 'uint256' },
+          { name: 'accessed', internalType: 'uint256', type: 'uint256' },
+          { name: 'created', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'code', internalType: 'bytes', type: 'bytes' }],
+    name: 'getArtifactPathByCode',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'deployedCode', internalType: 'bytes', type: 'bytes' }],
+    name: 'getArtifactPathByDeployedCode',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlobBaseFee',
+    outputs: [
+      { name: 'blobBaseFee', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlobhashes',
+    outputs: [{ name: 'hashes', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlockNumber',
+    outputs: [{ name: 'height', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlockTimestamp',
+    outputs: [{ name: 'timestamp', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'txType',
+        internalType: 'enum VmSafe.BroadcastTxType',
+        type: 'uint8',
+      },
+    ],
+    name: 'getBroadcast',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary',
+        type: 'tuple',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getBroadcasts',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'txType',
+        internalType: 'enum VmSafe.BroadcastTxType',
+        type: 'uint8',
+      },
+    ],
+    name: 'getBroadcasts',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'chainAlias', internalType: 'string', type: 'string' }],
+    name: 'getChain',
+    outputs: [
+      {
+        name: 'chain',
+        internalType: 'struct VmSafe.Chain',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: 'chainAlias', internalType: 'string', type: 'string' },
+          { name: 'rpcUrl', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'chainId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getChain',
+    outputs: [
+      {
+        name: 'chain',
+        internalType: 'struct VmSafe.Chain',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: 'chainAlias', internalType: 'string', type: 'string' },
+          { name: 'rpcUrl', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'getCode',
+    outputs: [
+      { name: 'creationBytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'getDeployedCode',
+    outputs: [
+      { name: 'runtimeBytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getDeployment',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'contractName', internalType: 'string', type: 'string' }],
+    name: 'getDeployment',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getDeployments',
+    outputs: [
+      {
+        name: 'deployedAddresses',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getFoundryVersion',
+    outputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getLabel',
+    outputs: [{ name: 'currentLabel', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'elementSlot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'getMappingKeyAndParentOf',
+    outputs: [
+      { name: 'found', internalType: 'bool', type: 'bool' },
+      { name: 'key', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'parent', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'mappingSlot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'getMappingLength',
+    outputs: [{ name: 'length', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'mappingSlot', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'idx', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMappingSlotAt',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getRecordedLogs',
+    outputs: [
+      {
+        name: 'logs',
+        internalType: 'struct VmSafe.Log[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'emitter', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getStateDiff',
+    outputs: [{ name: 'diff', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getStateDiffJson',
+    outputs: [{ name: 'diff', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getWallets',
+    outputs: [
+      { name: 'wallets', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'indexOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'interceptInitcode',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'context',
+        internalType: 'enum VmSafe.ForgeContext',
+        type: 'uint8',
+      },
+    ],
+    name: 'isContext',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'isDir',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'isFile',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'isPersistent',
+    outputs: [{ name: 'persistent', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExists',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExistsJson',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExistsToml',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'newLabel', internalType: 'string', type: 'string' },
+    ],
+    name: 'label',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'lastCallGas',
+    outputs: [
+      {
+        name: 'gas',
+        internalType: 'struct VmSafe.Gas',
+        type: 'tuple',
+        components: [
+          { name: 'gasLimit', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasTotalUsed', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasMemoryUsed', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasRefunded', internalType: 'int64', type: 'int64' },
+          { name: 'gasRemaining', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'load',
+    outputs: [{ name: 'data', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'pathToAllocsJson', internalType: 'string', type: 'string' },
+    ],
+    name: 'loadAllocs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'makePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account0', internalType: 'address', type: 'address' },
+      { name: 'account1', internalType: 'address', type: 'address' },
+    ],
+    name: 'makePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'makePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account0', internalType: 'address', type: 'address' },
+      { name: 'account1', internalType: 'address', type: 'address' },
+      { name: 'account2', internalType: 'address', type: 'address' },
+    ],
+    name: 'makePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCallRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes4', type: 'bytes4' },
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCallRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCallRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockCallRevert',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'msgValue', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'returnData', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'mockCalls',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'returnData', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'mockCalls',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'callee', internalType: 'address', type: 'address' },
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'mockFunction',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'noAccessList',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseAddress',
+    outputs: [
+      { name: 'parsedValue', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBool',
+    outputs: [{ name: 'parsedValue', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBytes',
+    outputs: [{ name: 'parsedValue', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBytes32',
+    outputs: [
+      { name: 'parsedValue', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseInt',
+    outputs: [{ name: 'parsedValue', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    name: 'parseJson',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJson',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonAddressArray',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBoolArray',
+    outputs: [{ name: '', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes32',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes32Array',
+    outputs: [{ name: '', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytesArray',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonIntArray',
+    outputs: [{ name: '', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonKeys',
+    outputs: [{ name: 'keys', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonStringArray',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonTypeArray',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonUintArray',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseToml',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'toml', internalType: 'string', type: 'string' }],
+    name: 'parseToml',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlAddressArray',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBoolArray',
+    outputs: [{ name: '', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes32',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes32Array',
+    outputs: [{ name: '', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytesArray',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlIntArray',
+    outputs: [{ name: '', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlKeys',
+    outputs: [{ name: 'keys', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlStringArray',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlTypeArray',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlUintArray',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseUint',
+    outputs: [
+      { name: 'parsedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseTracing',
+    outputs: [],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'txOrigin', internalType: 'address', type: 'address' },
+    ],
+    name: 'prank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'txOrigin', internalType: 'address', type: 'address' },
+      { name: 'delegateCall', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'prank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'delegateCall', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'prank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'msgSender', internalType: 'address', type: 'address' }],
+    name: 'prank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newPrevrandao', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'prevrandao',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newPrevrandao', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'prevrandao',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'projectRoot',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'prompt',
+    outputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptSecret',
+    outputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptSecretUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'publicKeyP256',
+    outputs: [
+      { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+      { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'len', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBytes4',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBytes8',
+    outputs: [{ name: '', internalType: 'bytes8', type: 'bytes8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'bits', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'bits', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'min', internalType: 'uint256', type: 'uint256' },
+      { name: 'max', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'readCallers',
+    outputs: [
+      {
+        name: 'callerMode',
+        internalType: 'enum VmSafe.CallerMode',
+        type: 'uint8',
+      },
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'txOrigin', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'maxDepth', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'maxDepth', internalType: 'uint64', type: 'uint64' },
+      { name: 'followLinks', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readFile',
+    outputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readFileBinary',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readLine',
+    outputs: [{ name: 'line', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'linkPath', internalType: 'string', type: 'string' }],
+    name: 'readLink',
+    outputs: [{ name: 'targetPath', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'record',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'recordLogs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'rememberKey',
+    outputs: [{ name: 'keyAddr', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'count', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'rememberKeys',
+    outputs: [
+      { name: 'keyAddrs', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'language', internalType: 'string', type: 'string' },
+      { name: 'count', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'rememberKeys',
+    outputs: [
+      { name: 'keyAddrs', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'recursive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'removeDir',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'removeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'from', internalType: 'string', type: 'string' },
+      { name: 'to', internalType: 'string', type: 'string' },
+    ],
+    name: 'replace',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resetGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'resetNonce',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resumeGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resumeTracing',
+    outputs: [],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'revertTo',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'revertToAndDelete',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'revertToState',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    name: 'revertToStateAndDelete',
+    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'revokePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'revokePersistent',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newHeight', internalType: 'uint256', type: 'uint256' }],
+    name: 'roll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'txHash', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'rollFork',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'forkId', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'rollFork',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'blockNumber', internalType: 'uint256', type: 'uint256' }],
+    name: 'rollFork',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'forkId', internalType: 'uint256', type: 'uint256' },
+      { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'rollFork',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'method', internalType: 'string', type: 'string' },
+      { name: 'params', internalType: 'string', type: 'string' },
+    ],
+    name: 'rpc',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'method', internalType: 'string', type: 'string' },
+      { name: 'params', internalType: 'string', type: 'string' },
+    ],
+    name: 'rpc',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'rpcAlias', internalType: 'string', type: 'string' }],
+    name: 'rpcUrl',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'rpcUrlStructs',
+    outputs: [
+      {
+        name: 'urls',
+        internalType: 'struct VmSafe.Rpc[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'key', internalType: 'string', type: 'string' },
+          { name: 'url', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'rpcUrls',
+    outputs: [
+      { name: 'urls', internalType: 'string[2][]', type: 'string[2][]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'forkId', internalType: 'uint256', type: 'uint256' }],
+    name: 'selectFork',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'serializeAddress',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'address', type: 'address' },
+    ],
+    name: 'serializeAddress',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'serializeBool',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'serializeBool',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'serializeBytes',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeBytes',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'serializeBytes32',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'serializeBytes32',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'serializeInt',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'serializeInt',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'serializeJson',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeJsonType',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeJsonType',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'serializeString',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'serializeString',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'serializeUint',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'serializeUint',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'serializeUintToHex',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'overwrite', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setArbitraryStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
+    name: 'setArbitraryStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'setBlockhash',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'setEnv',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'newNonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'setNonce',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'newNonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'setNonceUnsafe',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'array', internalType: 'uint256[]', type: 'uint256[]' }],
+    name: 'shuffle',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'digest', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'digest', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signP256',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'skipTest', internalType: 'bool', type: 'bool' },
+      { name: 'reason', internalType: 'string', type: 'string' },
+    ],
+    name: 'skip',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'skipTest', internalType: 'bool', type: 'bool' }],
+    name: 'skip',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'duration', internalType: 'uint256', type: 'uint256' }],
+    name: 'sleep',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'snapshot',
+    outputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'group', internalType: 'string', type: 'string' },
+      { name: 'name', internalType: 'string', type: 'string' },
+    ],
+    name: 'snapshotGasLastCall',
+    outputs: [{ name: 'gasUsed', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'snapshotGasLastCall',
+    outputs: [{ name: 'gasUsed', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'snapshotState',
+    outputs: [{ name: 'snapshotId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'snapshotValue',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'group', internalType: 'string', type: 'string' },
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'snapshotValue',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'array', internalType: 'uint256[]', type: 'uint256[]' }],
+    name: 'sort',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'delimiter', internalType: 'string', type: 'string' },
+    ],
+    name: 'split',
+    outputs: [{ name: 'outputs', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'signer', internalType: 'address', type: 'address' }],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startDebugTraceRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startMappingRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'msgSender', internalType: 'address', type: 'address' }],
+    name: 'startPrank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'delegateCall', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'startPrank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'txOrigin', internalType: 'address', type: 'address' },
+    ],
+    name: 'startPrank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'msgSender', internalType: 'address', type: 'address' },
+      { name: 'txOrigin', internalType: 'address', type: 'address' },
+      { name: 'delegateCall', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'startPrank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'startSnapshotGas',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'group', internalType: 'string', type: 'string' },
+      { name: 'name', internalType: 'string', type: 'string' },
+    ],
+    name: 'startSnapshotGas',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startStateDiffRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopAndReturnDebugTraceRecording',
+    outputs: [
+      {
+        name: 'step',
+        internalType: 'struct VmSafe.DebugStep[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stack', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'memoryInput', internalType: 'bytes', type: 'bytes' },
+          { name: 'opcode', internalType: 'uint8', type: 'uint8' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isOutOfGas', internalType: 'bool', type: 'bool' },
+          { name: 'contractAddr', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopAndReturnStateDiff',
+    outputs: [
+      {
+        name: 'accountAccesses',
+        internalType: 'struct VmSafe.AccountAccess[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'chainInfo',
+            internalType: 'struct VmSafe.ChainInfo',
+            type: 'tuple',
+            components: [
+              { name: 'forkId', internalType: 'uint256', type: 'uint256' },
+              { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+          {
+            name: 'kind',
+            internalType: 'enum VmSafe.AccountAccessKind',
+            type: 'uint8',
+          },
+          { name: 'account', internalType: 'address', type: 'address' },
+          { name: 'accessor', internalType: 'address', type: 'address' },
+          { name: 'initialized', internalType: 'bool', type: 'bool' },
+          { name: 'oldBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'newBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'deployedCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'reverted', internalType: 'bool', type: 'bool' },
+          {
+            name: 'storageAccesses',
+            internalType: 'struct VmSafe.StorageAccess[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'account', internalType: 'address', type: 'address' },
+              { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'isWrite', internalType: 'bool', type: 'bool' },
+              {
+                name: 'previousValue',
+                internalType: 'bytes32',
+                type: 'bytes32',
+              },
+              { name: 'newValue', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'reverted', internalType: 'bool', type: 'bool' },
+            ],
+          },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopExpectSafeMemory',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopMappingRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopPrank',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'group', internalType: 'string', type: 'string' },
+      { name: 'name', internalType: 'string', type: 'string' },
+    ],
+    name: 'stopSnapshotGas',
+    outputs: [{ name: 'gasUsed', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'stopSnapshotGas',
+    outputs: [{ name: 'gasUsed', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopSnapshotGas',
+    outputs: [{ name: 'gasUsed', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'value', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'store',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    name: 'toBase64',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'toBase64',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    name: 'toBase64URL',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'toBase64URL',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'toLowercase',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'toUppercase',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'forkId', internalType: 'uint256', type: 'uint256' },
+      { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'transact',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'txHash', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'transact',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'trim',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'commandInput', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'tryFfi',
+    outputs: [
+      {
+        name: 'result',
+        internalType: 'struct VmSafe.FfiResult',
+        type: 'tuple',
+        components: [
+          { name: 'exitCode', internalType: 'int32', type: 'int32' },
+          { name: 'stdout', internalType: 'bytes', type: 'bytes' },
+          { name: 'stderr', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newGasPrice', internalType: 'uint256', type: 'uint256' }],
+    name: 'txGasPrice',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unixTime',
+    outputs: [
+      { name: 'milliseconds', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'warmSlot',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newTimestamp', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'warp',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'writeFileBinary',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeJson',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeJson',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeLine',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeToml',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeToml',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// VmSafe
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const vmSafeAbi = [
+  {
+    type: 'function',
+    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
+    name: 'accesses',
+    outputs: [
+      { name: 'readSlots', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'writeSlots', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'addr',
+    outputs: [{ name: 'keyAddr', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbs',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqAbsDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRel',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'maxPercentDelta', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertApproxEqRelDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'condition', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertFalse',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assertFalse',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertGtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLe',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLeDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLt',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertLtDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool', type: 'bool' },
+      { name: 'right', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'right', internalType: 'bool[]', type: 'bool[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address[]', type: 'address[]' },
+      { name: 'right', internalType: 'address[]', type: 'address[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string', type: 'string' },
+      { name: 'right', internalType: 'string', type: 'string' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes', type: 'bytes' },
+      { name: 'right', internalType: 'bytes', type: 'bytes' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'right', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'address', type: 'address' },
+      { name: 'right', internalType: 'address', type: 'address' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'right', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'right', internalType: 'bytes32[]', type: 'bytes32[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'string[]', type: 'string[]' },
+      { name: 'right', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'right', internalType: 'int256[]', type: 'int256[]' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'right', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'assertNotEq',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'int256', type: 'int256' },
+      { name: 'right', internalType: 'int256', type: 'int256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'left', internalType: 'uint256', type: 'uint256' },
+      { name: 'right', internalType: 'uint256', type: 'uint256' },
+      { name: 'decimals', internalType: 'uint256', type: 'uint256' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertNotEqDecimal',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assertTrue',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'condition', internalType: 'bool', type: 'bool' },
+      { name: 'error', internalType: 'string', type: 'string' },
+    ],
+    name: 'assertTrue',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'condition', internalType: 'bool', type: 'bool' }],
+    name: 'assume',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'potentialReverts',
+        internalType: 'struct VmSafe.PotentialRevert[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'reverter', internalType: 'address', type: 'address' },
+          { name: 'partialMatch', internalType: 'bool', type: 'bool' },
+          { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'potentialRevert',
+        internalType: 'struct VmSafe.PotentialRevert',
+        type: 'tuple',
+        components: [
+          { name: 'reverter', internalType: 'address', type: 'address' },
+          { name: 'partialMatch', internalType: 'bool', type: 'bool' },
+          { name: 'revertData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'assumeNoRevert',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'blob', internalType: 'bytes', type: 'bytes' }],
+    name: 'attachBlob',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    name: 'attachDelegation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'attachDelegation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'char', internalType: 'string', type: 'string' }],
+    name: 'breakpoint',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'char', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'breakpoint',
+    outputs: [],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'signer', internalType: 'address', type: 'address' }],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'broadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'broadcastRawTransaction',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'closeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'initCodeHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'computeCreate2Address',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'initCodeHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'deployer', internalType: 'address', type: 'address' },
+    ],
+    name: 'computeCreate2Address',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'deployer', internalType: 'address', type: 'address' },
+      { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'computeCreateAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'subject', internalType: 'string', type: 'string' },
+      { name: 'search', internalType: 'string', type: 'string' },
+    ],
+    name: 'contains',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'string', type: 'string' },
+      { name: 'to', internalType: 'string', type: 'string' },
+    ],
+    name: 'copyFile',
+    outputs: [{ name: 'copied', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+    ],
+    name: 'copyStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'recursive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'createDir',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'walletLabel', internalType: 'string', type: 'string' }],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'walletLabel', internalType: 'string', type: 'string' },
+    ],
+    name: 'createWallet',
+    outputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'artifactPath', internalType: 'string', type: 'string' },
+      { name: 'constructorArgs', internalType: 'bytes', type: 'bytes' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deployCode',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+      { name: 'language', internalType: 'string', type: 'string' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+      { name: 'language', internalType: 'string', type: 'string' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'index', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'deriveKey',
+    outputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'ensNamehash',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envAddress',
+    outputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envAddress',
+    outputs: [{ name: 'value', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBool',
+    outputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBool',
+    outputs: [{ name: 'value', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBytes',
+    outputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBytes',
+    outputs: [{ name: 'value', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envBytes32',
+    outputs: [{ name: 'value', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envBytes32',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envExists',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envInt',
+    outputs: [{ name: 'value', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envInt',
+    outputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'address', type: 'address' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+      { name: 'defaultValue', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'envOr',
+    outputs: [{ name: 'value', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envString',
+    outputs: [{ name: 'value', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envString',
+    outputs: [{ name: 'value', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'envUint',
+    outputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'delim', internalType: 'string', type: 'string' },
+    ],
+    name: 'envUint',
+    outputs: [{ name: 'value', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'fromBlock', internalType: 'uint256', type: 'uint256' },
+      { name: 'toBlock', internalType: 'uint256', type: 'uint256' },
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'eth_getLogs',
+    outputs: [
+      {
+        name: 'logs',
+        internalType: 'struct VmSafe.EthGetLogs[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'emitter', internalType: 'address', type: 'address' },
+          { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'transactionHash', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'transactionIndex', internalType: 'uint64', type: 'uint64' },
+          { name: 'logIndex', internalType: 'uint256', type: 'uint256' },
+          { name: 'removed', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'exists',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'commandInput', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'ffi',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    name: 'foundryVersionAtLeast',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    name: 'foundryVersionCmp',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'fsMetadata',
+    outputs: [
+      {
+        name: 'metadata',
+        internalType: 'struct VmSafe.FsMetadata',
+        type: 'tuple',
+        components: [
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+          { name: 'length', internalType: 'uint256', type: 'uint256' },
+          { name: 'readOnly', internalType: 'bool', type: 'bool' },
+          { name: 'modified', internalType: 'uint256', type: 'uint256' },
+          { name: 'accessed', internalType: 'uint256', type: 'uint256' },
+          { name: 'created', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'code', internalType: 'bytes', type: 'bytes' }],
+    name: 'getArtifactPathByCode',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'deployedCode', internalType: 'bytes', type: 'bytes' }],
+    name: 'getArtifactPathByDeployedCode',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlobBaseFee',
+    outputs: [
+      { name: 'blobBaseFee', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlockNumber',
+    outputs: [{ name: 'height', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getBlockTimestamp',
+    outputs: [{ name: 'timestamp', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'txType',
+        internalType: 'enum VmSafe.BroadcastTxType',
+        type: 'uint8',
+      },
+    ],
+    name: 'getBroadcast',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary',
+        type: 'tuple',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getBroadcasts',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'txType',
+        internalType: 'enum VmSafe.BroadcastTxType',
+        type: 'uint8',
+      },
+    ],
+    name: 'getBroadcasts',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct VmSafe.BroadcastTxSummary[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'txHash', internalType: 'bytes32', type: 'bytes32' },
+          {
+            name: 'txType',
+            internalType: 'enum VmSafe.BroadcastTxType',
+            type: 'uint8',
+          },
+          { name: 'contractAddress', internalType: 'address', type: 'address' },
+          { name: 'blockNumber', internalType: 'uint64', type: 'uint64' },
+          { name: 'success', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'chainAlias', internalType: 'string', type: 'string' }],
+    name: 'getChain',
+    outputs: [
+      {
+        name: 'chain',
+        internalType: 'struct VmSafe.Chain',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: 'chainAlias', internalType: 'string', type: 'string' },
+          { name: 'rpcUrl', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'chainId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getChain',
+    outputs: [
+      {
+        name: 'chain',
+        internalType: 'struct VmSafe.Chain',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: 'chainAlias', internalType: 'string', type: 'string' },
+          { name: 'rpcUrl', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'getCode',
+    outputs: [
+      { name: 'creationBytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'artifactPath', internalType: 'string', type: 'string' }],
+    name: 'getDeployedCode',
+    outputs: [
+      { name: 'runtimeBytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getDeployment',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'contractName', internalType: 'string', type: 'string' }],
+    name: 'getDeployment',
+    outputs: [
+      { name: 'deployedAddress', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'contractName', internalType: 'string', type: 'string' },
+      { name: 'chainId', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'getDeployments',
+    outputs: [
+      {
+        name: 'deployedAddresses',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getFoundryVersion',
+    outputs: [{ name: 'version', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getLabel',
+    outputs: [{ name: 'currentLabel', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'elementSlot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'getMappingKeyAndParentOf',
+    outputs: [
+      { name: 'found', internalType: 'bool', type: 'bool' },
+      { name: 'key', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'parent', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'mappingSlot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'getMappingLength',
+    outputs: [{ name: 'length', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'mappingSlot', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'idx', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMappingSlotAt',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getRecordedLogs',
+    outputs: [
+      {
+        name: 'logs',
+        internalType: 'struct VmSafe.Log[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'topics', internalType: 'bytes32[]', type: 'bytes32[]' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'emitter', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getStateDiff',
+    outputs: [{ name: 'diff', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getStateDiffJson',
+    outputs: [{ name: 'diff', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getWallets',
+    outputs: [
+      { name: 'wallets', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'indexOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'context',
+        internalType: 'enum VmSafe.ForgeContext',
+        type: 'uint8',
+      },
+    ],
+    name: 'isContext',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'isDir',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'isFile',
+    outputs: [{ name: 'result', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExists',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExistsJson',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'keyExistsToml',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'newLabel', internalType: 'string', type: 'string' },
+    ],
+    name: 'label',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'lastCallGas',
+    outputs: [
+      {
+        name: 'gas',
+        internalType: 'struct VmSafe.Gas',
+        type: 'tuple',
+        components: [
+          { name: 'gasLimit', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasTotalUsed', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasMemoryUsed', internalType: 'uint64', type: 'uint64' },
+          { name: 'gasRefunded', internalType: 'int64', type: 'int64' },
+          { name: 'gasRemaining', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'load',
+    outputs: [{ name: 'data', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseAddress',
+    outputs: [
+      { name: 'parsedValue', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBool',
+    outputs: [{ name: 'parsedValue', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBytes',
+    outputs: [{ name: 'parsedValue', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseBytes32',
+    outputs: [
+      { name: 'parsedValue', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseInt',
+    outputs: [{ name: 'parsedValue', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    name: 'parseJson',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJson',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonAddressArray',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBoolArray',
+    outputs: [{ name: '', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes32',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytes32Array',
+    outputs: [{ name: '', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonBytesArray',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonIntArray',
+    outputs: [{ name: '', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonKeys',
+    outputs: [{ name: 'keys', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonStringArray',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonTypeArray',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseJsonUintArray',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseToml',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'toml', internalType: 'string', type: 'string' }],
+    name: 'parseToml',
+    outputs: [{ name: 'abiEncodedData', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlAddressArray',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBoolArray',
+    outputs: [{ name: '', internalType: 'bool[]', type: 'bool[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes32',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytes32Array',
+    outputs: [{ name: '', internalType: 'bytes32[]', type: 'bytes32[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlBytesArray',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlIntArray',
+    outputs: [{ name: '', internalType: 'int256[]', type: 'int256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlKeys',
+    outputs: [{ name: 'keys', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlStringArray',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlType',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlTypeArray',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'toml', internalType: 'string', type: 'string' },
+      { name: 'key', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseTomlUintArray',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    name: 'parseUint',
+    outputs: [
+      { name: 'parsedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseTracing',
+    outputs: [],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'projectRoot',
+    outputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'prompt',
+    outputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptSecret',
+    outputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptSecretUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'promptText', internalType: 'string', type: 'string' }],
+    name: 'promptUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'publicKeyP256',
+    outputs: [
+      { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+      { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBool',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'len', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomBytes',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBytes4',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomBytes8',
+    outputs: [{ name: '', internalType: 'bytes8', type: 'bytes8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'bits', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomInt',
+    outputs: [{ name: '', internalType: 'int256', type: 'int256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'bits', internalType: 'uint256', type: 'uint256' }],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'min', internalType: 'uint256', type: 'uint256' },
+      { name: 'max', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'randomUint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'maxDepth', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'maxDepth', internalType: 'uint64', type: 'uint64' },
+      { name: 'followLinks', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readDir',
+    outputs: [
+      {
+        name: 'entries',
+        internalType: 'struct VmSafe.DirEntry[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'errorMessage', internalType: 'string', type: 'string' },
+          { name: 'path', internalType: 'string', type: 'string' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isDir', internalType: 'bool', type: 'bool' },
+          { name: 'isSymlink', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readFile',
+    outputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readFileBinary',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'readLine',
+    outputs: [{ name: 'line', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'linkPath', internalType: 'string', type: 'string' }],
+    name: 'readLink',
+    outputs: [{ name: 'targetPath', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'record',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'recordLogs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'rememberKey',
+    outputs: [{ name: 'keyAddr', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'count', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'rememberKeys',
+    outputs: [
+      { name: 'keyAddrs', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'mnemonic', internalType: 'string', type: 'string' },
+      { name: 'derivationPath', internalType: 'string', type: 'string' },
+      { name: 'language', internalType: 'string', type: 'string' },
+      { name: 'count', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'rememberKeys',
+    outputs: [
+      { name: 'keyAddrs', internalType: 'address[]', type: 'address[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'recursive', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'removeDir',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'path', internalType: 'string', type: 'string' }],
+    name: 'removeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'from', internalType: 'string', type: 'string' },
+      { name: 'to', internalType: 'string', type: 'string' },
+    ],
+    name: 'replace',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resetGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resumeGasMetering',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resumeTracing',
+    outputs: [],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'urlOrAlias', internalType: 'string', type: 'string' },
+      { name: 'method', internalType: 'string', type: 'string' },
+      { name: 'params', internalType: 'string', type: 'string' },
+    ],
+    name: 'rpc',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'method', internalType: 'string', type: 'string' },
+      { name: 'params', internalType: 'string', type: 'string' },
+    ],
+    name: 'rpc',
+    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'rpcAlias', internalType: 'string', type: 'string' }],
+    name: 'rpcUrl',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'rpcUrlStructs',
+    outputs: [
+      {
+        name: 'urls',
+        internalType: 'struct VmSafe.Rpc[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'key', internalType: 'string', type: 'string' },
+          { name: 'url', internalType: 'string', type: 'string' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'rpcUrls',
+    outputs: [
+      { name: 'urls', internalType: 'string[2][]', type: 'string[2][]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'serializeAddress',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'address', type: 'address' },
+    ],
+    name: 'serializeAddress',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'serializeBool',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'serializeBool',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+    name: 'serializeBytes',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeBytes',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'bytes32[]', type: 'bytes32[]' },
+    ],
+    name: 'serializeBytes32',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'serializeBytes32',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'int256', type: 'int256' },
+    ],
+    name: 'serializeInt',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'int256[]', type: 'int256[]' },
+    ],
+    name: 'serializeInt',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'serializeJson',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeJsonType',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'typeDescription', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'serializeJsonType',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'serializeString',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'serializeString',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'serializeUint',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'serializeUint',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'objectKey', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'serializeUintToHex',
+    outputs: [{ name: 'json', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'overwrite', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setArbitraryStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
+    name: 'setArbitraryStorage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'value', internalType: 'string', type: 'string' },
+    ],
+    name: 'setEnv',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'array', internalType: 'uint256[]', type: 'uint256[]' }],
+    name: 'shuffle',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'digest', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'sign',
+    outputs: [
+      { name: 'v', internalType: 'uint8', type: 'uint8' },
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'signAndAttachDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'wallet',
+        internalType: 'struct VmSafe.Wallet',
+        type: 'tuple',
+        components: [
+          { name: 'addr', internalType: 'address', type: 'address' },
+          { name: 'publicKeyX', internalType: 'uint256', type: 'uint256' },
+          { name: 'publicKeyY', internalType: 'uint256', type: 'uint256' },
+          { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'digest', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signCompact',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'crossChain', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+    ],
+    name: 'signDelegation',
+    outputs: [
+      {
+        name: 'signedDelegation',
+        internalType: 'struct VmSafe.SignedDelegation',
+        type: 'tuple',
+        components: [
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'nonce', internalType: 'uint64', type: 'uint64' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'privateKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'digest', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'signP256',
+    outputs: [
+      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+      { name: 's', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'duration', internalType: 'uint256', type: 'uint256' }],
+    name: 'sleep',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'array', internalType: 'uint256[]', type: 'uint256[]' }],
+    name: 'sort',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'input', internalType: 'string', type: 'string' },
+      { name: 'delimiter', internalType: 'string', type: 'string' },
+    ],
+    name: 'split',
+    outputs: [{ name: 'outputs', internalType: 'string[]', type: 'string[]' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'signer', internalType: 'address', type: 'address' }],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'privateKey', internalType: 'uint256', type: 'uint256' }],
+    name: 'startBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startDebugTraceRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startMappingRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'startStateDiffRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopAndReturnDebugTraceRecording',
+    outputs: [
+      {
+        name: 'step',
+        internalType: 'struct VmSafe.DebugStep[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stack', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'memoryInput', internalType: 'bytes', type: 'bytes' },
+          { name: 'opcode', internalType: 'uint8', type: 'uint8' },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+          { name: 'isOutOfGas', internalType: 'bool', type: 'bool' },
+          { name: 'contractAddr', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopAndReturnStateDiff',
+    outputs: [
+      {
+        name: 'accountAccesses',
+        internalType: 'struct VmSafe.AccountAccess[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'chainInfo',
+            internalType: 'struct VmSafe.ChainInfo',
+            type: 'tuple',
+            components: [
+              { name: 'forkId', internalType: 'uint256', type: 'uint256' },
+              { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+            ],
+          },
+          {
+            name: 'kind',
+            internalType: 'enum VmSafe.AccountAccessKind',
+            type: 'uint8',
+          },
+          { name: 'account', internalType: 'address', type: 'address' },
+          { name: 'accessor', internalType: 'address', type: 'address' },
+          { name: 'initialized', internalType: 'bool', type: 'bool' },
+          { name: 'oldBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'newBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'deployedCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'reverted', internalType: 'bool', type: 'bool' },
+          {
+            name: 'storageAccesses',
+            internalType: 'struct VmSafe.StorageAccess[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'account', internalType: 'address', type: 'address' },
+              { name: 'slot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'isWrite', internalType: 'bool', type: 'bool' },
+              {
+                name: 'previousValue',
+                internalType: 'bytes32',
+                type: 'bytes32',
+              },
+              { name: 'newValue', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'reverted', internalType: 'bool', type: 'bool' },
+            ],
+          },
+          { name: 'depth', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopBroadcast',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopMappingRecording',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stopRecord',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    name: 'toBase64',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'toBase64',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'string', type: 'string' }],
+    name: 'toBase64URL',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
+    name: 'toBase64URL',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'toLowercase',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'address', type: 'address' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'uint256', type: 'uint256' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bytes', type: 'bytes' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bool', type: 'bool' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'int256', type: 'int256' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'toString',
+    outputs: [
+      { name: 'stringifiedValue', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'toUppercase',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'input', internalType: 'string', type: 'string' }],
+    name: 'trim',
+    outputs: [{ name: 'output', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'commandInput', internalType: 'string[]', type: 'string[]' },
+    ],
+    name: 'tryFfi',
+    outputs: [
+      {
+        name: 'result',
+        internalType: 'struct VmSafe.FfiResult',
+        type: 'tuple',
+        components: [
+          { name: 'exitCode', internalType: 'int32', type: 'int32' },
+          { name: 'stdout', internalType: 'bytes', type: 'bytes' },
+          { name: 'stderr', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unixTime',
+    outputs: [
+      { name: 'milliseconds', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeFile',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'writeFileBinary',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeJson',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeJson',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeLine',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+      { name: 'valueKey', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeToml',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'json', internalType: 'string', type: 'string' },
+      { name: 'path', internalType: 'string', type: 'string' },
+    ],
+    name: 'writeToml',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const;
 
@@ -24196,4 +41835,116 @@ export const wlitAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'receive', stateMutability: 'payable' },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// stdError
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stdErrorAbi = [
+  {
+    type: 'function',
+    inputs: [],
+    name: 'arithmeticError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'assertionError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'divisionError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'encodeStorageError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'enumConversionError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'indexOOBError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'memOverflowError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'popError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'zeroVarError',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// stdStorageSafe
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stdStorageSafeAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'who', internalType: 'address', type: 'address', indexed: false },
+      { name: 'fsig', internalType: 'bytes4', type: 'bytes4', indexed: false },
+      {
+        name: 'keysHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+      {
+        name: 'slot',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'SlotFound',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'who', internalType: 'address', type: 'address', indexed: false },
+      {
+        name: 'slot',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'WARNING_UninitedSlot',
+  },
 ] as const;
