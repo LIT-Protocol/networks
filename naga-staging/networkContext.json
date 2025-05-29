@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0x2F1A4f93b10aea28a7f37eEd798B1f216319A6D1",
+    "address": "0x638EffA9541DEB97193A52469B5208A97Ee7902d",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0x99C13305E5FD57Ca226b480dCB7eCfa9ac56dda3",
+    "address": "0x04A7bFf98B98F7C2234778c6FA42932a8ddCB8EA",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0x17AB0f5706CdC8b4769373BD6d91C487465d83E6",
+    "address": "0x040Dd3dD258D590280E455a3BCd348113f6f1bF9",
     "abi": [
       {
         "inputs": [
@@ -2393,7 +2393,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x5a71f52425BF16beAFB026dD2677F48B5AA9CA17",
+    "address": "0xe499d76F53Bf75840F01041Bcb8259d59a0c4333",
     "abi": [
       {
         "inputs": [
@@ -3636,7 +3636,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0x195C6282391086FfF7532b2aC17F725cDAcaCdF6",
+    "address": "0xb94b328bf24D02516971063BA1407252a7c027dC",
     "abi": [
       {
         "inputs": [
@@ -3794,7 +3794,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x98fde31fd4Eb49b8770E89eA4099b0344E4C8386",
+    "address": "0x2b24e03F95A091E1b6Eb75E6b778451B463078bF",
     "abi": [
       {
         "inputs": [
@@ -5123,7 +5123,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0xD6FD63B0cddc191C18c0024790Cc678a65151047",
+    "address": "0x399Ea8E261EF8372B6f2755c6d41FE2F07a42a4c",
     "abi": [
       {
         "inputs": [
@@ -6122,7 +6122,7 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x11F441baa56Dd0472E0E003FeA7416AFfa98DD39",
+    "address": "0x7fD7135FE923130669AeE7E8F93D6F3ebB33aea3",
     "abi": [
       {
         "inputs": [
@@ -6909,205 +6909,12 @@
         "inputs": [
           {
             "indexed": false,
-            "internalType": "address",
-            "name": "userStakerAddress",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "address",
-            "name": "operatorStakerAddress",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "timeLock",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "name": "AdminStakedForUser",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
             "internalType": "uint256",
             "name": "dataType",
             "type": "uint256"
           }
         ],
         "name": "ClearOfflinePhaseData",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "reason",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "tolerance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "intervalSecs",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "kickPenaltyPercent",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "kickPenaltyDemerits",
-                "type": "uint256"
-              }
-            ],
-            "indexed": false,
-            "internalType": "struct LibStakingStorage.ComplaintConfig",
-            "name": "config",
-            "type": "tuple"
-          }
-        ],
-        "name": "ComplaintConfigSet",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "tokenRewardPerTokenPerEpoch",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256[]",
-            "name": "keyTypes",
-            "type": "uint256[]"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "minimumValidatorCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "rewardEpochDuration",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "maxTimeLock",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "minTimeLock",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "bmin",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "bmax",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "k",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "p",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "bool",
-            "name": "enableStakeAutolock",
-            "type": "bool"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "tokenPrice",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "profitMultiplier",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "usdCostPerMonth",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "maxEmissionRate",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "minStakeAmount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "maxStakeAmount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "minSelfStake",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "minSelfStakeTimelock",
-            "type": "uint256"
-          }
-        ],
-        "name": "ConfigSet",
         "type": "event"
       },
       {
@@ -7217,67 +7024,6 @@
         "inputs": [
           {
             "indexed": false,
-            "internalType": "uint256",
-            "name": "newTokenRewardPerTokenPerEpoch",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256[]",
-            "name": "newKeyTypes",
-            "type": "uint256[]"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMinimumValidatorCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxConcurrentRequests",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxPresignCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMinPresignCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newPeerCheckingIntervalSecs",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxPresignConcurrency",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "bool",
-            "name": "newRpcHealthcheckEnabled",
-            "type": "bool"
-          }
-        ],
-        "name": "RealmConfigSet",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
             "internalType": "address",
             "name": "newResolverContractAddress",
             "type": "address"
@@ -7341,19 +7087,6 @@
         "inputs": [
           {
             "indexed": false,
-            "internalType": "address",
-            "name": "newStakingTokenAddress",
-            "type": "address"
-          }
-        ],
-        "name": "StakingTokenSet",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
             "internalType": "enum LibStakingStorage.States",
             "name": "newState",
             "type": "uint8"
@@ -7402,24 +7135,6 @@
         "type": "event"
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "validator",
-            "type": "address"
-          }
-        ],
-        "name": "addPermittedValidator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "inputs": [],
         "name": "addRealm",
         "outputs": [
@@ -7459,19 +7174,6 @@
           }
         ],
         "name": "adminRejoinValidator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          }
-        ],
-        "name": "adminResetEpoch",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -7680,24 +7382,6 @@
           }
         ],
         "name": "increaseRewardPool",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "validator",
-            "type": "address"
-          }
-        ],
-        "name": "removePermittedValidator",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -7990,16 +7674,78 @@
         "inputs": [
           {
             "internalType": "uint256",
-            "name": "reason",
+            "name": "realmId",
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "newKickPenaltyPercent",
-            "type": "uint256"
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "timeoutMs",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "memoryLimitMb",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxCodeLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxResponseLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxConsoleLogLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxFetchCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxSignCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxContractCallCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxBroadcastAndCollectCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxCallDepth",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxRetries",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "asyncActionsEnabled",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.LitActionConfig",
+            "name": "newConfig",
+            "type": "tuple"
           }
         ],
-        "name": "setKickPenaltyPercent",
+        "name": "setLitActionConfig",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -8013,6 +7759,24 @@
           }
         ],
         "name": "setPendingRejoinTimeout",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "realmId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[]",
+            "name": "validatorsToSet",
+            "type": "address[]"
+          }
+        ],
+        "name": "setPermittedValidators",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -9309,13 +9073,66 @@
             "type": "address"
           },
           {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "y",
+                "type": "uint256"
+              }
+            ],
             "indexed": true,
-            "internalType": "uint256",
+            "internalType": "struct LibStakingStorage.UncompressedK256Key",
             "name": "attestedPubKey",
-            "type": "uint256"
+            "type": "tuple"
           }
         ],
         "name": "AttestedWalletRegistered",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "reason",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tolerance",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "intervalSecs",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "kickPenaltyPercent",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "kickPenaltyDemerits",
+                "type": "uint256"
+              }
+            ],
+            "indexed": false,
+            "internalType": "struct LibStakingStorage.ComplaintConfig",
+            "name": "config",
+            "type": "tuple"
+          }
+        ],
+        "name": "ComplaintConfigSet",
         "type": "event"
       },
       {
@@ -9485,6 +9302,19 @@
         "anonymous": false,
         "inputs": [
           {
+            "indexed": false,
+            "internalType": "address",
+            "name": "newStakingTokenAddress",
+            "type": "address"
+          }
+        ],
+        "name": "StakingTokenSet",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
             "indexed": true,
             "internalType": "address",
             "name": "reporter",
@@ -9549,6 +9379,25 @@
         "inputs": [
           {
             "internalType": "address",
+            "name": "attestedAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getAttestedPubKey",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
             "name": "validatorToKickStakerAddress",
             "type": "address"
           },
@@ -9594,9 +9443,9 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
+            "internalType": "bytes",
             "name": "attestedPubKey",
-            "type": "uint256"
+            "type": "bytes"
           }
         ],
         "name": "registerAttestedWallet",
@@ -10596,6 +10445,54 @@
         "type": "function"
       },
       {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "validatorAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "limit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "offset",
+            "type": "uint256"
+          }
+        ],
+        "name": "getDelegatedStakersWithUnfreezingStakes",
+        "outputs": [
+          {
+            "internalType": "address[]",
+            "name": "",
+            "type": "address[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "validatorAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getDelegatedStakersWithUnfreezingStakesCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "getKeyTypes",
         "outputs": [
@@ -10752,9 +10649,21 @@
                 "type": "address"
               },
               {
-                "internalType": "uint256",
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "x",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "y",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct LibStakingStorage.UncompressedK256Key",
                 "name": "pubKey",
-                "type": "uint256"
+                "type": "tuple"
               }
             ],
             "internalType": "struct LibStakingStorage.PubKeyMapping[]",
@@ -11379,6 +11288,30 @@
             "name": "",
             "type": "uint256"
           },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "userStakerAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorStakerAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getUnfrozenStakeCountForUser",
+        "outputs": [
           {
             "internalType": "uint256",
             "name": "",
@@ -12158,6 +12091,87 @@
         "type": "function"
       },
       {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "realmId",
+            "type": "uint256"
+          }
+        ],
+        "name": "litActionsConfig",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "timeoutMs",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "memoryLimitMb",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxCodeLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxResponseLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxConsoleLogLength",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxFetchCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxSignCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxContractCallCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxBroadcastAndCollectCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxCallDepth",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxRetries",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "asyncActionsEnabled",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.LitActionConfig",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "maxStake",
         "outputs": [
@@ -12632,7 +12646,7 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0x345D8EFB4022d5D6ad485E4fc8d5d987c9392aE4",
+    "address": "0x5431A573F7F675Df17e89A29EB78A9d55B56047E",
     "abi": [
       {
         "inputs": [
@@ -13318,7 +13332,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0xbD1e45C97bD183244e13125D6d974D37C51BCE01",
+    "address": "0xcb3e97a45C8E09D1bF68Fd97e1fd2b6AA355FC3f",
     "abi": [
       {
         "inputs": [
@@ -14268,7 +14282,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x4561Be99262DE8119671b953b67A95cf898A1741",
+    "address": "0x160cF0e4CBB285C67d518423e64448D775303E71",
     "abi": [
       {
         "inputs": [
@@ -15241,6 +15255,25 @@
         "name": "setUserWithdrawDelay",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          }
+        ],
+        "name": "stableBalance",
+        "outputs": [
+          {
+            "internalType": "int256",
+            "name": "",
+            "type": "int256"
+          }
+        ],
+        "stateMutability": "view",
         "type": "function"
       },
       {
