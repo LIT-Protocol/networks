@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0x638EffA9541DEB97193A52469B5208A97Ee7902d",
+    "address": "0xddF7f978620772338d6778B65BD5db4Bfc40E51A",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0x04A7bFf98B98F7C2234778c6FA42932a8ddCB8EA",
+    "address": "0x82E5Cfe98ef484FAF19937956f8845c8A8Ce160C",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0x040Dd3dD258D590280E455a3BCd348113f6f1bF9",
+    "address": "0x88c87f244056ddaB06115601Aaa18754034e1faA",
     "abi": [
       {
         "inputs": [
@@ -2393,7 +2393,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0xe499d76F53Bf75840F01041Bcb8259d59a0c4333",
+    "address": "0xECa5925531a5c261A1ac286aF59579717Ef9DBDd",
     "abi": [
       {
         "inputs": [
@@ -3636,7 +3636,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0xb94b328bf24D02516971063BA1407252a7c027dC",
+    "address": "0xd4Aa13Bdf6fcE7C89Df4098AeEF482395089A1D5",
     "abi": [
       {
         "inputs": [
@@ -3794,7 +3794,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x2b24e03F95A091E1b6Eb75E6b778451B463078bF",
+    "address": "0x1575F38C4996794e474F4F5Ab5A0fa361EB7E1b0",
     "abi": [
       {
         "inputs": [
@@ -5123,7 +5123,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0x399Ea8E261EF8372B6f2755c6d41FE2F07a42a4c",
+    "address": "0xFbD0f3606447c8B313db74CFc30e108f52C6E351",
     "abi": [
       {
         "inputs": [
@@ -6122,7 +6122,7 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x7fD7135FE923130669AeE7E8F93D6F3ebB33aea3",
+    "address": "0x21b7DBd0Af50507d3028Ddbe5F391f96EE79D3f9",
     "abi": [
       {
         "inputs": [
@@ -12646,7 +12646,7 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0x5431A573F7F675Df17e89A29EB78A9d55B56047E",
+    "address": "0xe9d7814B17A7825E5B772A42c9B8E1b7763C1475",
     "abi": [
       {
         "inputs": [
@@ -13332,7 +13332,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0xcb3e97a45C8E09D1bF68Fd97e1fd2b6AA355FC3f",
+    "address": "0x0fFe71ACd8468921EeEF6f51Bf993344779F0767",
     "abi": [
       {
         "inputs": [
@@ -14282,7 +14282,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x160cF0e4CBB285C67d518423e64448D775303E71",
+    "address": "0x4d5B175AdfE7C33cA5e9017863fAB56Df61E6544",
     "abi": [
       {
         "inputs": [
