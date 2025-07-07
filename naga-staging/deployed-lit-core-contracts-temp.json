@@ -1,5 +1,5 @@
 {
-  "contractResolver": "0x0644EB69C48df28CaF90C4a3147c464aab658E26",
-  "releaseRegisterContractAddress": "0xD92634A4a6eaB8eAc6d303267Ef8766DC426d10C",
-  "hostCommandsContractAddress": "0xa1928B0E24D7bF1981B7A180E10fD0468d27004d"
+  "contractResolver": "0xD1fb6af6f69a193deb4598b24BaaEb0c1622755C",
+  "releaseRegisterContractAddress": "0x8c4F93c10912d5f823249EBd90133599Bf985a72",
+  "hostCommandsContractAddress": "0x65e24BF2941b210293E0d29a2c4b0fcF93AD5a4F"
 }
