@@ -2453,11 +2453,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "realmId",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "operatorAddressToMigrateFrom",
         "type": "address"
@@ -4921,6 +4916,25 @@
       }
     ],
     "name": "getStakeWeightInEpoch",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "nodeCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getThreshold",
     "outputs": [
       {
         "internalType": "uint256",
