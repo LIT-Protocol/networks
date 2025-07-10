@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0xbB8cE5E5FC1729D35323aFf1f2FC654287e9e1fE",
+    "address": "0x3d97DA15c6665Fb6c976F0265bd7726A82F13920",
     "abi": [
       {
         "inputs": [],
@@ -231,7 +231,7 @@
     "name": "Allowlist"
   },
   "LITToken": {
-    "address": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
+    "address": "0x5E8db2E7af793f4095c4843C8cBD87C5D8604838",
     "abi": [
       {
         "inputs": [
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0xe90726978FcfB01Eb218a750044c210cA0a8925A",
+    "address": "0xb21c1a8C75accBF9e5786a809A1d5CdAa071340f",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0xdeE74a5bae82109E2D7A5Fa76823Cf0e7638527c",
+    "address": "0xf757112631e6269A3B9bf78DB73fe0fEE83dE7b9",
     "abi": [
       {
         "inputs": [
@@ -2393,7 +2393,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x125E91f9A8D50372a4560c5C4bd25ea0B8A2dc1d",
+    "address": "0xf3E8659C240d4eC9a03c3CDe4539e3C265009Ab8",
     "abi": [
       {
         "inputs": [
@@ -3636,7 +3636,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0xB1e63aCC6c0EA9377eDfa21957D553694888203c",
+    "address": "0x1BF44950DB687ba4B3D886f6fA101612E113F41A",
     "abi": [
       {
         "inputs": [
@@ -3794,7 +3794,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0xaaDa98C0D8E52A6C8F4bee4909D3145454f38169",
+    "address": "0x49e599515b22536fa033FFe45A87F053d96A6f84",
     "abi": [
       {
         "inputs": [
@@ -5123,7 +5123,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0x7020F9643BA04fA895372FFfA9686F3c583FDa59",
+    "address": "0xDefe7fb3D333dd0460113674F759eA575C1eC6b3",
     "abi": [
       {
         "inputs": [
@@ -6122,7 +6122,7 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0xB0BC7522DAe628B0118Fb1c478b65541321EE3AF",
+    "address": "0x35d77b5D61F36C02e2e1177845FB6B933FFf7043",
     "abi": [
       {
         "inputs": [
@@ -8577,11 +8577,6 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          },
           {
             "internalType": "address",
             "name": "operatorAddressToMigrateFrom",
@@ -12646,7 +12641,7 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0x0644EB69C48df28CaF90C4a3147c464aab658E26",
+    "address": "0xAf7374de0B47F541c55F4C9a409F706A3198D01b",
     "abi": [
       {
         "inputs": [
@@ -13332,7 +13327,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0xF6241e9D9DD5f0AbE7cEfB68E644865c52a2bFEF",
+    "address": "0xA69f54bBfaAFff94e73e6CfD3642B4464036C9BA",
     "abi": [
       {
         "inputs": [
@@ -13825,6 +13820,36 @@
       },
       {
         "inputs": [],
+        "name": "getLitActionPriceConfigs",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+                "name": "priceComponent",
+                "type": "uint8"
+              },
+              {
+                "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+                "name": "priceMeasurement",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibPriceFeedStorage.LitActionPriceConfig[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
         "name": "getNodeCapacityConfig",
         "outputs": [
           {
@@ -14149,6 +14174,59 @@
       {
         "inputs": [
           {
+            "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+            "name": "priceComponent",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+            "name": "priceMeasurement",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "new_price",
+            "type": "uint256"
+          }
+        ],
+        "name": "setLitActionPriceConfig",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "components": [
+              {
+                "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+                "name": "priceComponent",
+                "type": "uint8"
+              },
+              {
+                "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+                "name": "priceMeasurement",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibPriceFeedStorage.LitActionPriceConfig[]",
+            "name": "configs",
+            "type": "tuple[]"
+          }
+        ],
+        "name": "setLitActionPriceConfigs",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
             "internalType": "uint256",
             "name": "newPrice",
             "type": "uint256"
@@ -14282,7 +14360,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0xCC56A86eF6343Ed96Cd8Ff0AA2bdb3E598b66A03",
+    "address": "0x09815849f59Fe4F7d94F6240a77AEf4Dc2f02873",
     "abi": [
       {
         "inputs": [
