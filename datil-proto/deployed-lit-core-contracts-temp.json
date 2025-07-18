@@ -1,5 +1,11 @@
 {
+<<<<<<< HEAD
   "contractResolver": "0x79Ae83763ABD54bB407EB9C36807C2D8E05693CB",
   "releaseRegisterContractAddress": "0xC3e7891EEAA89C411857ed49a1484822d1718532",
   "hostCommandsContractAddress": "0x24F813E6c4c8689D71d512eeF283B882FFaD0598"
+=======
+  "contractResolver": "0xdb2E07490F6c83Cb7565f4c43A7De6b858Af8370",
+  "releaseRegisterContractAddress": "0x9aa7b10FD0cE45d340eaE73Aa69F3a4626a276BA",
+  "hostCommandsContractAddress": "0x26994A6ae328DA9bC146E8309fe319D1026004a7"
+>>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
 }
