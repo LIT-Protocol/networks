@@ -1,10 +1,6 @@
 {
   "Allowlist": {
-<<<<<<< HEAD
-    "address": "0x4964B1138c1E22bb12d95bEf3Ac60e1526538462",
-=======
     "address": "0xD059dadCB1Ca3C04A8E4B93577b74469E4E1b18B",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [],
@@ -1283,11 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-<<<<<<< HEAD
-    "address": "0x6AFdddD7263E0fb89eecd6FBf95934FBcCc1bd0A",
-=======
     "address": "0xa2E8D28e7f3147C4d5A1B88Ce3370d7c78284369",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "anonymous": false,
@@ -1396,11 +1388,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-<<<<<<< HEAD
-    "address": "0x13FbfC17470e21A894734b604A4DDDa4694C6AaE",
-=======
     "address": "0xa80eA59151553a0bE802fF87D544032f9a773168",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -2382,11 +2370,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-<<<<<<< HEAD
-    "address": "0x8Ac70019175D594509bd66ED6B2Fb62D4139ffC6",
-=======
     "address": "0x17206CEe311a1699e431BC122aAD434c28B28584",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -3624,11 +3608,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-<<<<<<< HEAD
-    "address": "0xF1356570fec39303e09e9c6ea281dC11254735E8",
-=======
     "address": "0xC2687640f1729f5a20FD376b15bfE88Efbb4a1f8",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -3786,11 +3766,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-<<<<<<< HEAD
-    "address": "0x58B0013Aa4358974c1A5267c858bdac267fFDdFE",
-=======
     "address": "0x77CdC5638c05da03e3d8Ec7B78D22BC2dC1855C8",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -5119,11 +5095,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-<<<<<<< HEAD
-    "address": "0xFb03f2D72C7DCB948F79A2790B130F743032dCB4",
-=======
     "address": "0x0ba7ecB3f14c740521C75a9e3695508cd5CF0063",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -6009,11 +5981,7 @@
     "name": "PubkeyRouter"
   },
   "RateLimitNFT": {
-<<<<<<< HEAD
-    "address": "0xCD005a6de61B6716AfDbcd27eE32ef3F31cC12C8",
-=======
     "address": "0x303d0A7D725621c9eAac8d90FDE797d8CeB5881d",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -7415,11 +7383,7 @@
     "name": "RateLimitNFT"
   },
   "Staking": {
-<<<<<<< HEAD
-    "address": "0x48ec670eCb1900FcC6D9B79cb020D0a5c07ee2d4",
-=======
     "address": "0x99a349466772f9b4434A4978132086b70047dB78",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -10256,11 +10220,7 @@
     "name": "Staking"
   },
   "StakingBalances": {
-<<<<<<< HEAD
-    "address": "0xf9a5eA93Bf3BA11900906f18D61bD91b062e8f56",
-=======
     "address": "0x96786DA0dc53514b9ef4c534FC0DA85983997bdc",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [
@@ -11502,11 +11462,7 @@
     "name": "StakingBalances"
   },
   "CloneNet": {
-<<<<<<< HEAD
-    "address": "0xDe80f8091e5d5c20ABf716Cd32e2DBFDd244a8DE",
-=======
     "address": "0xF0Fe69a5259fEF8D76F489044583Fcdd8BF6C3De",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "type": "error",
@@ -11675,11 +11631,7 @@
     "name": "CloneNet"
   },
   "ContractResolver": {
-<<<<<<< HEAD
-    "address": "0x79Ae83763ABD54bB407EB9C36807C2D8E05693CB",
-=======
     "address": "0xdb2E07490F6c83Cb7565f4c43A7De6b858Af8370",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
     "abi": [
       {
         "inputs": [

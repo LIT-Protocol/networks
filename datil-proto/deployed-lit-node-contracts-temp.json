@@ -1,24 +1,4 @@
 {
-<<<<<<< HEAD
-  "backupRecoveryContractAddress": "0x8120076Fa0Bd8DCc73ad5b8fF6544Bfd246AE94F",
-  "stakingBalancesContractAddress": "0xf9a5eA93Bf3BA11900906f18D61bD91b062e8f56",
-  "stakingContractAddress": "0x48ec670eCb1900FcC6D9B79cb020D0a5c07ee2d4",
-  "cloneNetContractAddress": "0xDe80f8091e5d5c20ABf716Cd32e2DBFDd244a8DE",
-  "multisenderContractAddress": "0x6AFdddD7263E0fb89eecd6FBf95934FBcCc1bd0A",
-  "litTokenContractAddress": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
-  "pubkeyRouterContractAddress": "0xFb03f2D72C7DCB948F79A2790B130F743032dCB4",
-  "pkpNftContractAddress": "0x8Ac70019175D594509bd66ED6B2Fb62D4139ffC6",
-  "rateLimitNftContractAddress": "0xCD005a6de61B6716AfDbcd27eE32ef3F31cC12C8",
-  "pkpHelperContractAddress": "0x13FbfC17470e21A894734b604A4DDDa4694C6AaE",
-  "pkpHelperV2ContractAddress": "0x2955C26E145C4C43fc1D1195EDA963e86904211E",
-  "pkpPermissionsContractAddress": "0x58B0013Aa4358974c1A5267c858bdac267fFDdFE",
-  "pkpNftMetadataContractAddress": "0xF1356570fec39303e09e9c6ea281dC11254735E8",
-  "allowlistContractAddress": "0x4964B1138c1E22bb12d95bEf3Ac60e1526538462",
-  "resolverContractAddress": "0x79Ae83763ABD54bB407EB9C36807C2D8E05693CB",
-  "domainWalletRegistryAddress": "0xDaA721F17c0cD40C6a82FeB16ABA69bd8cD2f25a",
-  "hdKeyDeriverContractAddress": "0x6Fb0ac8d1979BE251C1c30af9cE2E3B7Bf78b447",
-  "paymentDelegationContractAddress": "0x1d75D0E7A4Cb66485e78fc6372b5Aa71Ad9819b2",
-=======
   "backupRecoveryContractAddress": "0xc6941ac0cc9fd11F3A123C61ab42A2c9eDC46a28",
   "stakingBalancesContractAddress": "0x96786DA0dc53514b9ef4c534FC0DA85983997bdc",
   "stakingContractAddress": "0x99a349466772f9b4434A4978132086b70047dB78",
@@ -37,7 +17,6 @@
   "domainWalletRegistryAddress": "0x0b36cccf640dCdB8DcFe033bb3C3af566b4f52CC",
   "hdKeyDeriverContractAddress": "0x7B9bB97ED55EFEEF6908E102481f56dD600e8531",
   "paymentDelegationContractAddress": "0xF6ac9ECcEd6E689FE1F5D1E4D330738d999ed8eD",
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
   "chainId": "175188",
   "rpcUrl": "https://yellowstone-rpc.litprotocol.com",
   "chainName": "yellowstone",
@@ -48,21 +27,6 @@
     "StakingBalances": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0x2573ffe33C5e69ac99601A26F84f2d868A487DE8"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0xc8fc8692406391E7cB4D18c7f8E670fb560f7231"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0x1710638F4948EcC552C4F5e1cdCD4f2e51bDd7Ce"
-      },
-      {
-        "facetName": "StakingBalancesFacet",
-        "facetAddress": "0x31B9f796CF00C18Cf377E097a04EdDBfbC3C3CF2"
-=======
         "facetAddress": "0xAA6FE8ac59e60D7dCbCd994FFF3CaE6b67e621D6"
       },
       {
@@ -76,39 +40,11 @@
       {
         "facetName": "StakingBalancesFacet",
         "facetAddress": "0x01e260f60b74C8C70a6A1dd83246441a20017A52"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "Staking": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xfEcA942eC4bBA637AcB7f75c3FD11578b5552786"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0xFBf0c02e58A1C8BB941873dF47360356f68284fd"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0x11e2F76CfC9fa111685b4688940E335D54686856"
-      },
-      {
-        "facetName": "StakingFacet",
-        "facetAddress": "0xC2DcF3F9B36d3e53b537482bE74Bd2A5724f6ACf"
-      },
-      {
-        "facetName": "StakingViewsFacet",
-        "facetAddress": "0xA996BfE53431e91b771177DA5988ba387666B370"
-      },
-      {
-        "facetName": "StakingVersionFacet",
-        "facetAddress": "0x035199D2537b04c768C446721DBa03E95C9C1572"
-      },
-      {
-        "facetName": "StakingAdminFacet",
-        "facetAddress": "0x77c8E107fAc60B2A7259125C5684AC792ce101C9"
-=======
         "facetAddress": "0xaeD35b41482E950604a607Bd958293AD29B636d7"
       },
       {
@@ -134,27 +70,11 @@
       {
         "facetName": "StakingAdminFacet",
         "facetAddress": "0xbfe88e2eCAD361f7d76A36793911fA355Db54632"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "CloneNet": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xfCF59bc6c2e7a23105C595378Bc2eF498072205c"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x4B7422730DD2F316317748d815225B396dE983ED"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0x4FBab55a4d05cfD7720578525861CD92DefC0135"
-      },
-      {
-        "facetName": "CloneNetFacet",
-        "facetAddress": "0x5a39DC5105F77f620E4d98eB9A2656de23AA6526"
-=======
         "facetAddress": "0x3e0adF85262D736E6760495CBf041E3dC9357061"
       },
       {
@@ -168,27 +88,11 @@
       {
         "facetName": "CloneNetFacet",
         "facetAddress": "0x6c0f474Ca77D27A475b3916fC3cecDa3be2408bF"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "PKPNFT": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xe371Bc9578757c666a97dDaa078f89a544153d78"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x94a55BAd54839cf10189e68AE40aDcC538FA29Ea"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0xe5BDFfcFa8802B2934523f1cb3B39DE1793E989C"
-      },
-      {
-        "facetName": "PKPNFTFacet",
-        "facetAddress": "0x28206429198d6b6dadf6D76b767531aB1BaC78d8"
-=======
         "facetAddress": "0x4b9992a6eaF1aC92065d821d57232dbbd521D8B1"
       },
       {
@@ -202,31 +106,11 @@
       {
         "facetName": "PKPNFTFacet",
         "facetAddress": "0x2dd2Fc2C0BF1e2d12649335a0e7EEEdB0680C769"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "RateLimitNFT": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0x47C9Ed32d40B420F0a80069cda855B0F26465F2B"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x78a45c78F2e6FC6a533A3263b3002C119CbD22ba"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0xfA947669028f761F98dEa4CD97076B9453BF48ad"
-      },
-      {
-        "facetName": "RateLimitNFTFacet",
-        "facetAddress": "0xaccc318402d6257A61184Dbefdf1e58466DD2428"
-      },
-      {
-        "facetName": "RateLimitNFTViewsFacet",
-        "facetAddress": "0x960bcAa96Dfe0805D286172FB9BAe68a3569887B"
-=======
         "facetAddress": "0x0274C5FA431C1e3462862D564182564cAa336AF6"
       },
       {
@@ -244,27 +128,11 @@
       {
         "facetName": "RateLimitNFTViewsFacet",
         "facetAddress": "0x3A7aB30D2D51600DE6f45302F9d3fbac15F302aa"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "PubkeyRouter": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xe7bC7a69D3cb04396da45fc28ab2B311E6f77fD1"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0xad467DFA568d42353bDE665cC77be8B883aF0988"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0x307a5972cf619d8B2Be6f4Bb5f0d1eb6244CDde4"
-      },
-      {
-        "facetName": "PubkeyRouterFacet",
-        "facetAddress": "0x41aE08106f146e44280230f25Bf0FB9914098A77"
-=======
         "facetAddress": "0x299F5FbE2CA9f0e91929BF19e48BE91f0947Be8c"
       },
       {
@@ -278,31 +146,11 @@
       {
         "facetName": "PubkeyRouterFacet",
         "facetAddress": "0x4E36Ee39b7B62e3D989d4ed8ede26701120ca154"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "DomainWalletRegistry": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0x4B07faC36ab81348a267E0Df7C8d069184811273"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x898dEF41eBA3abf984b4f2Bf589a7f01e49513cb"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0xDA7D2264a9818Ad49A034dFd03e5B47ed3251354"
-      },
-      {
-        "facetName": "DomainWalletRegistryFacet",
-        "facetAddress": "0xFfc1D55345fCe8B084Ed26553C9F3e68a8501567"
-      },
-      {
-        "facetName": "DomainWalletRegistryViewsFacet",
-        "facetAddress": "0xBD9Ba1DC918F5e7f4BFEA75A4e84DD850c521773"
-=======
         "facetAddress": "0xF21Cb7792C6bD4fa69Ae3dD9bB8162Ce5365E5eC"
       },
       {
@@ -320,27 +168,11 @@
       {
         "facetName": "DomainWalletRegistryViewsFacet",
         "facetAddress": "0x38d3DbE4d662AdB181B62802c771ce2EAD77dee1"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "PKPPermissions": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0x6f29c8Ea13526Ef5C42c72Ec80E459e98B89723F"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0xb326200af8724DCefE00871e3441860038cAb37C"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0x490E5650De774b6E1FB5B36E3Dcd3697c7a11702"
-      },
-      {
-        "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0xF17E690880b6699c839F00dF2e05CE4fC33CB88c"
-=======
         "facetAddress": "0x84B71Ef5b56426462F06E5C978a5ce760140Bb5d"
       },
       {
@@ -354,35 +186,11 @@
       {
         "facetName": "PKPPermissionsFacet",
         "facetAddress": "0xB0D5E924a88f8839b9C0E9181BfBA6626b8c55b4"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "BackupRecovery": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xE8aF8B76825Fbb0F32FC8c8213D3aAd8F3Dcf17D"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0x3Dd38d9BC73Ab572ae2Cd5E7810309A1361D5FeE"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0xA422617b607024Cd31406F2ea8395A4189fe8a0b"
-      },
-      {
-        "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x2671eDB3197f599B640964a595170e8223515EfC"
-      },
-      {
-        "facetName": "BackupRecoveryNodeStatusFacet",
-        "facetAddress": "0x739e1AbB0C3bE5C0a7197FFa766F58744F084b26"
-      },
-      {
-        "facetName": "BackupRecoveryViewFacet",
-        "facetAddress": "0x43E4be6fbeD1C23693B4b14DBB878b5783f8d549"
-=======
         "facetAddress": "0x8483DE0a066f33868B19d97Fd53f6dEb940A7a5c"
       },
       {
@@ -404,27 +212,11 @@
       {
         "facetName": "BackupRecoveryViewFacet",
         "facetAddress": "0xd37F97701D7ADC494D929445Dbb2cAf34c3B72Dd"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ],
     "PaymentDelegation": [
       {
         "facetName": "DiamondCutFacet",
-<<<<<<< HEAD
-        "facetAddress": "0xD3e3C8DAfB08DCE241Ada2b45efe9C2b3C4EE5D2"
-      },
-      {
-        "facetName": "DiamondLoupeFacetNoERC165",
-        "facetAddress": "0xF2eF97CD680D76e9A8FFf9ac8c03d0567303E5fa"
-      },
-      {
-        "facetName": "OwnershipFacet",
-        "facetAddress": "0xF389C354e7AC907aFF5F9b0Cc17ca722843c5014"
-      },
-      {
-        "facetName": "PaymentDelegationFacet",
-        "facetAddress": "0x90Bd51A7667192Fc051D656F7b396BB8d2Abb43D"
-=======
         "facetAddress": "0x223AcDB3c3a2fE8241A708cCF5690EDc8b17d16e"
       },
       {
@@ -438,7 +230,6 @@
       {
         "facetName": "PaymentDelegationFacet",
         "facetAddress": "0xA08690b48eeE9798f93c745e0fa662f6332ecED8"
->>>>>>> 58801b2 (feat: update contract addresses for network-datil-proto branch (2025-07-18))
       }
     ]
   }
