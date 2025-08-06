@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0x7cF93f90ad32F452558BcD703834804374E483D8",
+    "address": "0xd28622f22Db28b18947B717ECD13422288bbA47A",
     "abi": [
       {
         "inputs": [],
@@ -231,7 +231,7 @@
     "name": "Allowlist"
   },
   "LITToken": {
-    "address": "0xd78089bAAe410f5d0eae31D0D56157c73a3Ff98B",
+    "address": "0x5E8db2E7af793f4095c4843C8cBD87C5D8604838",
     "abi": [
       {
         "inputs": [
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0x90BF75af91Ad234f77c3DC74e86bb076f515B779",
+    "address": "0x341C5626834256bE084C76686AEA391683F36163",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0xBf9Ac081A9d34d16Dda468cDBd854793C1C1aE95",
+    "address": "0x9D629a44D27a541CCe00794C47F9E2D3Bc041491",
     "abi": [
       {
         "inputs": [
@@ -2393,7 +2393,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0xC212ab184C3F6B696B51cED5AE25bF3549E9bdA7",
+    "address": "0xdb30610cA55c028AF00821040ccA9Ba9408e62c3",
     "abi": [
       {
         "inputs": [
@@ -3636,7 +3636,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0x758396E0Aba323d97e0781AB10c7dB0FFBf56b1b",
+    "address": "0x48C44D3dF5aFA8621B152E6dB072D2CF85bb8873",
     "abi": [
       {
         "inputs": [
@@ -3794,7 +3794,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x2A71A8E2Fe3E18D64C719477F8B8146494E20210",
+    "address": "0x7FD09B32F015aF90830888811188c90432e8632D",
     "abi": [
       {
         "inputs": [
@@ -5123,7 +5123,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0xBb6E21999e9D99d79D84dB71C91040159f34FdD6",
+    "address": "0xfaF036f39d496d15911b85Dcc236Fbd0AEF482dD",
     "abi": [
       {
         "inputs": [
@@ -6122,7 +6122,7 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x27B629746BbD6DA1eC86B88A8Ab67DeacA467D4a",
+    "address": "0xaADa2d92B4B104aFDE13690A6462D7E5138B07f2",
     "abi": [
       {
         "inputs": [
@@ -8380,11 +8380,6 @@
               },
               {
                 "internalType": "uint256",
-                "name": "slopeIncrease",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
                 "name": "validatorSharePrice",
                 "type": "uint256"
               },
@@ -8457,11 +8452,6 @@
               {
                 "internalType": "uint256",
                 "name": "slope",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "slopeIncrease",
                 "type": "uint256"
               },
               {
@@ -8577,11 +8567,6 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          },
           {
             "internalType": "address",
             "name": "operatorAddressToMigrateFrom",
@@ -8948,7 +8933,23 @@
         "type": "error"
       },
       {
-        "inputs": [],
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "senderAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "operatorAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakerAddress",
+            "type": "address"
+          }
+        ],
         "name": "StakerAddressMismatch",
         "type": "error"
       },
@@ -9446,6 +9447,16 @@
             "internalType": "bytes",
             "name": "attestedPubKey",
             "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "senderPubKey",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "receiverPubKey",
+            "type": "uint256"
           }
         ],
         "name": "registerAttestedWallet",
@@ -9561,19 +9572,9 @@
             "internalType": "address",
             "name": "operatorAddress",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "senderPubKey",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "receiverPubKey",
-            "type": "uint256"
           }
         ],
-        "name": "setIpPortNodeAddressAndCommunicationPubKeys",
+        "name": "setIpPortNodeAddress",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -11046,6 +11047,25 @@
           }
         ],
         "name": "getStakeWeightInEpoch",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "nodeCount",
+            "type": "uint256"
+          }
+        ],
+        "name": "getThreshold",
         "outputs": [
           {
             "internalType": "uint256",
@@ -12646,7 +12666,7 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0xac4D8d3fa1d9109AB76739827598eAbcE4442648",
+    "address": "0x55e91694cEb7665F84C8Cf7525733E48906D7eB8",
     "abi": [
       {
         "inputs": [
@@ -13332,7 +13352,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0xB301ca8D0D36151788fe22E205dfaA937B5E3616",
+    "address": "0x92694b7e1F5b16a8EDC4A78Da7AdF34946dFd779",
     "abi": [
       {
         "inputs": [
@@ -13825,6 +13845,36 @@
       },
       {
         "inputs": [],
+        "name": "getLitActionPriceConfigs",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+                "name": "priceComponent",
+                "type": "uint8"
+              },
+              {
+                "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+                "name": "priceMeasurement",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibPriceFeedStorage.LitActionPriceConfig[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
         "name": "getNodeCapacityConfig",
         "outputs": [
           {
@@ -13842,6 +13892,11 @@
               {
                 "internalType": "uint256",
                 "name": "litActionMaxConcurrency",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "signSessionKeyMaxConcurrency",
                 "type": "uint256"
               },
               {
@@ -14149,6 +14204,59 @@
       {
         "inputs": [
           {
+            "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+            "name": "priceComponent",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+            "name": "priceMeasurement",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "new_price",
+            "type": "uint256"
+          }
+        ],
+        "name": "setLitActionPriceConfig",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "components": [
+              {
+                "internalType": "enum LibPriceFeedStorage.LitActionPriceComponent",
+                "name": "priceComponent",
+                "type": "uint8"
+              },
+              {
+                "internalType": "enum LibPriceFeedStorage.NodePriceMeasurement",
+                "name": "priceMeasurement",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct LibPriceFeedStorage.LitActionPriceConfig[]",
+            "name": "configs",
+            "type": "tuple[]"
+          }
+        ],
+        "name": "setLitActionPriceConfigs",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
             "internalType": "uint256",
             "name": "newPrice",
             "type": "uint256"
@@ -14181,6 +14289,11 @@
               {
                 "internalType": "uint256",
                 "name": "litActionMaxConcurrency",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "signSessionKeyMaxConcurrency",
                 "type": "uint256"
               },
               {
@@ -14282,7 +14395,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x5e778B2c49d5A2aBfE95D282A9099169cd30400d",
+    "address": "0x0349Db653b9b549F460C9f3d2c5d7d29Dbd5Ab5a",
     "abi": [
       {
         "inputs": [
