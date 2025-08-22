@@ -196,6 +196,11 @@
         "type": "bytes"
       },
       {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
+      },
+      {
         "internalType": "bytes",
         "name": "uri",
         "type": "bytes"
