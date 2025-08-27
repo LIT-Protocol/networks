@@ -15351,6 +15351,11 @@ export const priceFeedDiamondAbi = [
             type: 'uint256',
           },
           {
+            name: 'signSessionKeyMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
             name: 'globalMaxCapacity',
             internalType: 'uint256',
             type: 'uint256',
@@ -15603,6 +15608,11 @@ export const priceFeedDiamondAbi = [
           },
           {
             name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'signSessionKeyMaxConcurrency',
             internalType: 'uint256',
             type: 'uint256',
           },
@@ -15790,6 +15800,11 @@ export const priceFeedFacetAbi = [
             type: 'uint256',
           },
           {
+            name: 'signSessionKeyMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
             name: 'globalMaxCapacity',
             internalType: 'uint256',
             type: 'uint256',
@@ -16042,6 +16057,11 @@ export const priceFeedFacetAbi = [
           },
           {
             name: 'litActionMaxConcurrency',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'signSessionKeyMaxConcurrency',
             internalType: 'uint256',
             type: 'uint256',
           },
@@ -21634,7 +21654,6 @@ export const stakingDiamondAbi = [
             type: 'uint256',
           },
           { name: 'slope', internalType: 'uint256', type: 'uint256' },
-          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
           {
             name: 'validatorSharePrice',
             internalType: 'uint256',
@@ -21687,7 +21706,6 @@ export const stakingDiamondAbi = [
             type: 'uint256',
           },
           { name: 'slope', internalType: 'uint256', type: 'uint256' },
-          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
           {
             name: 'validatorSharePrice',
             internalType: 'uint256',
@@ -21994,7 +22012,15 @@ export const stakingDiamondAbi = [
     ],
     name: 'SignaledReadyForWrongEpochNumber',
   },
-  { type: 'error', inputs: [], name: 'StakerAddressMismatch' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'senderAddress', internalType: 'address', type: 'address' },
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'StakerAddressMismatch',
+  },
   {
     type: 'error',
     inputs: [
@@ -22390,6 +22416,8 @@ export const stakingDiamondAbi = [
       { name: 'stakerAddress', internalType: 'address', type: 'address' },
       { name: 'attestedAddress', internalType: 'address', type: 'address' },
       { name: 'attestedPubKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'registerAttestedWallet',
     outputs: [],
@@ -22453,10 +22481,8 @@ export const stakingDiamondAbi = [
       { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
       { name: 'port', internalType: 'uint32', type: 'uint32' },
       { name: 'operatorAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'setIpPortNodeAddressAndCommunicationPubKeys',
+    name: 'setIpPortNodeAddress',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -23221,6 +23247,13 @@ export const stakingDiamondAbi = [
       { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'getStakeWeightInEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeCount', internalType: 'uint256', type: 'uint256' }],
+    name: 'getThreshold',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -24034,7 +24067,6 @@ export const stakingFacetAbi = [
     ],
     name: 'InsufficientSelfStake',
   },
-  { type: 'error', inputs: [], name: 'InvalidNewSharePrice' },
   { type: 'error', inputs: [], name: 'InvalidRatio' },
   {
     type: 'error',
@@ -24442,7 +24474,6 @@ export const stakingFacetAbi = [
             type: 'uint256',
           },
           { name: 'slope', internalType: 'uint256', type: 'uint256' },
-          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
           {
             name: 'validatorSharePrice',
             internalType: 'uint256',
@@ -24495,7 +24526,6 @@ export const stakingFacetAbi = [
             type: 'uint256',
           },
           { name: 'slope', internalType: 'uint256', type: 'uint256' },
-          { name: 'slopeIncrease', internalType: 'uint256', type: 'uint256' },
           {
             name: 'validatorSharePrice',
             internalType: 'uint256',
@@ -26392,6 +26422,16 @@ export const stakingMigrateTestAbi = [
       { name: 'amount', internalType: 'uint256', type: 'uint256' },
       { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
     ],
+    name: 'testFuzz_DelegatedStakerMigrateFromActiveValidator_UnfrozenStake_2Realms',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
     name: 'testFuzz_DelegatedStakerMigrateFromInactiveValidator',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -27487,6 +27527,31 @@ export const stakingTestAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_UnfreezeContinuesAfterRejoining',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'delegatingStakerAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'testDelegatingStaker', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'testFuzz_UnfreezePastUnfrozen_2Realms_1Stuck',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
       {
         name: 'operatorStakerIndexToUnfreeze',
         internalType: 'uint256',
@@ -27641,6 +27706,16 @@ export const stakingTestAbi = [
       { name: 'testDelegatedStaker', internalType: 'bool', type: 'bool' },
     ],
     name: 'testFuzz_Withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'timeLock', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'testFuzz_WithdrawAfterUnfreezingAgainstSlashedValidator',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -28013,7 +28088,15 @@ export const stakingValidatorFacetAbi = [
     ],
     name: 'SignaledReadyForWrongEpochNumber',
   },
-  { type: 'error', inputs: [], name: 'StakerAddressMismatch' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'senderAddress', internalType: 'address', type: 'address' },
+      { name: 'operatorAddress', internalType: 'address', type: 'address' },
+      { name: 'stakerAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'StakerAddressMismatch',
+  },
   {
     type: 'error',
     inputs: [
@@ -28524,6 +28607,8 @@ export const stakingValidatorFacetAbi = [
       { name: 'stakerAddress', internalType: 'address', type: 'address' },
       { name: 'attestedAddress', internalType: 'address', type: 'address' },
       { name: 'attestedPubKey', internalType: 'bytes', type: 'bytes' },
+      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'registerAttestedWallet',
     outputs: [],
@@ -28587,10 +28672,8 @@ export const stakingValidatorFacetAbi = [
       { name: 'ipv6', internalType: 'uint128', type: 'uint128' },
       { name: 'port', internalType: 'uint32', type: 'uint32' },
       { name: 'operatorAddress', internalType: 'address', type: 'address' },
-      { name: 'senderPubKey', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiverPubKey', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'setIpPortNodeAddressAndCommunicationPubKeys',
+    name: 'setIpPortNodeAddress',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -30485,6 +30568,13 @@ export const stakingViewsFacetAbi = [
       { name: 'rewardEpochNumber', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'getStakeWeightInEpoch',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'nodeCount', internalType: 'uint256', type: 'uint256' }],
+    name: 'getThreshold',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
