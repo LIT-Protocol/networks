@@ -2255,11 +2255,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "slopeIncrease",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "validatorSharePrice",
             "type": "uint256"
           },
@@ -2332,11 +2327,6 @@
           {
             "internalType": "uint256",
             "name": "slope",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "slopeIncrease",
             "type": "uint256"
           },
           {
@@ -2582,6 +2572,117 @@
     "type": "function"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "hashed",
+        "type": "bytes32"
+      }
+    ],
+    "name": "KeySetConfigSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      }
+    ],
+    "name": "KeySetConfigUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      }
+    ],
+    "name": "deleteKeySet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "minimumThreshold",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "monetaryValue",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bool",
+            "name": "completeIsolation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "realms",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "curves",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "counts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "recoveryPartyMembers",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.KeySetConfig",
+        "name": "update",
+        "type": "tuple"
+      }
+    ],
+    "name": "setKeySet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "ActiveValidatorsCannotLeave",
     "type": "error"
@@ -2818,7 +2919,23 @@
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "senderAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operatorAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "stakerAddress",
+        "type": "address"
+      }
+    ],
     "name": "StakerAddressMismatch",
     "type": "error"
   },
@@ -3316,6 +3433,16 @@
         "internalType": "bytes",
         "name": "attestedPubKey",
         "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "senderPubKey",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "receiverPubKey",
+        "type": "uint256"
       }
     ],
     "name": "registerAttestedWallet",
@@ -3431,19 +3558,9 @@
         "internalType": "address",
         "name": "operatorAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "senderPubKey",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "receiverPubKey",
-        "type": "uint256"
       }
     ],
-    "name": "setIpPortNodeAddressAndCommunicationPubKeys",
+    "name": "setIpPortNodeAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -4363,6 +4480,72 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      }
+    ],
+    "name": "getKeySet",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "minimumThreshold",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "monetaryValue",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bool",
+            "name": "completeIsolation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "realms",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "curves",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "counts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "recoveryPartyMembers",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.KeySetConfig",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getKeyTypes",
     "outputs": [
@@ -4608,6 +4791,25 @@
         "internalType": "address[]",
         "name": "",
         "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "realmId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNonShadowValidatorsInCurrentEpochLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -4929,6 +5131,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "nodeCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getThreshold",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "stakerAddress",
         "type": "address"
@@ -5224,25 +5445,6 @@
         "internalType": "address[]",
         "name": "",
         "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "realmId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getValidatorsInCurrentEpochLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -5942,6 +6144,66 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "keySets",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "minimumThreshold",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "monetaryValue",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bool",
+            "name": "completeIsolation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "realms",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "curves",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "counts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "recoveryPartyMembers",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct LibStakingStorage.KeySetConfig[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -6507,6 +6769,47 @@
         "internalType": "struct LibStakingStorage.Validator",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "pubkey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IPubkeyRouter.RootKey[]",
+        "name": "newRootKeys",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "verifyKeySetCounts",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
