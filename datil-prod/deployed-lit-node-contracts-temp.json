@@ -88,6 +88,11 @@
       {
         "facetName": "PKPNFTFacet",
         "facetAddress": "0x1db0f6BBb72B59b1DCe9607aacA8A04F1b07085B"
+      },
+      {
+        "facetName": "PKPNFTFacet",
+        "facetAddress": "0xd40f251c5993241DE41c178594922b51c60d144c",
+        "notes": "This facet just added 2 view functions getPkpInfoFromTokenIds and getPkpInfoFromEthAddresses"
       }
     ],
     "RateLimitNFT": [
@@ -128,6 +133,11 @@
       {
         "facetName": "PubkeyRouterFacet",
         "facetAddress": "0x890e615F513183a3400139024d53A21E5Fe2006b"
+      },
+      {
+        "facetName": "PubkeyRouterFacet",
+        "facetAddress": "0x13E51559748731ef7d8731A7fa54d230DF705716",
+        "notes": "This facet just added 2 view functions getPkpInfoFromTokenIds and getPkpInfoFromEthAddresses"
       }
     ],
     "DomainWalletRegistry": [
