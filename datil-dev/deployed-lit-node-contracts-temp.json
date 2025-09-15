@@ -93,13 +93,8 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0xd40f251c5993241DE41c178594922b51c60d144c",
-        "notes": "This facet just added 2 view functions getPkpInfoFromTokenIds and getPkpInfoFromEthAddresses"
-      },
-      {
-        "facetName": "PKPNFTFacet",
         "facetAddress": "0xcbb970ccCfbE99fB9D4C5FD072039b76C8891a32",
-        "notes": "This facet just added 2 view functions getPkpInfoFromOwnerAddress and getPkpInfoFromOwnerTokenId"
+        "notes": "This facet just added 4 view functions getPkpInfoFromTokenIds and getPkpInfoFromEthAddresses and getPkpInfoFromOwnerAddress and getPkpInfoFromOwnerTokenId"
       }
     ],
     "RateLimitNFT": [
