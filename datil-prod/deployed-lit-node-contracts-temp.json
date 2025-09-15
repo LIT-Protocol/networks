@@ -96,7 +96,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0x7953C6e71a9AE31F08F5Fb7fAb08AeE4409AdF6A",
+        "facetAddress": "0xcbb970ccCfbE99fB9D4C5FD072039b76C8891a32",
         "notes": "This facet just added 2 view functions getPkpInfoFromOwnerAddress and getPkpInfoFromOwnerTokenId"
       }
     ],
