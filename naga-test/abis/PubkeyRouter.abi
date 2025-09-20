@@ -396,6 +396,38 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "KeySetNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "curveType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "name": "RootKeyMiscount",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -539,6 +571,11 @@
         "internalType": "address",
         "name": "stakingContract",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
       }
     ],
     "name": "adminResetRootKeys",
@@ -552,6 +589,11 @@
         "internalType": "address",
         "name": "stakingContract",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
       },
       {
         "components": [
@@ -668,6 +710,11 @@
         "type": "address"
       },
       {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
+      },
+      {
         "internalType": "bytes32",
         "name": "derivedKeyId",
         "type": "bytes32"
@@ -741,6 +788,11 @@
         "internalType": "address",
         "name": "stakingContract",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
       }
     ],
     "name": "getRootKeys",
@@ -968,6 +1020,11 @@
         "internalType": "address",
         "name": "stakingContractAddress",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
       },
       {
         "components": [

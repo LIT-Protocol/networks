@@ -541,6 +541,11 @@
           },
           {
             "internalType": "uint256",
+            "name": "signSessionKeyMaxConcurrency",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
             "name": "globalMaxCapacity",
             "type": "uint256"
           }
@@ -929,6 +934,11 @@
           {
             "internalType": "uint256",
             "name": "litActionMaxConcurrency",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "signSessionKeyMaxConcurrency",
             "type": "uint256"
           },
           {

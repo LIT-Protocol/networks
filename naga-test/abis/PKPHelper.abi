@@ -375,6 +375,11 @@
             "type": "uint256"
           },
           {
+            "internalType": "string",
+            "name": "keySetId",
+            "type": "string"
+          },
+          {
             "internalType": "bytes32",
             "name": "derivedKeyId",
             "type": "bytes32"
@@ -645,6 +650,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
+      },
+      {
         "internalType": "uint256[]",
         "name": "permittedAuthMethodTypes",
         "type": "uint256[]"
@@ -689,59 +699,71 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "keyType",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "permittedIpfsCIDs",
-        "type": "bytes[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "permittedIpfsCIDScopes",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "permittedAddresses",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "permittedAddressScopes",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "permittedAuthMethodTypes",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "permittedAuthMethodIds",
-        "type": "bytes[]"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "permittedAuthMethodPubkeys",
-        "type": "bytes[]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "permittedAuthMethodScopes",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "bool",
-        "name": "addPkpEthAddressAsPermittedAddress",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "sendPkpToItself",
-        "type": "bool"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "keySetId",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "permittedIpfsCIDs",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint256[][]",
+            "name": "permittedIpfsCIDScopes",
+            "type": "uint256[][]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "permittedAddresses",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[][]",
+            "name": "permittedAddressesScopes",
+            "type": "uint256[][]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "permittedAuthMethodTypes",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "permittedAuthMethodIds",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "permittedAuthMethodPubkeys",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint256[][]",
+            "name": "permittedAuthMethodScopes",
+            "type": "uint256[][]"
+          },
+          {
+            "internalType": "bool",
+            "name": "addPkpEthAddressAsPermittedAddress",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "sendPkpToItself",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct PKPHelper.MintNextAndAddAuthMethodsWithTypesParams",
+        "name": "params",
+        "type": "tuple"
       }
     ],
     "name": "mintNextAndAddAuthMethodsWithTypes",
@@ -761,6 +783,11 @@
         "internalType": "uint256",
         "name": "keyType",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
       },
       {
         "internalType": "uint256[]",
