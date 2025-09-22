@@ -611,6 +611,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
+      },
+      {
         "internalType": "bytes32",
         "name": "derivedKeyId",
         "type": "bytes32"
@@ -873,6 +878,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
+      },
+      {
         "internalType": "bytes",
         "name": "ipfsCID",
         "type": "bytes"
@@ -895,6 +905,11 @@
         "internalType": "uint256",
         "name": "keyType",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "keySetId",
+        "type": "string"
       }
     ],
     "name": "mintNext",
