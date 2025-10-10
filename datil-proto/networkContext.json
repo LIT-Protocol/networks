@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0x86f79fAc8eA2709Fac93a6A66a2E651F8b54Acfd",
+    "address": "0x82eC786E677fe3a3404C127dC8C88b9d6c52eF7d",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0x6C7F350e8a04f3C5fA61C03299Ba759368D9217A",
+    "address": "0x6d2Bc1644711a80CEd3F2B70218fEdD1CEF71EC8",
     "abi": [
       {
         "anonymous": false,
@@ -1388,7 +1388,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0x916CCf427Ef66990D67709C94F315eb572b0aBeA",
+    "address": "0xeec77d36eA8d6C8d5A2Bf6ebd5939809fb791466",
     "abi": [
       {
         "inputs": [
@@ -2370,7 +2370,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x66f105BCc6AA8F10A5F25f62b0581fc1b3349B40",
+    "address": "0x19164205446469e9a6BDD89b6054E11fFae83d2e",
     "abi": [
       {
         "inputs": [
@@ -3608,7 +3608,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0xaEe1a33865f0f186598A20dEdf8cc1cB6B3bbA9A",
+    "address": "0x211881E8E3948DeB602701684B228aabdcA71a2B",
     "abi": [
       {
         "inputs": [
@@ -3766,7 +3766,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0xA2e0B96E2BD7f7420C794A4e24361ef5FC6c7c9C",
+    "address": "0xE17591554724C43080c1Ff8e57211568Fa6f358b",
     "abi": [
       {
         "inputs": [
@@ -5095,7 +5095,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0x638D3720126163CCC3d816c911ec9F6d0606017F",
+    "address": "0x4c07BA18ab4E5D06c55B35D26D3a949E5e4827f1",
     "abi": [
       {
         "inputs": [
@@ -5981,7 +5981,7 @@
     "name": "PubkeyRouter"
   },
   "RateLimitNFT": {
-    "address": "0xF4dE2810FCD0C6228677C26269E6dC2c98584A89",
+    "address": "0x560BCef0D2cA8Eb854D9017eed4012F3b2731D16",
     "abi": [
       {
         "inputs": [
@@ -7383,7 +7383,7 @@
     "name": "RateLimitNFT"
   },
   "Staking": {
-    "address": "0x5C94899252C57aFC8BAdB3a7085B41726A48Ad4F",
+    "address": "0x252FdD8B5893EA086071cD7d45396785723A5645",
     "abi": [
       {
         "inputs": [
@@ -7971,12 +7971,6 @@
             "internalType": "struct LibStakingStorage.LitActionConfig",
             "name": "newLitActionConfig",
             "type": "tuple"
-          },
-          {
-            "indexed": false,
-            "internalType": "bool",
-            "name": "newHeliosEnabled",
-            "type": "bool"
           }
         ],
         "name": "ConfigSet",
@@ -8350,11 +8344,6 @@
                 "internalType": "struct LibStakingStorage.LitActionConfig",
                 "name": "litActionConfig",
                 "type": "tuple"
-              },
-              {
-                "internalType": "bool",
-                "name": "heliosEnabled",
-                "type": "bool"
               }
             ],
             "internalType": "struct LibStakingStorage.Config",
@@ -9454,11 +9443,6 @@
                 "internalType": "struct LibStakingStorage.LitActionConfig",
                 "name": "litActionConfig",
                 "type": "tuple"
-              },
-              {
-                "internalType": "bool",
-                "name": "heliosEnabled",
-                "type": "bool"
               }
             ],
             "internalType": "struct LibStakingStorage.Config",
@@ -10236,7 +10220,7 @@
     "name": "Staking"
   },
   "StakingBalances": {
-    "address": "0x1Bf6BD7dc8067233105d97C6F4c28A4b524E455b",
+    "address": "0x8577F61205A6271C0EC1cd5109058e11fd1A3114",
     "abi": [
       {
         "inputs": [
@@ -11478,7 +11462,7 @@
     "name": "StakingBalances"
   },
   "CloneNet": {
-    "address": "0xDa75A2516d0F2c2C98EdaDf58DEAD90D73058D06",
+    "address": "0x316b0607E996de73F2B702B2d6c444feb09Cc130",
     "abi": [
       {
         "type": "error",
@@ -11647,7 +11631,7 @@
     "name": "CloneNet"
   },
   "ContractResolver": {
-    "address": "0x5d803F7Df0532d8D14a8A653277C42A3A16Baf35",
+    "address": "0xc6Cc3a90412d8b4DB09BC839D41699d9Fc13a215",
     "abi": [
       {
         "inputs": [
