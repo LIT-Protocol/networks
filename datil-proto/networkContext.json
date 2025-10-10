@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0xD059dadCB1Ca3C04A8E4B93577b74469E4E1b18B",
+    "address": "0x17b67Bad90dC7f31B13507cC860cEc06E8ca4F2e",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0xa2E8D28e7f3147C4d5A1B88Ce3370d7c78284369",
+    "address": "0x48e07A5fa10ffCEc8411F9532b22b6823631f971",
     "abi": [
       {
         "anonymous": false,
@@ -1388,7 +1388,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0xa80eA59151553a0bE802fF87D544032f9a773168",
+    "address": "0xfe1ECf696386bf96d288906D14a534cB2668b60F",
     "abi": [
       {
         "inputs": [
@@ -2370,7 +2370,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x17206CEe311a1699e431BC122aAD434c28B28584",
+    "address": "0xBcEeF84481E45CA64D36e60773c47Cc0c18C9da6",
     "abi": [
       {
         "inputs": [
@@ -3608,7 +3608,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0xC2687640f1729f5a20FD376b15bfE88Efbb4a1f8",
+    "address": "0x9a1748F1f4ad68B9A4F63CfF6F6e2bBCa886c193",
     "abi": [
       {
         "inputs": [
@@ -3766,7 +3766,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x77CdC5638c05da03e3d8Ec7B78D22BC2dC1855C8",
+    "address": "0xa72e510f20e4520171893d2641D44913B12d1F47",
     "abi": [
       {
         "inputs": [
@@ -5095,7 +5095,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0x0ba7ecB3f14c740521C75a9e3695508cd5CF0063",
+    "address": "0x0D5aC1AAa6C25419Eb996A8901CE279dF3eD61c8",
     "abi": [
       {
         "inputs": [
@@ -5981,7 +5981,7 @@
     "name": "PubkeyRouter"
   },
   "RateLimitNFT": {
-    "address": "0x303d0A7D725621c9eAac8d90FDE797d8CeB5881d",
+    "address": "0xa8bC808722b20a5851B6C41381f3BfF5C17d73Fb",
     "abi": [
       {
         "inputs": [
@@ -7383,7 +7383,7 @@
     "name": "RateLimitNFT"
   },
   "Staking": {
-    "address": "0x99a349466772f9b4434A4978132086b70047dB78",
+    "address": "0x93ea2E159E6C7a2Af79F165c2962962D561A74AB",
     "abi": [
       {
         "inputs": [
@@ -10220,7 +10220,7 @@
     "name": "Staking"
   },
   "StakingBalances": {
-    "address": "0x96786DA0dc53514b9ef4c534FC0DA85983997bdc",
+    "address": "0xA11703c607018064D11d9861aFa97Bec7A5AA049",
     "abi": [
       {
         "inputs": [
@@ -11462,7 +11462,7 @@
     "name": "StakingBalances"
   },
   "CloneNet": {
-    "address": "0xF0Fe69a5259fEF8D76F489044583Fcdd8BF6C3De",
+    "address": "0x23ca44c26C57dDbA474fe15F7649F8556B06A7B3",
     "abi": [
       {
         "type": "error",
@@ -11631,7 +11631,7 @@
     "name": "CloneNet"
   },
   "ContractResolver": {
-    "address": "0xdb2E07490F6c83Cb7565f4c43A7De6b858Af8370",
+    "address": "0x52508a24FADbA026e482063b7Fa9B8E081Ad1388",
     "abi": [
       {
         "inputs": [
