@@ -43,11 +43,11 @@
       },
       {
         "facetName": "StakingValidatorFacet",
-        "facetAddress": "0x02ac2617B3f6795d8C51DbE9A6E20840Cf30f3d8"
+        "facetAddress": "0x9B10C6cDF4aC415A1CF3CE0789dD88F373d46601"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0xBE7bE90D3384F04d79f4c34cb2E22a0fD614FE75"
+        "facetAddress": "0x225c01B68BCc5199889a3173e5478A7FB45D6EF5"
       },
       {
         "facetName": "StakingVersionFacet",
@@ -63,7 +63,7 @@
       },
       {
         "facetName": "StakingAdminFacet",
-        "facetAddress": "0x75cef04c3003C58bb273eDeE0EEe74Df2Fb8D6cE"
+        "facetAddress": "0x332B87c74999411B0358b4c4d9E80606dc12BA60"
       }
     ],
     "PKPNFT": [
