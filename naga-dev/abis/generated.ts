@@ -3094,6 +3094,7 @@ export const domainWalletRegistryDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'userId', internalType: 'bytes', type: 'bytes' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'uri', internalType: 'bytes', type: 'bytes' },
       { name: 'ttl', internalType: 'uint256', type: 'uint256' },
       {
@@ -3643,6 +3644,7 @@ export const domainWalletRegistryFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'userId', internalType: 'bytes', type: 'bytes' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'uri', internalType: 'bytes', type: 'bytes' },
       { name: 'ttl', internalType: 'uint256', type: 'uint256' },
       {
@@ -9879,6 +9881,7 @@ export const pkpHelperAbi = [
         type: 'tuple',
         components: [
           { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+          { name: 'keySetId', internalType: 'string', type: 'string' },
           { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
           {
             name: 'signatures',
@@ -10040,6 +10043,7 @@ export const pkpHelperAbi = [
     type: 'function',
     inputs: [
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       {
         name: 'permittedAuthMethodTypes',
         internalType: 'uint256[]',
@@ -10074,49 +10078,62 @@ export const pkpHelperAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'keyType', internalType: 'uint256', type: 'uint256' },
-      { name: 'permittedIpfsCIDs', internalType: 'bytes[]', type: 'bytes[]' },
       {
-        name: 'permittedIpfsCIDScopes',
-        internalType: 'uint256[][]',
-        type: 'uint256[][]',
+        name: 'params',
+        internalType:
+          'struct PKPHelper.MintNextAndAddAuthMethodsWithTypesParams',
+        type: 'tuple',
+        components: [
+          { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+          { name: 'keySetId', internalType: 'string', type: 'string' },
+          {
+            name: 'permittedIpfsCIDs',
+            internalType: 'bytes[]',
+            type: 'bytes[]',
+          },
+          {
+            name: 'permittedIpfsCIDScopes',
+            internalType: 'uint256[][]',
+            type: 'uint256[][]',
+          },
+          {
+            name: 'permittedAddresses',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+          {
+            name: 'permittedAddressesScopes',
+            internalType: 'uint256[][]',
+            type: 'uint256[][]',
+          },
+          {
+            name: 'permittedAuthMethodTypes',
+            internalType: 'uint256[]',
+            type: 'uint256[]',
+          },
+          {
+            name: 'permittedAuthMethodIds',
+            internalType: 'bytes[]',
+            type: 'bytes[]',
+          },
+          {
+            name: 'permittedAuthMethodPubkeys',
+            internalType: 'bytes[]',
+            type: 'bytes[]',
+          },
+          {
+            name: 'permittedAuthMethodScopes',
+            internalType: 'uint256[][]',
+            type: 'uint256[][]',
+          },
+          {
+            name: 'addPkpEthAddressAsPermittedAddress',
+            internalType: 'bool',
+            type: 'bool',
+          },
+          { name: 'sendPkpToItself', internalType: 'bool', type: 'bool' },
+        ],
       },
-      {
-        name: 'permittedAddresses',
-        internalType: 'address[]',
-        type: 'address[]',
-      },
-      {
-        name: 'permittedAddressScopes',
-        internalType: 'uint256[][]',
-        type: 'uint256[][]',
-      },
-      {
-        name: 'permittedAuthMethodTypes',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-      },
-      {
-        name: 'permittedAuthMethodIds',
-        internalType: 'bytes[]',
-        type: 'bytes[]',
-      },
-      {
-        name: 'permittedAuthMethodPubkeys',
-        internalType: 'bytes[]',
-        type: 'bytes[]',
-      },
-      {
-        name: 'permittedAuthMethodScopes',
-        internalType: 'uint256[][]',
-        type: 'uint256[][]',
-      },
-      {
-        name: 'addPkpEthAddressAsPermittedAddress',
-        internalType: 'bool',
-        type: 'bool',
-      },
-      { name: 'sendPkpToItself', internalType: 'bool', type: 'bool' },
     ],
     name: 'mintNextAndAddAuthMethodsWithTypes',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -10126,6 +10143,7 @@ export const pkpHelperAbi = [
     type: 'function',
     inputs: [
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       {
         name: 'permittedAuthMethodTypes',
         internalType: 'uint256[]',
@@ -10350,6 +10368,7 @@ export const pkpHelperV2Abi = [
         type: 'tuple',
         components: [
           { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+          { name: 'keySetId', internalType: 'string', type: 'string' },
           {
             name: 'permittedAuthMethodTypes',
             internalType: 'uint256[]',
@@ -10398,6 +10417,7 @@ export const pkpHelperV2Abi = [
         type: 'tuple',
         components: [
           { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+          { name: 'keySetId', internalType: 'string', type: 'string' },
           {
             name: 'permittedAuthMethodTypes',
             internalType: 'uint256[]',
@@ -11106,6 +11126,7 @@ export const pkpnftDiamondAbi = [
     inputs: [
       { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
       {
         name: 'signatures',
@@ -11232,6 +11253,7 @@ export const pkpnftDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'ipfsCID', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'mintGrantAndBurnNext',
@@ -11240,7 +11262,10 @@ export const pkpnftDiamondAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'keyType', internalType: 'uint256', type: 'uint256' }],
+    inputs: [
+      { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
+    ],
     name: 'mintNext',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'payable',
@@ -11585,6 +11610,7 @@ export const pkpnftFacetAbi = [
     inputs: [
       { name: 'realmId', internalType: 'uint256', type: 'uint256' },
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
       {
         name: 'signatures',
@@ -11711,6 +11737,7 @@ export const pkpnftFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'ipfsCID', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'mintGrantAndBurnNext',
@@ -11719,7 +11746,10 @@ export const pkpnftFacetAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'keyType', internalType: 'uint256', type: 'uint256' }],
+    inputs: [
+      { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
+    ],
     name: 'mintNext',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'payable',
@@ -16573,6 +16603,22 @@ export const pubkeyRouterDiamondAbi = [
   },
   { type: 'error', inputs: [], name: 'CallerNotOwner' },
   {
+    type: 'error',
+    inputs: [
+      { name: 'identifier', internalType: 'string', type: 'string' },
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'KeySetNotFound',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'curveType', internalType: 'uint256', type: 'uint256' },
+      { name: 'count', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'RootKeyMiscount',
+  },
+  {
     type: 'event',
     anonymous: false,
     inputs: [
@@ -16701,6 +16747,7 @@ export const pubkeyRouterDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
     ],
     name: 'adminResetRootKeys',
     outputs: [],
@@ -16710,6 +16757,7 @@ export const pubkeyRouterDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       {
         name: 'rootKeys',
         internalType: 'struct IPubkeyRouter.RootKey[]',
@@ -16762,6 +16810,7 @@ export const pubkeyRouterDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'getDerivedPubkey',
@@ -16793,6 +16842,7 @@ export const pubkeyRouterDiamondAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
     ],
     name: 'getRootKeys',
     outputs: [
@@ -16912,6 +16962,7 @@ export const pubkeyRouterDiamondAbi = [
         internalType: 'address',
         type: 'address',
       },
+      { name: 'identifier', internalType: 'string', type: 'string' },
       {
         name: 'newRootKeys',
         internalType: 'struct IPubkeyRouter.RootKey[]',
@@ -16935,6 +16986,22 @@ export const pubkeyRouterDiamondAbi = [
 export const pubkeyRouterFacetAbi = [
   { type: 'error', inputs: [], name: 'CallerNotOwner' },
   {
+    type: 'error',
+    inputs: [
+      { name: 'identifier', internalType: 'string', type: 'string' },
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'KeySetNotFound',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'curveType', internalType: 'uint256', type: 'uint256' },
+      { name: 'count', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'RootKeyMiscount',
+  },
+  {
     type: 'event',
     anonymous: false,
     inputs: [
@@ -17063,6 +17130,7 @@ export const pubkeyRouterFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
     ],
     name: 'adminResetRootKeys',
     outputs: [],
@@ -17072,6 +17140,7 @@ export const pubkeyRouterFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       {
         name: 'rootKeys',
         internalType: 'struct IPubkeyRouter.RootKey[]',
@@ -17124,6 +17193,7 @@ export const pubkeyRouterFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
       { name: 'derivedKeyId', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'getDerivedPubkey',
@@ -17155,6 +17225,7 @@ export const pubkeyRouterFacetAbi = [
     type: 'function',
     inputs: [
       { name: 'stakingContract', internalType: 'address', type: 'address' },
+      { name: 'keySetId', internalType: 'string', type: 'string' },
     ],
     name: 'getRootKeys',
     outputs: [
@@ -17274,6 +17345,7 @@ export const pubkeyRouterFacetAbi = [
         internalType: 'address',
         type: 'address',
       },
+      { name: 'identifier', internalType: 'string', type: 'string' },
       {
         name: 'newRootKeys',
         internalType: 'struct IPubkeyRouter.RootKey[]',
@@ -21850,6 +21922,74 @@ export const stakingDiamondAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'exists', internalType: 'bool', type: 'bool', indexed: false },
+      {
+        name: 'identifier',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'hashed',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'KeySetConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'identifier',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+    ],
+    name: 'KeySetConfigUpdated',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'identifier', internalType: 'string', type: 'string' }],
+    name: 'deleteKeySet',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'update',
+        internalType: 'struct LibStakingStorage.KeySetConfig',
+        type: 'tuple',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    name: 'setKeySet',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
   { type: 'error', inputs: [], name: 'ActiveValidatorsCannotLeave' },
   {
     type: 'error',
@@ -22946,6 +23086,34 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'identifier', internalType: 'string', type: 'string' }],
+    name: 'getKeySet',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.KeySetConfig',
+        type: 'tuple',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'getKeyTypes',
     outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
@@ -23079,6 +23247,13 @@ export const stakingDiamondAbi = [
     inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getNonShadowValidators',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getNonShadowValidatorsInCurrentEpochLength',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -23408,13 +23583,6 @@ export const stakingDiamondAbi = [
     inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getValidatorsInCurrentEpoch',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getValidatorsInCurrentEpochLength',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -23756,6 +23924,34 @@ export const stakingDiamondAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'keySets',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.KeySetConfig[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
     name: 'kickPenaltyPercentByReason',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -24036,6 +24232,27 @@ export const stakingDiamondAbi = [
           },
         ],
       },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'identifier', internalType: 'string', type: 'string' },
+      {
+        name: 'newRootKeys',
+        internalType: 'struct IPubkeyRouter.RootKey[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'verifyKeySetCounts',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
     ],
     stateMutability: 'view',
   },
@@ -25881,6 +26098,82 @@ export const stakingInvariantsTestAbi = [
       },
     ],
     stateMutability: 'view',
+  },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingKeySetsFacet
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingKeySetsFacetAbi = [
+  { type: 'error', inputs: [], name: 'CallerNotOwner' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'exists', internalType: 'bool', type: 'bool', indexed: false },
+      {
+        name: 'identifier',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'hashed',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'KeySetConfigSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'identifier',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+    ],
+    name: 'KeySetConfigUpdated',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'identifier', internalType: 'string', type: 'string' }],
+    name: 'deleteKeySet',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'update',
+        internalType: 'struct LibStakingStorage.KeySetConfig',
+        type: 'tuple',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    name: 'setKeySet',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const;
 
@@ -30267,6 +30560,34 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'identifier', internalType: 'string', type: 'string' }],
+    name: 'getKeySet',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.KeySetConfig',
+        type: 'tuple',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'getKeyTypes',
     outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
@@ -30400,6 +30721,13 @@ export const stakingViewsFacetAbi = [
     inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getNonShadowValidators',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getNonShadowValidatorsInCurrentEpochLength',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -30729,13 +31057,6 @@ export const stakingViewsFacetAbi = [
     inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
     name: 'getValidatorsInCurrentEpoch',
     outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'realmId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getValidatorsInCurrentEpochLength',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -31077,6 +31398,34 @@ export const stakingViewsFacetAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'keySets',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct LibStakingStorage.KeySetConfig[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'minimumThreshold', internalType: 'uint32', type: 'uint32' },
+          { name: 'monetaryValue', internalType: 'uint32', type: 'uint32' },
+          { name: 'completeIsolation', internalType: 'bool', type: 'bool' },
+          { name: 'identifier', internalType: 'string', type: 'string' },
+          { name: 'description', internalType: 'string', type: 'string' },
+          { name: 'realms', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'curves', internalType: 'uint256[]', type: 'uint256[]' },
+          { name: 'counts', internalType: 'uint256[]', type: 'uint256[]' },
+          {
+            name: 'recoveryPartyMembers',
+            internalType: 'address[]',
+            type: 'address[]',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'reason', internalType: 'uint256', type: 'uint256' }],
     name: 'kickPenaltyPercentByReason',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -31357,6 +31706,27 @@ export const stakingViewsFacetAbi = [
           },
         ],
       },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'identifier', internalType: 'string', type: 'string' },
+      {
+        name: 'newRootKeys',
+        internalType: 'struct IPubkeyRouter.RootKey[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'keyType', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'verifyKeySetCounts',
+    outputs: [
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
     ],
     stateMutability: 'view',
   },
