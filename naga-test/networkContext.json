@@ -1,6 +1,10 @@
 {
   "Allowlist": {
-    "address": "0x74fa01C30dD2b4712EB5473736368ABc089F6b7D",
+<<<<<<< HEAD
+    "address": "0x7a0C80abF9D138E2049cBCbAc61F810106cA28d7",
+=======
+    "address": "0x934d3190ff3A92eB1Cfb6CbD3617629322897969",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1283,11 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0xBE60Ad74680D6a9219fEFC3CF20E077152b60Ad1",
+<<<<<<< HEAD
+    "address": "0x5114aC8676BCBeb042d1EFeF491Ede31565fB64F",
+=======
+    "address": "0x077eFcaBFF62391b6fd438034fb21E2484C5B9FF",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1419,11 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0xe335bEa630D5390A7db3cE88021101cE400537e1",
+<<<<<<< HEAD
+    "address": "0xa75f994e7608061A29Ea1e5aED6aB9f9b484b2D5",
+=======
+    "address": "0x13428A18C0b181344F97ceaC5596F31a9d182e5c",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -2420,7 +2432,11 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x7fe70621d284d08574B07F8c1E0Ee0e274c6029c",
+<<<<<<< HEAD
+    "address": "0xD51e707Cd5ace08004fA3eb134e283a4543DCb63",
+=======
+    "address": "0xaf4Dddb07Cdde48042e93eb5bf266b49950bC5BD",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -3842,7 +3858,11 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0x4bCCE02E05E5FeDd17F41da088e1150c20ea3F79",
+<<<<<<< HEAD
+    "address": "0xE06efBFF7B4e34336F39bc7f0D716a29f210cA78",
+=======
+    "address": "0xE77d6EBD151c02e05a4d9645f816F68f55730733",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -4000,7 +4020,11 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x2aEe7F8B4A3155cf19e47bC4Eb25ac4537Bd5Ea1",
+<<<<<<< HEAD
+    "address": "0x2090Ba6B41572eed8A533b7985b2F2a6b9d56Fce",
+=======
+    "address": "0x7255737630fCFb4914cF51552123eEe9abEc6120",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -5329,7 +5353,11 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0xBA0B8d884b408fcf4eCA10B2C47bf889910aD180",
+<<<<<<< HEAD
+    "address": "0x3566C96443a085e394D3871a7Cd909a3502bb976",
+=======
+    "address": "0x054Ddcfef7E9434413ad62A6F37946Bf6B6CFc1A",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -6457,7 +6485,11 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x25829212828eeB5e74432429bE84F97aA56f5F91",
+<<<<<<< HEAD
+    "address": "0x9E6CA44744f1c2C121c95cB82C75623663Aaa6a2",
+=======
+    "address": "0x9f3cE810695180C5f693a7cD2a0203A381fd57E1",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -13317,7 +13349,11 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0x097240445e4B1aE89fb1C3B8BB7C07C957392d45",
+<<<<<<< HEAD
+    "address": "0x6f6eB113f6aDD9dF84ddd2dDc3aa0C5f1ac711cC",
+=======
+    "address": "0x03aF23be3A816abd9aa5992434d42Bed1300eB03",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -14003,7 +14039,11 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0x5df51a5b7bFaF0769CeC2648Dd61469ff7df4b87",
+<<<<<<< HEAD
+    "address": "0x2c5867888EE65Cb25D192888d8B535B5ab3B01C3",
+=======
+    "address": "0x556955025dD0981Bac684fbDEcE14cDa897d0837",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -15041,7 +15081,11 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x52b0Df7989d7914B0212a21eDD64F16F577D8aCd",
+<<<<<<< HEAD
+    "address": "0x5CEEBb1c298E6c411074898223Ea5E85928EA482",
+=======
+    "address": "0xbA0aEB6Bbf58F1B74E896416A20DB5be51C991f2",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
@@ -16313,7 +16357,11 @@
     "name": "Forwarder"
   },
   "PaymentDelegation": {
-    "address": "0xdB1FCf6abeea6d1dd66E87b88bD62a7B4f877EDb",
+<<<<<<< HEAD
+    "address": "0x634dF7b2BDf87dAE4138E96Dcc189EaE61B2A307",
+=======
+    "address": "0xd1E59c174BcF85012c54086AB600Dd0aB032e88B",
+>>>>>>> b219478 (feat: update contract addresses for release-naga-test-2025-10-30 branch (2025-10-30))
     "abi": [
       {
         "inputs": [
