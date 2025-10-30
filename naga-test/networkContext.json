@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0xa9D639c6Bb52BD3B30EB46a9B5E5f2eE90977888",
+    "address": "0x74fa01C30dD2b4712EB5473736368ABc089F6b7D",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0x729D481064fBFfB6E58C915A19eB77BDcc1f4d13",
+    "address": "0xBE60Ad74680D6a9219fEFC3CF20E077152b60Ad1",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0x3229379bA31Bb916F73842409cdB909De9c8cD33",
+    "address": "0xe335bEa630D5390A7db3cE88021101cE400537e1",
     "abi": [
       {
         "inputs": [
@@ -2420,7 +2420,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0xAf49B3Dd17F0D251E7E0ED510b22B7624c6878CA",
+    "address": "0x7fe70621d284d08574B07F8c1E0Ee0e274c6029c",
     "abi": [
       {
         "inputs": [
@@ -3166,6 +3166,170 @@
         "type": "function"
       },
       {
+        "inputs": [
+          {
+            "internalType": "address[]",
+            "name": "ethAddresses",
+            "type": "address[]"
+          }
+        ],
+        "name": "getPkpInfoFromEthAddresses",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pageSize",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pageIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "getPkpInfoFromOwnerAddress",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pageSize",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pageIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "getPkpInfoFromOwnerTokenId",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256[]",
+            "name": "tokenIds",
+            "type": "uint256[]"
+          }
+        ],
+        "name": "getPkpInfoFromTokenIds",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "getPkpNftMetadataAddress",
         "outputs": [
@@ -3678,7 +3842,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0x288204FB05F904BD28bB474Af51618271698943E",
+    "address": "0x4bCCE02E05E5FeDd17F41da088e1150c20ea3F79",
     "abi": [
       {
         "inputs": [
@@ -3836,7 +4000,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x093A9046766A67cC4b207fC782A53785267B9E45",
+    "address": "0x2aEe7F8B4A3155cf19e47bC4Eb25ac4537Bd5Ea1",
     "abi": [
       {
         "inputs": [
@@ -5165,7 +5329,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0xcBF65D0d3a3Dc3a1E7BcAC4ef34128a52F51E600",
+    "address": "0xBA0B8d884b408fcf4eCA10B2C47bf889910aD180",
     "abi": [
       {
         "inputs": [
@@ -5919,6 +6083,78 @@
         "type": "function"
       },
       {
+        "inputs": [
+          {
+            "internalType": "address[]",
+            "name": "ethAddresses",
+            "type": "address[]"
+          }
+        ],
+        "name": "getPkpInfoFromEthAddresses",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256[]",
+            "name": "tokenIds",
+            "type": "uint256[]"
+          }
+        ],
+        "name": "getPkpInfoFromTokenIds",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "address",
+                "name": "ethAddress",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct LibPubkeyRouterStorage.PkpInfo[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "getPkpNftAddress",
         "outputs": [
@@ -6221,7 +6457,7 @@
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x28C626d92c5061AdeeDF59d483304b8d35613212",
+    "address": "0x25829212828eeB5e74432429bE84F97aA56f5F91",
     "abi": [
       {
         "inputs": [
@@ -6927,6 +7163,11 @@
       {
         "inputs": [],
         "name": "CannotModifyUnfrozen",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "CannotMoveToLockedValidatorStateBeforeEpochEnds",
         "type": "error"
       },
       {
@@ -7645,6 +7886,11 @@
               {
                 "internalType": "uint256",
                 "name": "minThresholdToClampAt",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "voteToAdvanceTimeOut",
                 "type": "uint256"
               }
             ],
@@ -8849,6 +9095,132 @@
       {
         "inputs": [
           {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          }
+        ],
+        "name": "getKeySet",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "minimumThreshold",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "monetaryValue",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bool",
+                "name": "completeIsolation",
+                "type": "bool"
+              },
+              {
+                "internalType": "string",
+                "name": "identifier",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "realms",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "curves",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "counts",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "address[]",
+                "name": "recoveryPartyMembers",
+                "type": "address[]"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.KeySetConfig",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "keySets",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "minimumThreshold",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "monetaryValue",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bool",
+                "name": "completeIsolation",
+                "type": "bool"
+              },
+              {
+                "internalType": "string",
+                "name": "identifier",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "realms",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "curves",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "counts",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "address[]",
+                "name": "recoveryPartyMembers",
+                "type": "address[]"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.KeySetConfig[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
             "components": [
               {
                 "internalType": "uint32",
@@ -8904,6 +9276,47 @@
         "name": "setKeySet",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyType",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IPubkeyRouter.RootKey[]",
+            "name": "newRootKeys",
+            "type": "tuple[]"
+          }
+        ],
+        "name": "verifyKeySetCounts",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
         "type": "function"
       },
       {
@@ -9526,6 +9939,19 @@
         "anonymous": false,
         "inputs": [
           {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "realmId",
+            "type": "uint256"
+          }
+        ],
+        "name": "VoteToAdvanceTimeOutElapsed",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
             "indexed": true,
             "internalType": "address",
             "name": "reporter",
@@ -9584,25 +10010,6 @@
         "name": "exit",
         "outputs": [],
         "stateMutability": "pure",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "attestedAddress",
-            "type": "address"
-          }
-        ],
-        "name": "getAttestedPubKey",
-        "outputs": [
-          {
-            "internalType": "bytes",
-            "name": "",
-            "type": "bytes"
-          }
-        ],
-        "stateMutability": "view",
         "type": "function"
       },
       {
@@ -10307,6 +10714,11 @@
                 "internalType": "uint256",
                 "name": "startTime",
                 "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lastAdvanceVoteTime",
+                "type": "uint256"
               }
             ],
             "internalType": "struct LibStakingStorage.Epoch",
@@ -10498,6 +10910,11 @@
                 "internalType": "uint256",
                 "name": "startTime",
                 "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lastAdvanceVoteTime",
+                "type": "uint256"
               }
             ],
             "internalType": "struct LibStakingStorage.Epoch",
@@ -10659,6 +11076,25 @@
         "inputs": [
           {
             "internalType": "address",
+            "name": "attestedAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getAttestedPubKey",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
             "name": "validatorAddress",
             "type": "address"
           },
@@ -10698,72 +11134,6 @@
             "internalType": "uint256",
             "name": "",
             "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "string",
-            "name": "identifier",
-            "type": "string"
-          }
-        ],
-        "name": "getKeySet",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "uint32",
-                "name": "minimumThreshold",
-                "type": "uint32"
-              },
-              {
-                "internalType": "uint32",
-                "name": "monetaryValue",
-                "type": "uint32"
-              },
-              {
-                "internalType": "bool",
-                "name": "completeIsolation",
-                "type": "bool"
-              },
-              {
-                "internalType": "string",
-                "name": "identifier",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "description",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "realms",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "curves",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "counts",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address[]",
-                "name": "recoveryPartyMembers",
-                "type": "address[]"
-              }
-            ],
-            "internalType": "struct LibStakingStorage.KeySetConfig",
-            "name": "",
-            "type": "tuple"
           }
         ],
         "stateMutability": "view",
@@ -12175,6 +12545,11 @@
                 "internalType": "uint256",
                 "name": "minThresholdToClampAt",
                 "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "voteToAdvanceTimeOut",
+                "type": "uint256"
               }
             ],
             "internalType": "struct LibStakingStorage.GlobalConfig",
@@ -12362,66 +12737,6 @@
             "internalType": "bool",
             "name": "",
             "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "keySets",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "uint32",
-                "name": "minimumThreshold",
-                "type": "uint32"
-              },
-              {
-                "internalType": "uint32",
-                "name": "monetaryValue",
-                "type": "uint32"
-              },
-              {
-                "internalType": "bool",
-                "name": "completeIsolation",
-                "type": "bool"
-              },
-              {
-                "internalType": "string",
-                "name": "identifier",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "description",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "realms",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "curves",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "counts",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address[]",
-                "name": "recoveryPartyMembers",
-                "type": "address[]"
-              }
-            ],
-            "internalType": "struct LibStakingStorage.KeySetConfig[]",
-            "name": "",
-            "type": "tuple[]"
           }
         ],
         "stateMutability": "view",
@@ -12997,53 +13312,12 @@
         ],
         "stateMutability": "view",
         "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "string",
-            "name": "identifier",
-            "type": "string"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct IPubkeyRouter.RootKey[]",
-            "name": "newRootKeys",
-            "type": "tuple[]"
-          }
-        ],
-        "name": "verifyKeySetCounts",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
       }
     ],
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0xBD1ce0bbEc63771dEcFbb952804267657dF16a85",
+    "address": "0x097240445e4B1aE89fb1C3B8BB7C07C957392d45",
     "abi": [
       {
         "inputs": [
@@ -13729,7 +14003,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0xD6228351719509393be4d0D97C293407Beadf56f",
+    "address": "0x5df51a5b7bFaF0769CeC2648Dd61469ff7df4b87",
     "abi": [
       {
         "inputs": [
@@ -14125,11 +14399,6 @@
       {
         "inputs": [],
         "name": "CallerNotOwner",
-        "type": "error"
-      },
-      {
-        "inputs": [],
-        "name": "MustBeLessThan100",
         "type": "error"
       },
       {
@@ -14772,7 +15041,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x9197a98E6E127B0540A73da4F06f548FbF66f75F",
+    "address": "0x52b0Df7989d7914B0212a21eDD64F16F577D8aCd",
     "abi": [
       {
         "inputs": [
@@ -16044,7 +16313,7 @@
     "name": "Forwarder"
   },
   "PaymentDelegation": {
-    "address": "0x1E383465eC19650D6a02a32105D4b0508B8712b0",
+    "address": "0xdB1FCf6abeea6d1dd66E87b88bD62a7B4f877EDb",
     "abi": [
       {
         "inputs": [
