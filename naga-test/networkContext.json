@@ -1,6 +1,6 @@
 {
   "Allowlist": {
-    "address": "0x934d3190ff3A92eB1Cfb6CbD3617629322897969",
+    "address": "0x625af003520ff8F9F4c53E694951277DF68B6dE9",
     "abi": [
       {
         "inputs": [],
@@ -1279,7 +1279,7 @@
     "name": "LITToken"
   },
   "Multisender": {
-    "address": "0xBE60Ad74680D6a9219fEFC3CF20E077152b60Ad1",
+    "address": "0xd8359D7F5390C8510e6EAab0e3814d472EE34910",
     "abi": [
       {
         "anonymous": false,
@@ -1411,7 +1411,7 @@
     "name": "Multisender"
   },
   "PKPHelper": {
-    "address": "0xe335bEa630D5390A7db3cE88021101cE400537e1",
+    "address": "0xD44B4732eA9bcfac666cd6c4B6920e9f29d6042D",
     "abi": [
       {
         "inputs": [
@@ -2420,7 +2420,7 @@
     "name": "PKPHelper"
   },
   "PKPNFT": {
-    "address": "0x7fe70621d284d08574B07F8c1E0Ee0e274c6029c",
+    "address": "0x71F58526F898773Eb6ca168f0f3673f5365718d5",
     "abi": [
       {
         "inputs": [
@@ -3842,7 +3842,7 @@
     "name": "PKPNFT"
   },
   "PKPNFTMetadata": {
-    "address": "0x4bCCE02E05E5FeDd17F41da088e1150c20ea3F79",
+    "address": "0xE986A13231E6d022466FD849ae3b1C1f6E5D7EE1",
     "abi": [
       {
         "inputs": [
@@ -4000,7 +4000,7 @@
     "name": "PKPNFTMetadata"
   },
   "PKPPermissions": {
-    "address": "0x2aEe7F8B4A3155cf19e47bC4Eb25ac4537Bd5Ea1",
+    "address": "0x9C48C70DD379FCe946f889f0072b1017e2eCF94C",
     "abi": [
       {
         "inputs": [
@@ -5329,7 +5329,7 @@
     "name": "PKPPermissions"
   },
   "PubkeyRouter": {
-    "address": "0xBA0B8d884b408fcf4eCA10B2C47bf889910aD180",
+    "address": "0x3EB38bD0B4B081338801f098dFDAe6519D7C9894",
     "abi": [
       {
         "inputs": [
@@ -5829,6 +5829,12 @@
             "internalType": "bytes32",
             "name": "derivedKeyId",
             "type": "bytes32"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "keySetIdentifier",
+            "type": "string"
           }
         ],
         "name": "PubkeyRoutingDataSet",
@@ -5946,6 +5952,156 @@
           }
         ],
         "name": "adminSetRootKeys",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getTrustedForwarder",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newResolverAddress",
+            "type": "address"
+          }
+        ],
+        "name": "setContractResolver",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "pubkey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "derivedKeyId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "keySetIdentifier",
+            "type": "string"
+          }
+        ],
+        "name": "setRoutingData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "pubkey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingContract",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "derivedKeyId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "keySetIdentifier",
+            "type": "string"
+          }
+        ],
+        "name": "setRoutingDataAsAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "forwarder",
+            "type": "address"
+          }
+        ],
+        "name": "setTrustedForwarder",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "stakingContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "identifier",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "pubkey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyType",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IPubkeyRouter.RootKey[]",
+            "name": "newRootKeys",
+            "type": "tuple[]"
+          }
+        ],
+        "name": "voteForRootKeys",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -6248,24 +6404,16 @@
                 "internalType": "bytes32",
                 "name": "derivedKeyId",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "keySetIdentifier",
+                "type": "string"
               }
             ],
             "internalType": "struct LibPubkeyRouterStorage.PubkeyRoutingData",
             "name": "",
             "type": "tuple"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "getTrustedForwarder",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -6316,6 +6464,11 @@
                 "internalType": "bytes32",
                 "name": "derivedKeyId",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "keySetIdentifier",
+                "type": "string"
               }
             ],
             "internalType": "struct LibPubkeyRouterStorage.PubkeyRoutingData",
@@ -6325,139 +6478,12 @@
         ],
         "stateMutability": "view",
         "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "newResolverAddress",
-            "type": "address"
-          }
-        ],
-        "name": "setContractResolver",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "address",
-            "name": "stakingContractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "derivedKeyId",
-            "type": "bytes32"
-          }
-        ],
-        "name": "setRoutingData",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "pubkey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "address",
-            "name": "stakingContract",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyType",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "derivedKeyId",
-            "type": "bytes32"
-          }
-        ],
-        "name": "setRoutingDataAsAdmin",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "forwarder",
-            "type": "address"
-          }
-        ],
-        "name": "setTrustedForwarder",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "stakingContractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "identifier",
-            "type": "string"
-          },
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint256",
-                "name": "keyType",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct IPubkeyRouter.RootKey[]",
-            "name": "newRootKeys",
-            "type": "tuple[]"
-          }
-        ],
-        "name": "voteForRootKeys",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
       }
     ],
     "name": "PubkeyRouter"
   },
   "Staking": {
-    "address": "0x25829212828eeB5e74432429bE84F97aA56f5F91",
+    "address": "0x149a054CE79A379Ae5E97f5B984B993233b28061",
     "abi": [
       {
         "inputs": [
@@ -6851,6 +6877,11 @@
         "type": "function"
       },
       {
+        "inputs": [],
+        "name": "CallerNotOwner",
+        "type": "error"
+      },
+      {
         "inputs": [
           {
             "internalType": "address",
@@ -7042,6 +7073,71 @@
       {
         "inputs": [
           {
+            "internalType": "uint256",
+            "name": "realmId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "maxConcurrentRequests",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxPresignCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minPresignCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "peerCheckingIntervalSecs",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxPresignConcurrency",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "rpcHealthcheckEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minEpochForRewards",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "permittedValidatorsOn",
+                "type": "bool"
+              },
+              {
+                "internalType": "string",
+                "name": "defaultKeySet",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct LibStakingStorage.RealmConfig",
+            "name": "newConfig",
+            "type": "tuple"
+          }
+        ],
+        "name": "setRealmConfig",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
             "internalType": "address",
             "name": "stakerAddress",
             "type": "address"
@@ -7149,11 +7245,6 @@
         ],
         "stateMutability": "view",
         "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "CallerNotOwner",
-        "type": "error"
       },
       {
         "inputs": [],
@@ -7790,7 +7881,7 @@
               },
               {
                 "internalType": "uint256[]",
-                "name": "keyTypes",
+                "name": "keyTypes_deprecated",
                 "type": "uint256[]"
               },
               {
@@ -8140,66 +8231,6 @@
           }
         ],
         "name": "setPermittedValidatorsOn",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "realmId",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "maxConcurrentRequests",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "maxPresignCount",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "minPresignCount",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "peerCheckingIntervalSecs",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "maxPresignConcurrency",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bool",
-                "name": "rpcHealthcheckEnabled",
-                "type": "bool"
-              },
-              {
-                "internalType": "uint256",
-                "name": "minEpochForRewards",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bool",
-                "name": "permittedValidatorsOn",
-                "type": "bool"
-              }
-            ],
-            "internalType": "struct LibStakingStorage.RealmConfig",
-            "name": "newConfig",
-            "type": "tuple"
-          }
-        ],
-        "name": "setRealmConfig",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -9145,9 +9176,9 @@
                 "type": "uint256[]"
               },
               {
-                "internalType": "address[]",
-                "name": "recoveryPartyMembers",
-                "type": "address[]"
+                "internalType": "bytes",
+                "name": "recoverySessionId",
+                "type": "bytes"
               }
             ],
             "internalType": "struct LibStakingStorage.KeySetConfig",
@@ -9205,9 +9236,9 @@
                 "type": "uint256[]"
               },
               {
-                "internalType": "address[]",
-                "name": "recoveryPartyMembers",
-                "type": "address[]"
+                "internalType": "bytes",
+                "name": "recoverySessionId",
+                "type": "bytes"
               }
             ],
             "internalType": "struct LibStakingStorage.KeySetConfig[]",
@@ -9263,9 +9294,9 @@
                 "type": "uint256[]"
               },
               {
-                "internalType": "address[]",
-                "name": "recoveryPartyMembers",
-                "type": "address[]"
+                "internalType": "bytes",
+                "name": "recoverySessionId",
+                "type": "bytes"
               }
             ],
             "internalType": "struct LibStakingStorage.KeySetConfig",
@@ -9757,67 +9788,6 @@
           }
         ],
         "name": "ComplaintConfigSet",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newTokenRewardPerTokenPerEpoch",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256[]",
-            "name": "newKeyTypes",
-            "type": "uint256[]"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMinimumValidatorCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxConcurrentRequests",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxPresignCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMinPresignCount",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newPeerCheckingIntervalSecs",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxPresignConcurrency",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "bool",
-            "name": "newRpcHealthcheckEnabled",
-            "type": "bool"
-          }
-        ],
-        "name": "ConfigSet",
         "type": "event"
       },
       {
@@ -11140,19 +11110,6 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "getKeyTypes",
-        "outputs": [
-          {
-            "internalType": "uint256[]",
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -12448,7 +12405,7 @@
               },
               {
                 "internalType": "uint256[]",
-                "name": "keyTypes",
+                "name": "keyTypes_deprecated",
                 "type": "uint256[]"
               },
               {
@@ -13101,6 +13058,11 @@
                 "internalType": "bool",
                 "name": "permittedValidatorsOn",
                 "type": "bool"
+              },
+              {
+                "internalType": "string",
+                "name": "defaultKeySet",
+                "type": "string"
               }
             ],
             "internalType": "struct LibStakingStorage.RealmConfig",
@@ -13317,7 +13279,7 @@
     "name": "Staking"
   },
   "ContractResolver": {
-    "address": "0x097240445e4B1aE89fb1C3B8BB7C07C957392d45",
+    "address": "0x0A88e4A0A371F783fCc2dd802f214EAF48D1C6a9",
     "abi": [
       {
         "inputs": [
@@ -13710,6 +13672,19 @@
       },
       {
         "inputs": [],
+        "name": "PUB_KEY_ROUTER_VIEWS_CONTRACT",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
         "name": "RATE_LIMIT_NFT_CONTRACT",
         "outputs": [
           {
@@ -14003,7 +13978,7 @@
     "name": "ContractResolver"
   },
   "PriceFeed": {
-    "address": "0x5df51a5b7bFaF0769CeC2648Dd61469ff7df4b87",
+    "address": "0x3C18D220947e38EE2BD702ddf353Ab8940a7c72A",
     "abi": [
       {
         "inputs": [
@@ -15041,7 +15016,7 @@
     "name": "PriceFeed"
   },
   "Ledger": {
-    "address": "0x52b0Df7989d7914B0212a21eDD64F16F577D8aCd",
+    "address": "0xBFcA364C37d82bF8D05F931084448798e2b6638b",
     "abi": [
       {
         "inputs": [
@@ -16313,7 +16288,7 @@
     "name": "Forwarder"
   },
   "PaymentDelegation": {
-    "address": "0xdB1FCf6abeea6d1dd66E87b88bD62a7B4f877EDb",
+    "address": "0xeb5C9B118E118C034Ff59ac8B1F0c3c36f22906b",
     "abi": [
       {
         "inputs": [
