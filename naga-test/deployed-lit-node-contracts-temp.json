@@ -39,15 +39,15 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x3b68D6cBB969Bf84D7F49713F71E128e580Db961"
+        "facetAddress": "0x673AEFF7e7EE982aa0Ed1188b843Baa871FB7A46"
       },
       {
         "facetName": "StakingValidatorFacet",
-        "facetAddress": "0x9a9634ac5693cf78922591506A426c12B1e5E2DF"
+        "facetAddress": "0x70591B43566e733AD605c5423B77946D108A786D"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x157823212D41Fb7218Ac8e7Fd832C7f7A82a8595"
+        "facetAddress": "0x39db3Ea2C0D0e9deF57C931C9cf842431e93fca9"
       },
       {
         "facetName": "StakingVersionFacet",
@@ -55,15 +55,15 @@
       },
       {
         "facetName": "StakingAcrossRealmsFacet",
-        "facetAddress": "0x8B65d37B989BF64b7985b4Be20E9A7f23be296d4"
+        "facetAddress": "0x31835BF625E716aa35fc5eF6B1FAb6d2997bB896"
       },
       {
         "facetName": "StakingKeySetsFacet",
-        "facetAddress": "0x7025f3917C7B9A66aA5b76109C3E93B7d8693e63"
+        "facetAddress": "0xcEdd195ba6A243Ed866997e4F1E13FFdC07b1799"
       },
       {
         "facetName": "StakingAdminFacet",
-        "facetAddress": "0x98ac6298F44e321D478495Af1D569ADc595210f7"
+        "facetAddress": "0x833096D0Ad63FeE96aE831e18dB80B2D78d50a89"
       }
     ],
     "PKPNFT": [
@@ -81,7 +81,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0x69844B8A1048B2c8699b96e861F265AD6B4c19D0"
+        "facetAddress": "0xa003e9EaEdB0d01Fb72eB8632Db12Ce31f444bfC"
       }
     ],
     "PubkeyRouter": [
@@ -99,11 +99,11 @@
       },
       {
         "facetName": "PubkeyRouterFacet",
-        "facetAddress": "0xA77CafA1032F5Bb4Be115832488781F3fea62B09"
+        "facetAddress": "0xDC1100ff1382A5F647a8BEDD18F6c07C93616998"
       },
       {
         "facetName": "PubkeyRouterViewsFacet",
-        "facetAddress": "0x8A60c60276a94C8623c07838FD33788d9141d0F7"
+        "facetAddress": "0x5d1Ace7511a2E0B77CB0008015Ec3064915a5e74"
       }
     ],
     "DomainWalletRegistry": [
@@ -143,7 +143,7 @@
       },
       {
         "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0x1E54061a0ac13b1e5C4d7229D1079eFd01df3e2E"
+        "facetAddress": "0x4406d7B6E6f62bBD7021d52F9Ff4901655571929"
       }
     ],
     "BackupRecovery": [
@@ -161,7 +161,7 @@
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x33972f0Fb20e1036338c867106f98aD23002DEE4"
+        "facetAddress": "0x593D9B8A4739885b5586dDf8bbd6a21f8c96b623"
       },
       {
         "facetName": "BackupRecoveryNodeStatusFacet",
@@ -223,7 +223,7 @@
       },
       {
         "facetName": "PriceFeedFacet",
-        "facetAddress": "0x9eb5BF8d9579721bf3e35B46f19265c0122Bd78B"
+        "facetAddress": "0x790B25DC8B636F5f8A5DF1Af50e087DD986D31ba"
       }
     ]
   }
