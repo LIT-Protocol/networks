@@ -12,7 +12,7 @@
   "allowlistContractAddress": "0x094CF9F8BBfc633AB2Eb8CdbBE8552a172fAdD80",
   "resolverContractAddress": "0xf5d51a8A91152cA3b901d26528cfC21a4eC11fdF",
   "domainWalletRegistryAddress": "0x89FfDed25Cd7ffDAac464dED71601E9B50007742",
-  "hdKeyDeriverContractAddress": "0x0C73CBF7755068B123929381A4CF146E70da09f1",
+  "hdKeyDeriverContractAddress": "0x5A6d93BEA021d1928780b356aD4b41cd566e3964",
   "paymentDelegationContractAddress": "0x5EF658cB6ab3C3BfB75C8293B9a6C8ccb0b96C3c",
   "ledgerContractAddress": "0x9BD023448d2D3b2D73fe61E4d7859007F6dA372c",
   "priceFeedContractAddress": "0x88F5535Fa6dA5C225a3C06489fE4e3405b87608C",
