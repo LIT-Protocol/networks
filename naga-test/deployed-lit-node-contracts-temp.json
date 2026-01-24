@@ -5,8 +5,8 @@
   "litTokenContractAddress": "0x5E8db2E7af793f4095c4843C8cBD87C5D8604838",
   "pubkeyRouterContractAddress": "0x3EB38bD0B4B081338801f098dFDAe6519D7C9894",
   "pkpNftContractAddress": "0x71F58526F898773Eb6ca168f0f3673f5365718d5",
-  "pkpHelperContractAddress": "0xc6c260c149427064C38c46923c4D66335745B2e9",
-  "pkpHelperV2ContractAddress": "0xAcDA6409DaA9aE24Aa3DCd5cA8c13AF976B8974d",
+  "pkpHelperContractAddress": "0xf3e920Cf88A11D3a6b6d59bfF892F34C2c4fC40c",
+  "pkpHelperV2ContractAddress": "0xe2cb8aE75249d2e9adC3B8156D27C4eeF8E380fe",
   "pkpPermissionsContractAddress": "0x9C48C70DD379FCe946f889f0072b1017e2eCF94C",
   "pkpNftMetadataContractAddress": "0xE986A13231E6d022466FD849ae3b1C1f6E5D7EE1",
   "allowlistContractAddress": "0x625af003520ff8F9F4c53E694951277DF68B6dE9",
@@ -39,15 +39,15 @@
       },
       {
         "facetName": "StakingFacet",
-        "facetAddress": "0x673AEFF7e7EE982aa0Ed1188b843Baa871FB7A46"
+        "facetAddress": "0x206D76Cf8B15De9c6Cb6f414Dbc662c319a202CB"
       },
       {
         "facetName": "StakingValidatorFacet",
-        "facetAddress": "0x70591B43566e733AD605c5423B77946D108A786D"
+        "facetAddress": "0x3F6e07B73Ff4efd3fCcb028355AcD3E0961dC2F5"
       },
       {
         "facetName": "StakingViewsFacet",
-        "facetAddress": "0x39db3Ea2C0D0e9deF57C931C9cf842431e93fca9"
+        "facetAddress": "0x6a6ee7fFE43C131b2E4c3d1b9255Ec8Dc1F589bE"
       },
       {
         "facetName": "StakingVersionFacet",
@@ -55,15 +55,15 @@
       },
       {
         "facetName": "StakingAcrossRealmsFacet",
-        "facetAddress": "0x31835BF625E716aa35fc5eF6B1FAb6d2997bB896"
+        "facetAddress": "0x53189d762982D803C1EbBc97111570f46969202a"
       },
       {
         "facetName": "StakingKeySetsFacet",
-        "facetAddress": "0xcEdd195ba6A243Ed866997e4F1E13FFdC07b1799"
+        "facetAddress": "0x484361FB33428397f6CE29f96018dABe6bdfAA87"
       },
       {
         "facetName": "StakingAdminFacet",
-        "facetAddress": "0x833096D0Ad63FeE96aE831e18dB80B2D78d50a89"
+        "facetAddress": "0x6272403591a8270E32f3853d3c9e023e9a2dE9Cf"
       }
     ],
     "PKPNFT": [
@@ -81,7 +81,7 @@
       },
       {
         "facetName": "PKPNFTFacet",
-        "facetAddress": "0xa003e9EaEdB0d01Fb72eB8632Db12Ce31f444bfC"
+        "facetAddress": "0xC080749178f67f4D5D8eB2C8E37acF48fFbC7692"
       }
     ],
     "PubkeyRouter": [
@@ -99,11 +99,11 @@
       },
       {
         "facetName": "PubkeyRouterFacet",
-        "facetAddress": "0xDC1100ff1382A5F647a8BEDD18F6c07C93616998"
+        "facetAddress": "0x053E196d6A10B7B0C148279aA49a60a734919f85"
       },
       {
         "facetName": "PubkeyRouterViewsFacet",
-        "facetAddress": "0x5d1Ace7511a2E0B77CB0008015Ec3064915a5e74"
+        "facetAddress": "0x040655A294C0A305057A39Cc20F5aAF975147029"
       }
     ],
     "DomainWalletRegistry": [
@@ -143,7 +143,7 @@
       },
       {
         "facetName": "PKPPermissionsFacet",
-        "facetAddress": "0x4406d7B6E6f62bBD7021d52F9Ff4901655571929"
+        "facetAddress": "0x0Fbe279EDCB29eF015E1067Aa10cD042292AC144"
       }
     ],
     "BackupRecovery": [
@@ -161,7 +161,7 @@
       },
       {
         "facetName": "BackupRecoveryFacet",
-        "facetAddress": "0x593D9B8A4739885b5586dDf8bbd6a21f8c96b623"
+        "facetAddress": "0x6bce4791d2f75B2eDb57Ee8f638A42d64b66d9BE"
       },
       {
         "facetName": "BackupRecoveryNodeStatusFacet",
@@ -223,7 +223,7 @@
       },
       {
         "facetName": "PriceFeedFacet",
-        "facetAddress": "0x790B25DC8B636F5f8A5DF1Af50e087DD986D31ba"
+        "facetAddress": "0xFEfd9170Bd4FA99BFA5589AC30B4bF5Ee4992827"
       }
     ]
   }
